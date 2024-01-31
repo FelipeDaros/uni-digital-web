@@ -1,4 +1,3 @@
-import { Box, BoxProps } from "@mui/material";
 import styled from "styled-components";
 import backgroundImage from "../../assets/background-desktop.png";
 import backgroundImageMobile from "../../assets/background-mobile.png";

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Envio de email</title>
+</head>
+<style>
+  * {
+    font-family: 'Poppins', sans-serif;
+    /* Defina outros estilos globais aqui, se necessário */
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .header-container {
+    background: url('https://uploaddeimagens.com.br/images/004/728/194/original/background-desktop.png?1706731004') center/cover no-repeat;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer {
+    background: url('https://uploaddeimagens.com.br/images/004/728/194/original/background-desktop.png?1706731004') center/cover no-repeat;
+    /* Ajuste conforme necessário */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: white;
+  }
+
+  .img-header {
+    width: 300px;
+  }
+
+  .img-footer {
+    width: 80px;
+  }
+
+  button {
+    background-color: #28DA9D;
+    border-radius: 6px;
+    color: #fff;
+    border: none;
+    padding: 6px;
+  }
+
+  .font-amarela {
+    color: #EDF002;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Centraliza o texto dentro da .container */
+  }
+</style>
+
+<body>
+  <div class="header-container">
+    <img
+      src="https://uploaddeimagens.com.br/images/004/728/184/original/logo-unidigital-horizontal-amarelo.png?1706730572"
+      class="img-header" alt="logo-header" />
+  </div>
+  <div>
+    <h2 style="text-align: center;">Você realizou um novo agendamento</h2>
+    <div class="container">
+      <p>Tipo: Exame de sangue</p>
+      <p>Local: Laboratório</p>
+      <p>Data: 10/02/2024</p>
+      <p>Para conferencia, por favor acessar nosso sistemas através do link abaixo</p>
+    <button>Clique aqui para acessar o sistema</button>
+    </div>
+  </div>
+  <div class="footer">
+    <img
+      src="https://uploaddeimagens.com.br/images/004/728/184/original/logo-unidigital-horizontal-amarelo.png?1706730572"
+      class="img-footer" />
+    <div>
+      <p style="font-weight: bold;">Central de atendimento</p>
+      <p class="font-amarela">48 98451-9640</p>
+      <p class="font-amarela">48 3431-5865</p>
+    </div>
+  </div>
+</body>
+
+</html>

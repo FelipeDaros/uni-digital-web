@@ -1,4 +1,3 @@
-import { CheckCircleOutline } from "@mui/icons-material";
 import { Alert } from "@mui/material";
 import styled from "styled-components";
 
@@ -15,7 +14,7 @@ const StyledToast = styled.div`
   z-index: 1000; /* Ajuste a ordem de empilhamento conforme necessário */
 `;
 
-export function Toast({ state, type }: Props) {
+export function Toast({ state }: Props) {
   return (
     <>
       {state ? (
