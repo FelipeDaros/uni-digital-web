@@ -14,7 +14,7 @@ export function Login() {
 
     if (!data.get('user')) {
       setAlert(true);
-      setTimeout(() => {setAlert(false)}, 3000Vs);
+      setTimeout(() => {setAlert(false)}, 3000);
     }
 
   };
