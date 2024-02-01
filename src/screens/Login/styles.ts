@@ -41,5 +41,6 @@ export const ContainerBox = styled.div`
 
 
 export const Image = styled.img`
+  margin-top: 40px;
   width: 250px;
 `;

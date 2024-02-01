@@ -100,6 +100,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
           >
             <MenuIcon color='primary'/>
           </IconButton>
+          <img src={logo} style={{ width: 100 }} />
           <Typography
             component="h1"
             variant="h6"
@@ -107,7 +108,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            <img src={logo} style={{ width: 60 }} />
+            
           </Typography>
           <IconButton color="inherit" onClick={() => signOut()}>
             <ExitToApp color='primary'/>
