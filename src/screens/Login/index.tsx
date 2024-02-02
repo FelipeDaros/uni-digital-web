@@ -3,7 +3,7 @@ import logo from '../../assets/logo-unidigital-horizontal-amarelo.png';
 import { ContainerBox, Image, StyledContainer } from './styles';
 import { PermIdentity, VpnKey } from '@mui/icons-material';
 import { useState } from 'react';
-import { Toast } from '../../components/Toast';
+import { SucessToast } from '../../components/Toast/SucessToast';
 
 export function Login() {
   const [alert, setAlert] = useState(false);
@@ -14,7 +14,7 @@ export function Login() {
 
     if (!data.get('user')) {
       setAlert(true);
-      setTimeout(() => {setAlert(false)}, 3000);
+      setTimeout(() => { setAlert(false) }, 3000);
     }
 
   };
@@ -23,9 +23,9 @@ export function Login() {
   return (
     <StyledContainer>
       <CssBaseline />
-      <Image src={logo}/>
+      <Image src={logo} />
       <ContainerBox>
-        <Toast state={alert}/>
+        <SucessToast state={alert} />
         <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
           <Typography fontWeight="bold" fontSize={22} marginBottom={6} color="#28DA9D" textAlign="center">Área do cliente</Typography>
           <TextField

@@ -9,3 +9,7 @@ export const CenteredContainer = styled.div`
   background: #fff;
   padding: 10px;
 `;
+
+export const LabelText = styled.label`
+  font-size: 12px;
+` 

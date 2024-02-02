@@ -14,7 +14,7 @@ const StyledToast = styled.div`
   z-index: 1000; /* Ajuste a ordem de empilhamento conforme necessário */
 `;
 
-export function Toast({ state }: Props) {
+export function SucessToast({ state }: Props) {
   return (
     <>
       {state ? (
