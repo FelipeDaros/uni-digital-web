@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import styled from "styled-components";
 
-export const ContainerCard = styled.div`
+export const ContainerCard = styled.a`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -11,6 +11,11 @@ export const ContainerCard = styled.div`
   width: 80%;
   border: 2px solid #A8B0B5;
   margin-top: 20px;
+
+  &:hover{
+    cursor: pointer; /* Muda o cursor para indicar que o elemento é clicável */
+    opacity: 0.8;
+  }
 
   @media (max-width: 900px) {
     width: 80%;

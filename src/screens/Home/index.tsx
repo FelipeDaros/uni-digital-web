@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { CardComponent } from "../../components/Card";
 import TvIcon from '@mui/icons-material/Tv';
 

@@ -7,6 +7,7 @@ export const CenteredContainer = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  height: 100%;
 `;
 
 export const ContainerSubscription = styled.div`
@@ -44,8 +45,9 @@ export const ContainerCupom = styled.div`
 export const ContainerFooter = styled.div`
   width: 80%;
   display: flex;
-  justify-content: flex-end; /* Correção aqui */
-  flex-direction: column; /* Adição aqui */
+  justify-content: flex-end;
+  align-items: flex-end; /* Ajuste aqui */
+  flex-direction: column;
   margin-top: 10px;
 
   @media (max-width: 900px) {
@@ -53,3 +55,4 @@ export const ContainerFooter = styled.div`
     align-items: center;
   }
 `;
+

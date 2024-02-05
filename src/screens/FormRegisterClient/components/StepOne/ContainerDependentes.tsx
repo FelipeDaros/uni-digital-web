@@ -3,6 +3,7 @@ import styled from "styled-components"
 
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
 
 export const ContainerDependentes = styled.div`
   width: 80%;
@@ -80,7 +81,13 @@ export const TruncatedText = styled(Typography)`
   padding: 2px;
 `;
 
-export function ContainerDependentesComponent() {
+type Props = {
+  dependents: number | undefined;
+}
+
+export function ContainerDependentesComponent({ dependents }: Props) {
+  const [handleAddDependents, handleRemoveDependents, isLoading] = FormRegisterClientStore((state) => [state.handleAddDependents, state.handleRemoveDependents, state.isLoading]);
+
   return (
     <ContainerDependentes>
       <ContainerOne>
@@ -89,11 +96,11 @@ export function ContainerDependentesComponent() {
         </TruncatedText>
       </ContainerOne>
       <ContainerTwo>
-        <IconButton>
+        <IconButton disabled={isLoading} onClick={() => handleRemoveDependents()}>
           <RemoveIcon color="success" sx={{ fontSize: 18 }} />
         </IconButton>
-        <TextField type="number" sx={{borderColor: '#A8B0B5'}} size="small" variant="outlined" />
-        <IconButton>
+        <TextField disabled={isLoading} type="number" value={dependents} sx={{borderColor: '#A8B0B5'}} size="small" variant="outlined" />
+        <IconButton disabled={isLoading} onClick={() => handleAddDependents()}>
           <AddIcon color="success" sx={{ fontSize: 18 }} />
         </IconButton>
       </ContainerTwo>

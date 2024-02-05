@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 import Stepper from '@mui/material/Stepper';
@@ -10,8 +9,8 @@ import { StepIconProps } from '@mui/material/StepIcon';
 
 import LooksOneIcon from '@mui/icons-material/LooksOne';
 import LooksTwoIcon from '@mui/icons-material/LooksTwo';
-import Looks3Icon from '@mui/icons-material/Looks3';
-import { Typography } from '@mui/material';
+import { LinearProgress, Typography } from '@mui/material';
+import { FormRegisterClientStore } from '../store/FormRegisterClientStore';
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -66,8 +65,7 @@ function ColorlibStepIcon(props: StepIconProps) {
 
   const icons: { [index: string]: React.ReactElement } = {
     1: <LooksOneIcon />,
-    2: <LooksTwoIcon />,
-    3: <Looks3Icon />,
+    2: <LooksTwoIcon />
   };
 
   return (
@@ -77,19 +75,22 @@ function ColorlibStepIcon(props: StepIconProps) {
   );
 }
 
-const steps = ['Assinatura', 'Dados', 'Conclusão'];
+const steps = ['Assinatura', 'Dados'];
 
 export function Steps() {
-  const [selectedStep, setSelectedStep] = useState(0);
+  const [step, isLoading] = FormRegisterClientStore((state) => [state.step, state.isLoading]);
   return (
     <Stack sx={{ width: '100%' }} spacing={4}>
-      <Stepper alternativeLabel activeStep={selectedStep} connector={<ColorlibConnector />}>
+      <Stepper alternativeLabel activeStep={step} connector={<ColorlibConnector />}>
         {steps.map((label) => (
           <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}><Typography sx={{ color: '#28DA9D', fontWeight: 'bold', fontSize: 18 }}>{label}</Typography></StepLabel>
+            <StepLabel StepIconComponent={ColorlibStepIcon}>
+              <Typography sx={{ color: '#28DA9D', fontWeight: 'bold', fontSize: 18 }}>{label}</Typography>
+            </StepLabel>
           </Step>
         ))}
       </Stepper>
+      {isLoading && <LinearProgress color='success' variant='indeterminate' />}
     </Stack>
   );
 }

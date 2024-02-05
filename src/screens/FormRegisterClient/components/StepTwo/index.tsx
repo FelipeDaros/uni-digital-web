@@ -1,367 +1,385 @@
-import { Avatar, Grid, IconButton, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { CenteredContainer, LabelText } from "./style";
+import { Avatar, Button, Checkbox, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Typography } from "@mui/material";
+import { CenteredContainer, LabelText, VisuallyHiddenInput } from "./style";
 import { DependentTable } from "./DependentTable";
-import AddIcon from '@mui/icons-material/Add';
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
-import { useState } from "react";
-import { ErrorToast } from "../../../../components/Toast/ErrorToast";
+import { useRef } from "react";
+import { CreditCard } from "../CreditCard";
+import { Form } from "@unform/web";
+import { VTextField } from "../../../../components/Input/VTextField";
+import { VSelect } from "../../../../components/Select/VSelect";
+import { statesArray } from "../../../../utils/estados";
+import { DependentForm } from "./DependentForm";
 
-type DependetesProps = {
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+
+import * as XLSX from 'xlsx'
+import { CustomButton } from "../../../../components/Button";
+
+type PropsXLSX = {
   nome: string;
   documento: string;
-  dataNascimento: Date | any;
   email: string;
+  dataNascimento: string
   sexo: string;
 }
 
 export function StepTwo() {
-  const [error, setError] = useState({
-    message: "",
-    state: false
-  });
+  const formRef = useRef(null);
 
-  const [formularioDependente, setFormularioDependente] = useState<DependetesProps>({} as DependetesProps);
-  const [formulario, updateFormulario, handleAddDependente] = FormRegisterClientStore((state) => [
-    state.formulario,
-    state.updateFormulario,
-    state.handleAddDependente
+  const [typePayment, handleChangePayment, acceptTerms, handleAcceptTerms, isLoading, handleAddDependente, dependentes] = FormRegisterClientStore((state) => [
+    state.typePayment, state.handleChangePayment, state.acceptTerms, state.handleAcceptTerms, state.isLoading, state.handleAddDependente, state.dependentes
   ]);
 
-  function handleAdd() {
-    if (!formularioDependente.nome || !formularioDependente.documento || !formularioDependente.dataNascimento || !formularioDependente.sexo || !formularioDependente.email) {
-      setError({
-        message: 'Informe todos os campos para adicionar dependente',
-        state: true
-      });
-      return;
-    }
 
-    handleAddDependente(formularioDependente);
+  async function handleAlterCep() {
+    try {
+      //@ts-ignore
+      const cep = formRef.current?.getData()?.cep
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
+        method: 'GET'
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao buscar CEP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      //@ts-ignore
+      formRef.current?.setFieldValue({
+        'uf': data.uf,
+        'cidade': data.cidade
+      })
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function importXLS(data: any) {
+    const reader = new FileReader();
+    reader.readAsBinaryString(data.target.files[0]);
+    reader.onload = (e: any) => {
+      const data = e.target.result;
+      const workbook = XLSX.read(data, { type: "binary" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData: PropsXLSX[] = XLSX.utils.sheet_to_json(sheet);
+
+      parsedData.forEach(item => {
+        // Check if the dependent with the same documento already exists
+        const isDependentExists = dependentes.some(value => value.documento === item.documento);
+        
+        if (!isDependentExists) {
+          handleAddDependente({
+            dataNascimento: item.dataNascimento,
+            documento: item.documento,
+            email: item.email,
+            nome: item.nome,
+            sexo: item.sexo
+          });
+        }
+      });
+    };
+  }
+
+  async function handleSave() {
     //@ts-ignore
-    setFormularioDependente({
-      dataNascimento: "",
-      documento: "",
-      email: "",
-      nome: "",
-      sexo: ""
-    });
+    if (formRef.current?.getData()?.senha !== formRef.current?.getData()?.confirmarSenha) {
+      window.alert('Senhas não conferem')
+    }
   }
 
   return (
     <CenteredContainer>
-      <Typography fontSize={12} sx={{ marginTop: 3, textAlign: 'center' }}>
-        O titular é a pessoa responsável pelo aceite do contrato e pelo pagamento das mensalidades da Telemedicina Unimed.
-      </Typography>
-      <Avatar sx={{ width: 56, height: 56, marginTop: 6 }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Nome</LabelText>
-          <TextField
-            required
-            size="small"
-            id="nome"
-            name="nome"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.nome}
-            onChange={value => updateFormulario("nome", value.target.value)}
-          />
+      {/* @ts-ignore */}
+      <Form ref={formRef} onSubmit={(dados) => handleSave(dados)}>
+        <Typography gutterBottom fontSize={12} sx={{ marginTop: 3, textAlign: 'center' }}>
+          O titular é a pessoa responsável pelo aceite do contrato e pelo pagamento das mensalidades da Telemedicina Unimed.
+        </Typography>
+        <Avatar sx={{ width: 56, height: 56, marginTop: 6 }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Nome</LabelText>
+            <VTextField
+              required
+              size="small"
+              id="nome"
+              name="nome"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Data nascimento</LabelText>
+            <VTextField
+              required
+              size="small"
+              id="dataNascimento"
+              name="dataNascimento"
+              placeholder="Data"
+              fullWidth
+              type="date"
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">CPF/CNPJ</LabelText>
+            <VTextField
+              required
+              size="small"
+              id="documento"
+              name="documento"
+              fullWidth
+              color="success"
+              variant="standard"
+              inputProps={{ maxLength: 11 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} marginTop={2}>
+            <RadioGroup
+              row
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="N"
+              name="radio-buttons-group"
+            >
+              <FormControlLabel value="M" control={<Radio sx={{
+                color: '#28DA9D',
+                '&.Mui-checked': {
+                  color: '#28DA9D',
+                },
+              }} size="small" />} label="Masculino" />
+              <FormControlLabel value="F" control={<Radio sx={{
+                color: '#28DA9D',
+                '&.Mui-checked': {
+                  color: '#28DA9D',
+                },
+              }} size="small" />} label="Feminino" />
+              <FormControlLabel value="N" control={<Radio sx={{
+                color: '#28DA9D',
+                '&.Mui-checked': {
+                  color: '#28DA9D',
+                },
+              }} size="small" />} label="Não informar" />
+            </RadioGroup>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Data nascimento</LabelText>
-          <TextField
-            required
-            size="small"
-            id="dataNascimento"
-            name="dataNascimento"
-            placeholder="Data"
-            fullWidth
-            type="date"
-            color="success"
-            variant="standard"
-            value={formulario?.dataNascimento}
-            onChange={value => updateFormulario("dataNascimento", value.target.value)}
-          />
+        <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Contatos</Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Fone</LabelText>
+            <VTextField
+              required
+              size="small"
+              id="fone"
+              name="fone"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Celular</LabelText>
+            <VTextField
+              required
+              size="small"
+              id="celular"
+              name="celular"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">E-mail</LabelText>
+            <VTextField
+              type="email"
+              required
+              size="small"
+              id="email"
+              name="email"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">CPF/CNPJ</LabelText>
-          <TextField
-            required
-            size="small"
-            id="documento"
-            name="documento"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.documento}
-            onChange={value => updateFormulario("documento", value.target.value)}
-          />
+        <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Endereço</Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Cep</LabelText>
+            <VTextField
+              type="text"
+              required
+              size="small"
+              id="cep"
+              name="cep"
+              fullWidth
+              color="success"
+              variant="standard"
+              inputProps={{ maxLength: 8 }}
+              onBlur={handleAlterCep}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Endereço</LabelText>
+            <VTextField
+              type="text"
+              required
+              size="small"
+              id="endereco"
+              name="endereco"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Número</LabelText>
+            <VTextField
+              type="number"
+              required
+              size="small"
+              id="numero"
+              name="numero"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Bairro</LabelText>
+            <VTextField
+              type="text"
+              required
+              size="small"
+              id="bairro"
+              name="bairro"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Cidade</LabelText>
+            <VTextField
+              type="text"
+              required
+              size="small"
+              id="cidade"
+              name="cidade"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">UF</LabelText>
+            <VSelect
+              type="text"
+              required
+              size="small"
+              id="uf"
+              name="uf"
+              fullWidth
+              color="success"
+              variant="standard"
+            >
+              {statesArray.map(item => (
+                <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+              ))}
+            </VSelect>
+          </Grid>
         </Grid>
-      </Grid>
-      <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Contato</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Fone</LabelText>
-          <TextField
-            required
-            size="small"
-            id="fone"
-            name="fone"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.fone}
-            onChange={value => updateFormulario("fone", value.target.value)}
-          />
+        <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Credenciais</Typography>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Senha</LabelText>
+            <VTextField
+              type="password"
+              required
+              size="small"
+              id="senha"
+              name="senha"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} marginTop={2}>
+            <LabelText htmlFor="">Confirmar senha</LabelText>
+            <VTextField
+              type="password"
+              required
+              size="small"
+              id="confirmarSenha"
+              name="confirmarSenha"
+              fullWidth
+              color="success"
+              variant="standard"
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Celular</LabelText>
-          <TextField
-            required
-            size="small"
-            id="celular"
-            name="celular"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.celular}
-            onChange={value => updateFormulario("celular", value.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">E-mail</LabelText>
-          <TextField
-            type="email"
-            required
-            size="small"
-            id="email"
-            name="email"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.email}
-            onChange={value => updateFormulario("email", value.target.value)}
-          />
-        </Grid>
-      </Grid>
-      <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Endereço</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Cep</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="cep"
-            name="cep"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.cep}
-            onChange={value => updateFormulario("cep", value.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Endereço</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="endereco"
-            name="endereco"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.endereco}
-            onChange={value => updateFormulario("endereco", value.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Número</LabelText>
-          <TextField
-            type="number"
-            required
-            size="small"
-            id="numero"
-            name="numero"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.numero}
-            onChange={value => updateFormulario("numero", value.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Bairro</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="bairro"
-            name="bairro"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.bairro}
-            onChange={value => updateFormulario("bairro", value.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Cidade</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="cidade"
-            name="cidade"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.cidade}
-            onChange={value => updateFormulario("cidade", value.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">UF</LabelText>
-          {/* <Select
-            type="text"
-            required
-            size="small"
-            id="uf"
-            name="uf"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.uf || ''}
-            onChange={value => updateFormulario("uf", value.target.value)}
+        <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Dependentes</Typography>
+        <DependentForm />
+        <DependentTable />
+        <CustomButton sx={{ marginTop: 4 }} component="label" variant="contained" startIcon={<CloudUploadIcon color="primary" />}>
+          <Typography color="white">Importar</Typography>
+          <VisuallyHiddenInput type="file" accept=".xlsx, .xls, .ods" multiple={false} onChange={importXLS} />
+        </CustomButton>
+        <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Pagamentos</Typography>
+        <Grid item xs={12} sm={2} marginTop={2}>
+          <RadioGroup
+            row
+            aria-labelledby="demo-radio-buttons-group-label"
+            name="radio-buttons-group"
+            value={typePayment}
+            defaultValue={typePayment}
+            onChange={(value) => handleChangePayment(value.target.value)}
           >
-            <MenuItem value={10}>Ten</MenuItem>
-          </Select> */}
+            <FormControlLabel value="cartao" control={<Radio sx={{
+              color: '#28DA9D',
+              '&.Mui-checked': {
+                color: '#28DA9D',
+              },
+            }} size="small" />} label="Cartão de crédito" />
+            <FormControlLabel value="boleto" control={<Radio sx={{
+              color: '#28DA9D',
+              '&.Mui-checked': {
+                color: '#28DA9D',
+              },
+            }} size="small" />} label="Boleto" />
+            <FormControlLabel value="pix" control={<Radio sx={{
+              color: '#28DA9D',
+              '&.Mui-checked': {
+                color: '#28DA9D',
+              },
+            }} size="small" />} label="PIX" />
+          </RadioGroup>
         </Grid>
-      </Grid>
-      <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Credenciais</Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Senha</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="senha"
-            name="senha"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.senha}
-            onChange={value => updateFormulario("senha", value.target.value)}
-          />
+        {typePayment === 'cartao' && <CreditCard />}
+        <Typography gutterBottom sx={{ marginTop: 6 }}>Os seus dados pessoais serão utilizados para processar a sua compra, apoiar a sua experiência em todo este site e para outros fins descritos na nossa Política de Privacidade.</Typography>
+        <Grid container direction="row" sx={{ alignItems: 'center', marginTop: 6 }}>
+          <Grid item xs={2} sm={1}>
+            <Checkbox
+              id="acceptTerms"
+              name="acceptTerms"
+              value={acceptTerms}
+              onChange={() => handleAcceptTerms()}
+              sx={{
+                color: '#28DA9D',
+                '&.Mui-checked': {
+                  color: '#28DA9D',
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={10} sm={8}>
+            <Typography>Aceito os termos contidos em contrato. Download do contrato (PDF)</Typography>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} marginTop={2}>
-          <LabelText htmlFor="">Confirmar senha</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="confirmarSenha"
-            name="confirmarSenha"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formulario?.confirmarSenha}
-            onChange={value => updateFormulario("confirmarSenha", value.target.value)}
-          />
-        </Grid>
-      </Grid>
-      <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Dependentes</Typography>
-      <Grid container spacing={3} direction="row">
-        <Grid item xs={12} sm={3} marginTop={2}>
-          <LabelText htmlFor="">Nome</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="nome"
-            name="nome"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formularioDependente.nome}
-            onChange={(e) => setFormularioDependente((state) => ({ ...state, nome: e.target.value }))}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2} marginTop={2}>
-          <LabelText htmlFor="">CPF</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="documento"
-            name="documento"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formularioDependente.documento}
-            onChange={(e) => setFormularioDependente((state) => ({ ...state, documento: e.target.value }))}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2} marginTop={2}>
-          <LabelText style={{ fontSize: 10 }}>Data nasci.</LabelText>
-          <TextField
-            required
-            size="small"
-            id="datanascimento"
-            name="datanascimento"
-            fullWidth
-            type="date"
-            color="success"
-            variant="standard"
-            value={formularioDependente.dataNascimento}
-            onChange={(e) => setFormularioDependente((state) => ({ ...state, dataNascimento: e.target.value as any }))}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2} marginTop={2}>
-          <LabelText htmlFor="">Sexo</LabelText>
-          <Select
-            type="text"
-            required
-            size="small"
-            id="sexo"
-            name="sexo"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formularioDependente.sexo}
-            onChange={(e) => setFormularioDependente((state) => ({ ...state, sexo: e.target.value }))}
-          >
-            <MenuItem value="M">Masculino</MenuItem>
-            <MenuItem value="F">Feminino</MenuItem>
-            <MenuItem value="N">Não informar</MenuItem>
-          </Select>
-        </Grid>
-        <Grid item xs={12} sm={2} marginTop={2}>
-          <LabelText htmlFor="">Email</LabelText>
-          <TextField
-            type="text"
-            required
-            size="small"
-            id="email"
-            name="email"
-            fullWidth
-            color="success"
-            variant="standard"
-            value={formularioDependente.email}
-            onChange={(e) => setFormularioDependente((state) => ({ ...state, email: e.target.value }))}
-          />
-        </Grid>
-        <Grid item xs={12} sm={1} marginTop={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <IconButton onClick={handleAdd} size="small" sx={{ backgroundColor: '#28DA9D' }}>
-            <AddIcon color="primary" sx={{ fontSize: 16 }} />
-          </IconButton>
-        </Grid>
-      </Grid>
-      <DependentTable />
-      <ErrorToast erro={error} />
+        <Button sx={{ marginTop: 10, marginBottom: 5 }} disabled={isLoading} variant="outlined" color="success" type="submit">Finalizar compra</Button>
+      </Form>
     </CenteredContainer >
   )
 }

@@ -1,14 +1,7 @@
-import { Route, Routes } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { DefaultLayout } from "../layout/DefaultLayout";
-import { Home } from "../screens/Home";
-import { Login } from "../screens/Login";
-import { RouteRegisterNoAuth } from "./RouteRegisterNoAuth";
+import { Routes } from "react-router-dom";
 
 
 export function Router() {
-  const { user } = useAuth();
-
   return (
     <Routes>
       {/* {user &&

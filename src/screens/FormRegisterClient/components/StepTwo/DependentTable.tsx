@@ -1,8 +1,6 @@
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import RemoveIcon from '@mui/icons-material/Remove';
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
-import moment from "moment";
-
 
 export function DependentTable() {
   const [dependentes, handleRemoveDependente] = FormRegisterClientStore((state) => [state.dependentes, state.handleRemoveDependente]);
@@ -23,7 +21,7 @@ export function DependentTable() {
         <TableBody>
           {dependentes.map((row) => (
             <TableRow
-              key={row.documento}
+              key={`${row.documento}`+`${row.nome}`}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell>
@@ -35,7 +33,7 @@ export function DependentTable() {
                 {row.nome}
               </TableCell>
               <TableCell align="right">{row.documento}</TableCell>
-              <TableCell align="right">{moment(row.dataNascimento).format('DD-MM-YYYY')}</TableCell>
+              <TableCell align="right">{row.dataNascimento}</TableCell>
               <TableCell align="right">{row.sexo}</TableCell>
               <TableCell align="right">{row.email}</TableCell>
             </TableRow>

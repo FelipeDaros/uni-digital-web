@@ -1,72 +1,79 @@
 import { create } from 'zustand';
 
-type Props = {
-  isLoading: boolean;
-  signature: PropsSignature | null;
-  formulario: PropsFormRegisterClient | null;
-  dependentes: DependetesProps[];
-  handleAddDependente: (data: DependetesProps) => void;
-  handleRemoveDependente: (documento: string) => void;
-  setIsLoading: () => void;
-  updateFormulario: (field: string, value: string) => void;
-}
-
-type DependetesProps = {
+type DependentesProps = {
   nome: string;
   documento: string;
-  dataNascimento: Date;
+  dataNascimento: string;
   email: string;
   sexo: string;
 }
 
 type PropsSignature = {
-  id: number;
-  title: string;
-  price: number;
-  dependents: number;
-  total: number;
-  couponId: number;
-  discoount: number;
+  title?: string;
+  price?: number;
+  dependents?: number;
+  total?: number;
+  couponId?: number | null;
+  discount?: number;
 }
 
-export type PropsFormRegisterClient = {
-  nome?: string;
-  senha?: string;
-  confirmarSenha?: string;
-  dataNascimento?: Date;
-  documento?: string;
-  sexo?: string;
-  fone?: string;
-  celular?: string;
-  email?: string;
-  cep?: string;
-  endereco?: string;
-  numero?: string;
-  bairro?: string;
-  cidade?: string;
-  uf?: string;
+type Props = {
+  step: number;
+  isLoading: boolean;
+  signature: PropsSignature | any;
+  dependentes: DependentesProps[];
+  typePayment: string;
+  acceptTerms: boolean;
+  handleAcceptTerms: () => void;
+  handleChangePayment: (payment: string) => void;
+  handleAddDependente: (data: DependentesProps) => void;
+  handleRemoveDependente: (documento: string) => void;
+  setIsLoading: () => void;
+  handleNextStep: () => void;
+  handleBackStep: () => void;
+  handleAddDependents: () => void;
+  handleRemoveDependents: () => void;
 }
 
-type BankData = {
-  titularName: string;
-  numberCart: number;
-  mouth: number;
-  year: number;
-  cvc: number;
-}
-
-export const FormRegisterClientStore = create<Props>((set, get) => ({
+export const FormRegisterClientStore = create<Props>((set) => ({
+  typePayment: 'pix',
+  step: 0,
   isLoading: false,
-  signature: null,
-  formulario: null,
+  signature: {
+    total: 0,
+    couponId: null,
+    discount: 0,
+    dependents: 0,
+    price: 0,
+    title: ''
+  },
   dependentes: [],
-  handleAddDependente: (dependente: DependetesProps) => set((state) => ({ dependentes: [...state.dependentes, dependente] })),
-  handleRemoveDependente: (documento: string) => set((state) => ({ dependentes: state.dependentes.filter(item => item.documento !== documento) })),
-  setIsLoading: () => { set({ isLoading: !get().isLoading }) },
-  updateFormulario: (field: string, value: string) => set((state) => ({
-    formulario: {
-      ...state.formulario,
-      [field]: value,
-    },
-  })),
+  acceptTerms: false,
+  handleAcceptTerms: () => {
+    set((state) => ({ acceptTerms: !state.acceptTerms }));
+  },
+  handleChangePayment: (type: string) => {
+    set({ typePayment: type });
+  },
+  handleAddDependente: (dependente: DependentesProps) => {
+    set((state) => ({ dependentes: [...state.dependentes, dependente] }));
+  },
+  handleRemoveDependente: (documento: string) => {
+    set((state) => ({ dependentes: state.dependentes.filter(item => item.documento !== documento) }));
+  },
+  setIsLoading: () => {
+    set((state) => ({ isLoading: !state.isLoading }));
+  },
+  handleNextStep: () => {
+    set((state) => ({ step: state.step + 1 }));
+  },
+  handleBackStep: () => {
+    set((state) => ({ step: state.step - 1 }));
+  },
+  handleAddDependents: () => {
+    set((state) => ({ signature: { ...state.signature, dependents: state.signature.dependents + 1 } }));
+  },
+  handleRemoveDependents: () => {
+    set((state) => ({ signature: { ...state.signature, dependents: state.signature.dependents - 1 } }));
+  },
 }));
