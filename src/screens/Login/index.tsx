@@ -1,11 +1,14 @@
-import { Box, Button, CssBaseline, Grid, InputAdornment, TextField, Typography } from '@mui/material';
+import { Box, Button, CssBaseline, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import logo from '../../assets/logo-unidigital-horizontal-amarelo.png';
 import { ContainerBox, Image, StyledContainer } from './styles';
 import { PermIdentity, VpnKey } from '@mui/icons-material';
 import { useState } from 'react';
 import { SucessToast } from '../../components/Toast/SucessToast';
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
+  const navigate = useNavigate();
+
   const [alert, setAlert] = useState(false);
 
   const handleSubmit = (event: any) => {
@@ -66,7 +69,9 @@ export function Login() {
           />
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Typography>Esqueci a senha</Typography>
+              <IconButton onClick={() => navigate('/forgout')}>
+                <Typography color="GrayText">Esqueci a senha</Typography>
+              </IconButton>
             </Grid>
           </Grid>
           <Grid container justifyContent="flex-end">

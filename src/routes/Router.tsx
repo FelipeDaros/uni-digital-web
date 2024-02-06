@@ -1,17 +1,14 @@
-import { Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
+import { RouteRegisterNoAuth } from "./RoutesNoAuth";
+import { useAuth } from "../context/AuthContext";
+import { RoutesAuth } from "./RoutesAuth";
 
 
 export function Router() {
+  const { user } = useAuth();
   return (
-    <Routes>
-      {/* {user &&
-        <Route path="/" element={<DefaultLayout />}>
-          <Route path="/" element={<Home />} />
-        </Route>
-      }
-      {
-        !user && <Route path="/" element={<Login />} />
-      } */}
-    </Routes>
+    <BrowserRouter>
+      {user ? <RouteRegisterNoAuth /> : <RoutesAuth />}
+    </BrowserRouter>
   )
 }

@@ -9,6 +9,7 @@ type DependentesProps = {
 }
 
 type PropsSignature = {
+  id?: number | null;
   title?: string;
   price?: number;
   dependents?: number;
@@ -20,7 +21,7 @@ type PropsSignature = {
 type Props = {
   step: number;
   isLoading: boolean;
-  signature: PropsSignature | any;
+  signature: PropsSignature;
   dependentes: DependentesProps[];
   typePayment: string;
   acceptTerms: boolean;
@@ -33,6 +34,7 @@ type Props = {
   handleBackStep: () => void;
   handleAddDependents: () => void;
   handleRemoveDependents: () => void;
+  handleSelectedSignature: (data: PropsSignature) => void;
 }
 
 export const FormRegisterClientStore = create<Props>((set) => ({
@@ -40,6 +42,7 @@ export const FormRegisterClientStore = create<Props>((set) => ({
   step: 0,
   isLoading: false,
   signature: {
+    id: null,
     total: 0,
     couponId: null,
     discount: 0,
@@ -71,9 +74,22 @@ export const FormRegisterClientStore = create<Props>((set) => ({
     set((state) => ({ step: state.step - 1 }));
   },
   handleAddDependents: () => {
+    //@ts-ignore
     set((state) => ({ signature: { ...state.signature, dependents: state.signature.dependents + 1 } }));
   },
   handleRemoveDependents: () => {
+    //@ts-ignore
     set((state) => ({ signature: { ...state.signature, dependents: state.signature.dependents - 1 } }));
   },
+  handleSelectedSignature: (data: PropsSignature) => {
+    set((state) => ({
+      signature: {
+        ...state.signature,
+        id: data.id,
+        price: data.price,
+        title: data.title,
+        total: data.total
+      }
+    }))
+  }
 }));

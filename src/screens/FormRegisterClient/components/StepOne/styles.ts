@@ -7,15 +7,16 @@ export const CenteredContainer = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: 40rem;
 `;
 
 export const ContainerSubscription = styled.div`
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-`
+  overflow-y: auto; /* Usar 'auto' permitirá que a barra de rolagem apareça apenas quando necessário */
+`;
 
 export const ContainerText = styled.div`
   margin-top: 10px;

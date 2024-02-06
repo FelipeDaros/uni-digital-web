@@ -18,7 +18,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ExitToApp from '@mui/icons-material/ExitToApp';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
-const drawerWidth: number = 220;
+const drawerWidth: number = 240;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -102,14 +102,13 @@ export const DefaultMenu: React.FC = ({ children }) => {
           </IconButton>
           <img src={logo} style={{ width: 100 }} />
           <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
+            color="white"
             noWrap
-            sx={{ flexGrow: 1 }}
+            sx={{ flexGrow: 1, marginLeft: 1, fontSize: 12 }}
           >
-            
+            FELIPE DAROS
           </Typography>
+          
           <IconButton color="inherit" onClick={() => signOut()}>
             <ExitToApp color='primary'/>
           </IconButton>
@@ -130,17 +129,14 @@ export const DefaultMenu: React.FC = ({ children }) => {
           </IconButton>
         </Toolbar>
         <Divider />
-        <List component="nav" sx={{ backgroundColor: '#28DA9D', height: '100%', border: 'none' }}>
+        <List component="nav" sx={{ backgroundColor: '#28DA9D', height: '100%', border: 'none', overflow: 'hidden' }}>
           {mainListItems}
-          {/* <Divider sx={{ my: 1 }} /> */}
-          {/* {secondaryListItems} */}
         </List>
       </Drawer>
       <Box
         component="main"
         sx={{
           backgroundColor: '#ffffff', // Definindo a cor de fundo do conteúdo principal
-          flexGrow: 1,
           height: '100vh',
           overflow: 'auto',
         }}

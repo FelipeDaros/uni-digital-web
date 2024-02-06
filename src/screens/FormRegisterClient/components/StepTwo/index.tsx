@@ -2,7 +2,7 @@ import { Avatar, Button, Checkbox, FormControlLabel, Grid, MenuItem, Radio, Radi
 import { CenteredContainer, LabelText, VisuallyHiddenInput } from "./style";
 import { DependentTable } from "./DependentTable";
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { CreditCard } from "../CreditCard";
 import { Form } from "@unform/web";
 import { VTextField } from "../../../../components/Input/VTextField";
@@ -14,6 +14,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import * as XLSX from 'xlsx'
 import { CustomButton } from "../../../../components/Button";
+import axios from "axios";
 
 type PropsXLSX = {
   nome: string;
@@ -25,10 +26,36 @@ type PropsXLSX = {
 
 export function StepTwo() {
   const formRef = useRef(null);
+  const [avatar, setAvatar] = useState(null);
+  const [avatarFile, setAvatarFile] = useState(null);
 
-  const [typePayment, handleChangePayment, acceptTerms, handleAcceptTerms, isLoading, handleAddDependente, dependentes] = FormRegisterClientStore((state) => [
-    state.typePayment, state.handleChangePayment, state.acceptTerms, state.handleAcceptTerms, state.isLoading, state.handleAddDependente, state.dependentes
+  const [typePayment,
+    handleChangePayment,
+    acceptTerms,
+    handleAcceptTerms,
+    isLoading,
+    handleAddDependente,
+    dependentes,
+    signature
+  ] = FormRegisterClientStore((state) => [
+    state.typePayment,
+    state.handleChangePayment,
+    state.acceptTerms,
+    state.handleAcceptTerms,
+    state.isLoading,
+    state.handleAddDependente,
+    state.dependentes,
+    state.signature
   ]);
+
+  function handleAvatarChange(e: any) {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      //@ts-ignore
+      setAvatarFile(URL.createObjectURL(file));
+    }
+  }
 
 
   async function handleAlterCep() {
@@ -67,7 +94,7 @@ export function StepTwo() {
       parsedData.forEach(item => {
         // Check if the dependent with the same documento already exists
         const isDependentExists = dependentes.some(value => value.documento === item.documento);
-        
+
         if (!isDependentExists) {
           handleAddDependente({
             dataNascimento: item.dataNascimento,
@@ -81,11 +108,15 @@ export function StepTwo() {
     };
   }
 
-  async function handleSave() {
+  async function handleSave(dados: any) {
     //@ts-ignore
     if (formRef.current?.getData()?.senha !== formRef.current?.getData()?.confirmarSenha) {
       window.alert('Senhas não conferem')
     }
+    const formData = new FormData();
+    formData.append('dados', dados);
+    //@ts-ignore
+    formData.append('signature', signature);
   }
 
   return (
@@ -95,7 +126,11 @@ export function StepTwo() {
         <Typography gutterBottom fontSize={12} sx={{ marginTop: 3, textAlign: 'center' }}>
           O titular é a pessoa responsável pelo aceite do contrato e pelo pagamento das mensalidades da Telemedicina Unimed.
         </Typography>
-        <Avatar sx={{ width: 56, height: 56, marginTop: 6 }} alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar sx={{ width: 62, height: 62, marginTop: 6 }} alt="Remy Sharp" src={avatarFile ?? ""} />
+        <CustomButton size="small" sx={{ marginTop: 4 }} component="label" variant="contained" startIcon={<CloudUploadIcon color="primary" />}>
+          <Typography color="white">Enviar</Typography>
+          <VisuallyHiddenInput type="file" accept=".png, .jpg, .jpeg" multiple={false} onChange={handleAvatarChange} />
+        </CustomButton>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} marginTop={2}>
             <LabelText htmlFor="">Nome</LabelText>

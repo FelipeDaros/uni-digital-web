@@ -1,7 +1,11 @@
 import { Typography } from "@mui/material";
 import styled from "styled-components";
 
-export const ContainerCard = styled.a`
+type Props = {
+  isSelected: boolean
+}
+
+export const ContainerCard = styled.a<Props>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,11 +13,11 @@ export const ContainerCard = styled.a`
   height: 100px;
   min-height: 100px;
   width: 80%;
-  border: 2px solid #A8B0B5;
+  border: ${props => props.isSelected ? '2px solid #28DA9D' : '2px solid #A8B0B5'};
   margin-top: 20px;
-
-  &:hover{
-    cursor: pointer; /* Muda o cursor para indicar que o elemento é clicável */
+  
+  &:hover {
+    cursor: pointer;
     opacity: 0.8;
   }
 
@@ -26,7 +30,6 @@ export const ContainerCard = styled.a`
     margin-top: 10px;
     text-align: center;
   }
-
 `;
 
 export const TruncatedText = styled(Typography).attrs({ fontSize: 10 })`

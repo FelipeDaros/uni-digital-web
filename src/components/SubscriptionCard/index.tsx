@@ -1,23 +1,36 @@
 import { Typography } from "@mui/material";
 import { ContainerCard, ContainerOne, ContainerThree, ContainerTwo, ImgLogoPlano, TruncatedText } from "./styles";
 
-export function SubscriptionCard() {
+type Props = {
+  signture: SignatureProps,
+  handleSelected: () => void;
+  isSelected: boolean;
+}
+
+type SignatureProps = {
+  id: number;
+  name: string;
+  price: number;
+  title: string;
+}
+
+export function SubscriptionCard({ signture, handleSelected, isSelected = false }: Props) {
   return (
-    <ContainerCard>
+    <ContainerCard onClick={handleSelected} isSelected={isSelected}>
       <ContainerOne>
         <ImgLogoPlano src="https://uploaddeimagens.com.br/images/004/728/559/original/logo-unidigital-horizontal-amarelo.png?1706790227" />
         <TruncatedText sx={{ textAlign: 'center', fontWeight: 'bold' }}>
-          Assinatura tipo 2 sdasdasdasdasdasdas
+          {signture.name}
         </TruncatedText>
       </ContainerOne>
       <ContainerTwo>
         <Typography fontSize={12} sx={{ textAlign: 'center', textOverflow: 'ellipsis' }}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero ex a repellat similique, error eius velit harum voluptas delectus aut, necessitatibus laudantium. Laudantium ab, aliquid rerum maxime ratione neque possimus.
+          {signture.title}
         </Typography>
       </ContainerTwo>
       <ContainerThree>
         <Typography fontSize={12} sx={{ textAlign: 'center', fontWeight: 'bold' }}>
-          R$ 49,90
+          {signture.price.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})}
         </Typography>
       </ContainerThree>
     </ContainerCard>

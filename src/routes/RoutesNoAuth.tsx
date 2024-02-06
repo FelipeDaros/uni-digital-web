@@ -1,0 +1,21 @@
+import { Route, Routes, Navigate } from "react-router-dom";
+import { FormRegisterClient } from "../screens/FormRegisterClient";
+import { FeedBackScreen } from "../screens/FormRegisterClient/FeedBackScreen";
+import { Login } from "../screens/Login";
+import { ForgoutPassword } from "../screens/Login/ForgoutPassword";
+import { SendForgout } from "../screens/Login/SendForgout";
+
+export function RouteRegisterNoAuth() {
+  return (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/forgout" element={<ForgoutPassword />} />
+      <Route path="/send-forgout" element={<SendForgout />} />
+      <Route path="/register" element={<FormRegisterClient />} />
+      <Route path="/concluded" element={<FeedBackScreen />} />
+      
+      {/* Rota para redirecionar para a página principal quando a rota não existir */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
+  )
+}

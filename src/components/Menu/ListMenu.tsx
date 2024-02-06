@@ -15,31 +15,37 @@ export const mainListItems = (
       <ListItemIcon>
         <DashboardIcon color='primary'/>
       </ListItemIcon>
-      <ListItemText primary="Dashboard" sx={{color: '#fff'}}/>
+      <ListItemText primary="TELA INICIAL" sx={{color: '#fff'}}/>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <ShoppingCartIcon color='primary'/>
       </ListItemIcon>
-      <ListItemText primary="Orders" sx={{color: '#fff'}}/>
+      <ListItemText primary="TELE CONSULTA" sx={{color: '#fff'}}/>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <PeopleIcon color='primary'/>
       </ListItemIcon>
-      <ListItemText primary="Customers" sx={{color: '#fff'}}/>
+      <ListItemText primary="ASSINATURA" sx={{color: '#fff'}}/>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <BarChartIcon color='primary'/>
       </ListItemIcon>
-      <ListItemText primary="Reports" sx={{color: '#fff'}}/>
+      <ListItemText primary="HIST. PAGAMENTOS" sx={{color: '#fff'}}/>
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
         <LayersIcon color='primary'/>
       </ListItemIcon>
-      <ListItemText primary="Integrations" sx={{color: '#fff'}}/>
+      <ListItemText primary="REDE CREDENCIADA" sx={{color: '#fff'}}/>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <LayersIcon color='primary'/>
+      </ListItemIcon>
+      <ListItemText primary="CONSULTA ESPEC." sx={{color: '#fff'}}/>
     </ListItemButton>
   </React.Fragment>
 );
