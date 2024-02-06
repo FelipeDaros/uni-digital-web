@@ -23,6 +23,7 @@ const BoxContaienr = styled.div`
   height: 30px;
   display: flex;
   align-items: center;
+  padding: 10px;
 `
 
 export function VirtualCard() {
@@ -38,6 +39,7 @@ export function VirtualCard() {
         direction="row"
         justifyContent="space-around"
         alignItems="center"
+        spacing={6}
       >
         <Box>
           <Typography sx={{ fontSize: 16 }} color="white">

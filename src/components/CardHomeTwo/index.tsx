@@ -8,7 +8,8 @@ const ContainerCard = styled.div`
   border-radius: 10px;
   display: flex;
   align-items: center;
-  padding: 10px; /* Aumentei o preenchimento para melhorar a aparência */
+  margin: 2px;
+  padding: 10px;
 `;
 
 type Props = {

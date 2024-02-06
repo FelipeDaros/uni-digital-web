@@ -13,7 +13,7 @@ const ContainerCard = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 2px;
-  padding: 4px;
+  padding: 10px;
 `;
 
 type Props = {
