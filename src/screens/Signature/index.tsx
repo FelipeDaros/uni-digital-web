@@ -153,310 +153,312 @@ export function Signature() {
   }
 
   return (
-    <Grid container>
-      <Grid container>
+    <Grid>
+      <Grid>
         <Typography fontWeight="bold" textAlign="center">Altere sua assinatura</Typography>
       </Grid>
-      <Grid container>
+      <Grid container display="flex" justifyContent="center">
         {signaturePlans.map(item => (
           <SubscriptionCard key={item.id} icon="UNIDIGITAL_DUPLO" handleSelected={() => handleSelectedSignature(item.id)} signture={item} isSelected={false} />
         ))}
       </Grid>
       {signature.id &&
-        // @ts-ignore
-        < Form ref={formRef} onSubmit={(dados) => handleSave(dados)}>
-          <Typography gutterBottom fontSize={12} sx={{ marginTop: 3, textAlign: 'center' }}>
-            O titular é a pessoa responsável pelo aceite do contrato e pelo pagamento das mensalidades da Telemedicina Unimed.
-          </Typography>
-          <Avatar sx={{ width: 62, height: 62, marginTop: 6 }} alt="Remy Sharp" src={avatarFile ?? ""} />
-          <CustomButton size="small" sx={{ marginTop: 4 }} variant="contained" startIcon={<CloudUploadIcon color="primary" />}>
-            <Typography color="white">Enviar</Typography>
-            <VisuallyHiddenInput type="file" accept=".png, .jpg, .jpeg" multiple={false} onChange={handleAvatarChange} />
-          </CustomButton>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Nome</LabelText>
-              <VTextField
-                required
-                size="small"
-                id="nome"
-                name="nome"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
+        <Grid >
+          {/* @ts-ignore */}
+          < Form ref={formRef} onSubmit={(dados) => handleSave(dados)}>
+            <Typography gutterBottom fontSize={12} sx={{ marginTop: 3, textAlign: 'center' }}>
+              O titular é a pessoa responsável pelo aceite do contrato e pelo pagamento das mensalidades da Telemedicina Unimed.
+            </Typography>
+            <Avatar sx={{ width: 62, height: 62, marginTop: 6 }} alt="Remy Sharp" src={avatarFile ?? ""} />
+            <CustomButton size="small" sx={{ marginTop: 4 }} color='success' variant="contained" startIcon={<CloudUploadIcon color="primary" />}>
+              <Typography color="white">Enviar</Typography>
+              <VisuallyHiddenInput type="file" accept=".png, .jpg, .jpeg" multiple={false} onChange={handleAvatarChange} />
+            </CustomButton>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Nome</LabelText>
+                <VTextField
+                  required
+                  size="small"
+                  id="nome"
+                  name="nome"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Data nascimento</LabelText>
+                <VTextField
+                  required
+                  size="small"
+                  id="data_nascimento"
+                  name="data_nascimento"
+                  placeholder="Data"
+                  fullWidth
+                  type="date"
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">CPF/CNPJ</LabelText>
+                <VTextField
+                  required
+                  size="small"
+                  id="documento"
+                  name="documento"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                  inputProps={{ maxLength: 11 }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} marginTop={2}>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="N"
+                  name="radio-buttons-group"
+                >
+                  <FormControlLabel value="M" control={<Radio sx={{
+                    color: '#28DA9D',
+                    '&.Mui-checked': {
+                      color: '#28DA9D',
+                    },
+                  }} size="small" />} label="Masculino" />
+                  <FormControlLabel value="F" control={<Radio sx={{
+                    color: '#28DA9D',
+                    '&.Mui-checked': {
+                      color: '#28DA9D',
+                    },
+                  }} size="small" />} label="Feminino" />
+                  <FormControlLabel value="N" control={<Radio sx={{
+                    color: '#28DA9D',
+                    '&.Mui-checked': {
+                      color: '#28DA9D',
+                    },
+                  }} size="small" />} label="Não informar" />
+                </RadioGroup>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Data nascimento</LabelText>
-              <VTextField
-                required
-                size="small"
-                id="data_nascimento"
-                name="data_nascimento"
-                placeholder="Data"
-                fullWidth
-                type="date"
-                color="success"
-                variant="standard"
-              />
+            <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Contatos</Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Fone</LabelText>
+                <VTextField
+                  required
+                  size="small"
+                  id="fone"
+                  name="fone"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Celular</LabelText>
+                <VTextField
+                  required
+                  size="small"
+                  id="celular"
+                  name="celular"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">E-mail</LabelText>
+                <VTextField
+                  type="email"
+                  required
+                  size="small"
+                  id="email"
+                  name="email"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">CPF/CNPJ</LabelText>
-              <VTextField
-                required
-                size="small"
-                id="documento"
-                name="documento"
-                fullWidth
-                color="success"
-                variant="standard"
-                inputProps={{ maxLength: 11 }}
-              />
+            <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Endereço</Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Cep</LabelText>
+                <VTextField
+                  type="text"
+                  required
+                  size="small"
+                  id="cep"
+                  name="cep"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                  inputProps={{ maxLength: 8 }}
+                  onBlur={handleAlterCep}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Endereço</LabelText>
+                <VTextField
+                  type="text"
+                  required
+                  size="small"
+                  id="endereco"
+                  name="endereco"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Número</LabelText>
+                <VTextField
+                  type="number"
+                  required
+                  size="small"
+                  id="numero"
+                  name="numero"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Bairro</LabelText>
+                <VTextField
+                  type="text"
+                  required
+                  size="small"
+                  id="bairro"
+                  name="bairro"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Cidade</LabelText>
+                <VTextField
+                  type="text"
+                  required
+                  size="small"
+                  id="cidade"
+                  name="cidade"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">UF</LabelText>
+                <VSelect
+                  type="text"
+                  required
+                  size="small"
+                  id="uf"
+                  name="uf"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                >
+                  {statesArray.map(item => (
+                    <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                  ))}
+                </VSelect>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={12} marginTop={2}>
+            <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Credenciais</Typography>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Senha</LabelText>
+                <VTextField
+                  type="password"
+                  required
+                  size="small"
+                  id="senha"
+                  name="senha"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} marginTop={2}>
+                <LabelText htmlFor="">Confirmar senha</LabelText>
+                <VTextField
+                  type="password"
+                  required
+                  size="small"
+                  id="confirmarSenha"
+                  name="confirmarSenha"
+                  fullWidth
+                  color="success"
+                  variant="standard"
+                />
+              </Grid>
+            </Grid>
+            <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Dependentes</Typography>
+            <DependentForm />
+            <DependentTable />
+            <CustomButton sx={{ marginTop: 4 }} color='success' variant="contained" startIcon={<CloudUploadIcon color="primary" />}>
+              <Typography color="white">Importar</Typography>
+              <VisuallyHiddenInput type="file" accept=".xlsx, .xls, .ods" multiple={false} onChange={importXLS} />
+            </CustomButton>
+            <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Pagamentos</Typography>
+            <Grid item xs={12} sm={2} marginTop={2}>
               <RadioGroup
                 row
                 aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="N"
                 name="radio-buttons-group"
+                value={typePayment}
+                defaultValue={typePayment}
+                onChange={(value) => handleChangePayment(value.target.value)}
               >
-                <FormControlLabel value="M" control={<Radio sx={{
+                <FormControlLabel value="cartao" control={<Radio sx={{
                   color: '#28DA9D',
                   '&.Mui-checked': {
                     color: '#28DA9D',
                   },
-                }} size="small" />} label="Masculino" />
-                <FormControlLabel value="F" control={<Radio sx={{
+                }} size="small" />} label="Cartão de crédito" />
+                <FormControlLabel value="boleto" control={<Radio sx={{
                   color: '#28DA9D',
                   '&.Mui-checked': {
                     color: '#28DA9D',
                   },
-                }} size="small" />} label="Feminino" />
-                <FormControlLabel value="N" control={<Radio sx={{
+                }} size="small" />} label="Boleto" />
+                <FormControlLabel value="pix" control={<Radio sx={{
                   color: '#28DA9D',
                   '&.Mui-checked': {
                     color: '#28DA9D',
                   },
-                }} size="small" />} label="Não informar" />
+                }} size="small" />} label="PIX" />
               </RadioGroup>
             </Grid>
-          </Grid>
-          <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Contatos</Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Fone</LabelText>
-              <VTextField
-                required
-                size="small"
-                id="fone"
-                name="fone"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Celular</LabelText>
-              <VTextField
-                required
-                size="small"
-                id="celular"
-                name="celular"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">E-mail</LabelText>
-              <VTextField
-                type="email"
-                required
-                size="small"
-                id="email"
-                name="email"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-          </Grid>
-          <Typography fontWeight="bold" sx={{ marginTop: 6 }}>Endereço</Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Cep</LabelText>
-              <VTextField
-                type="text"
-                required
-                size="small"
-                id="cep"
-                name="cep"
-                fullWidth
-                color="success"
-                variant="standard"
-                inputProps={{ maxLength: 8 }}
-                onBlur={handleAlterCep}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Endereço</LabelText>
-              <VTextField
-                type="text"
-                required
-                size="small"
-                id="endereco"
-                name="endereco"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Número</LabelText>
-              <VTextField
-                type="number"
-                required
-                size="small"
-                id="numero"
-                name="numero"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Bairro</LabelText>
-              <VTextField
-                type="text"
-                required
-                size="small"
-                id="bairro"
-                name="bairro"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Cidade</LabelText>
-              <VTextField
-                type="text"
-                required
-                size="small"
-                id="cidade"
-                name="cidade"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">UF</LabelText>
-              <VSelect
-                type="text"
-                required
-                size="small"
-                id="uf"
-                name="uf"
-                fullWidth
-                color="success"
-                variant="standard"
-              >
-                {statesArray.map(item => (
-                  <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
-                ))}
-              </VSelect>
-            </Grid>
-          </Grid>
-          <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Credenciais</Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Senha</LabelText>
-              <VTextField
-                type="password"
-                required
-                size="small"
-                id="senha"
-                name="senha"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} marginTop={2}>
-              <LabelText htmlFor="">Confirmar senha</LabelText>
-              <VTextField
-                type="password"
-                required
-                size="small"
-                id="confirmarSenha"
-                name="confirmarSenha"
-                fullWidth
-                color="success"
-                variant="standard"
-              />
-            </Grid>
-          </Grid>
-          <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Dependentes</Typography>
-          <DependentForm />
-          <DependentTable />
-          <CustomButton sx={{ marginTop: 4 }} variant="contained" startIcon={<CloudUploadIcon color="primary" />}>
-            <Typography color="white">Importar</Typography>
-            <VisuallyHiddenInput type="file" accept=".xlsx, .xls, .ods" multiple={false} onChange={importXLS} />
-          </CustomButton>
-          <Typography gutterBottom fontWeight="bold" sx={{ marginTop: 6 }}>Pagamentos</Typography>
-          <Grid item xs={12} sm={2} marginTop={2}>
-            <RadioGroup
-              row
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="radio-buttons-group"
-              value={typePayment}
-              defaultValue={typePayment}
-              onChange={(value) => handleChangePayment(value.target.value)}
-            >
-              <FormControlLabel value="cartao" control={<Radio sx={{
-                color: '#28DA9D',
-                '&.Mui-checked': {
-                  color: '#28DA9D',
-                },
-              }} size="small" />} label="Cartão de crédito" />
-              <FormControlLabel value="boleto" control={<Radio sx={{
-                color: '#28DA9D',
-                '&.Mui-checked': {
-                  color: '#28DA9D',
-                },
-              }} size="small" />} label="Boleto" />
-              <FormControlLabel value="pix" control={<Radio sx={{
-                color: '#28DA9D',
-                '&.Mui-checked': {
-                  color: '#28DA9D',
-                },
-              }} size="small" />} label="PIX" />
-            </RadioGroup>
-          </Grid>
-          {typePayment === 'cartao' && <CreditCard />}
-          <Typography gutterBottom sx={{ marginTop: 6 }}>Os seus dados pessoais serão utilizados para processar a sua compra, apoiar a sua experiência em todo este site e para outros fins descritos na nossa Política de Privacidade.</Typography>
-          <Grid container direction="row" sx={{ alignItems: 'center', marginTop: 6 }}>
-            <Grid item xs={2} sm={1}>
-              <Checkbox
-                id="acceptTerms"
-                name="acceptTerms"
-                value={acceptTerms}
-                onChange={() => handleAcceptTerms()}
-                sx={{
-                  color: '#28DA9D',
-                  '&.Mui-checked': {
+            {typePayment === 'cartao' && <CreditCard />}
+            <Typography gutterBottom sx={{ marginTop: 6 }}>Os seus dados pessoais serão utilizados para processar a sua compra, apoiar a sua experiência em todo este site e para outros fins descritos na nossa Política de Privacidade.</Typography>
+            <Grid container direction="row" sx={{ alignItems: 'center', marginTop: 6 }}>
+              <Grid item xs={2} sm={1}>
+                <Checkbox
+                  id="acceptTerms"
+                  name="acceptTerms"
+                  value={acceptTerms}
+                  onChange={() => handleAcceptTerms()}
+                  sx={{
                     color: '#28DA9D',
-                  },
-                }}
-              />
+                    '&.Mui-checked': {
+                      color: '#28DA9D',
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={10} sm={8}>
+                <Typography>Aceito os termos contidos em contrato. Download do contrato (PDF)</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={10} sm={8}>
-              <Typography>Aceito os termos contidos em contrato. Download do contrato (PDF)</Typography>
-            </Grid>
-          </Grid>
-          <CustomButton sx={{ marginTop: 10, marginBottom: 5 }} disabled={isLoading} variant="outlined" color="success" type="submit">Finalizar compra</CustomButton>
-        </Form>
+            <CustomButton sx={{ marginTop: 10, marginBottom: 5 }} disabled={isLoading} variant="outlined" color="success" type="submit">Alterar assinatura</CustomButton>
+          </Form>
+        </Grid>
       }
     </Grid >
   )

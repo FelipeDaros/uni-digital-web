@@ -2,9 +2,7 @@ import { Button } from "@mui/material";
 import styled from "styled-components";
 
 
-export const CustomButton = styled(Button).attrs({
-  color: 'success'
-})`
+export const CustomButton = styled(Button)`
 
   @media (max-width: 900px) {
     margin-top: 10px;

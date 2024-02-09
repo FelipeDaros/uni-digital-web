@@ -57,7 +57,7 @@ export function ForgoutPassword() {
           />
           <Grid container justifyContent="center">
             <Grid item marginTop={2}>
-              <CustomButton type='submit' size="large" variant="contained">
+              <CustomButton type='submit' color='success' size="large" variant="contained">
                 <Typography fontSize={14} color="white" >
                   Recuperar Senha
                 </Typography>
