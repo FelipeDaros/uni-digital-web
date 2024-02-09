@@ -31,7 +31,7 @@ export function VirtualCard() {
     <ContainerCard>
       <BoxContaienr>
         <Typography sx={{ fontSize: 18, paddingLeft: 1 }} color="white">
-          Nome do plano
+          Nome do assinatura
         </Typography>
       </BoxContaienr>
       <Stack

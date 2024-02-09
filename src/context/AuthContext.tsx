@@ -6,7 +6,6 @@ type AuthContextDataProps = {
   user: IUser | null;
   signIn(nome: string, senha: string): Promise<any>;
   signOut(): Promise<any>;
-  handleChecked(): Promise<any>;
 };
 
 const AuthContext = createContext<AuthContextDataProps>(
@@ -28,7 +27,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
 
       if (storagedUser) {
         const userParsed = JSON.parse(storagedUser);
-        api.defaults.headers["Authorization"] = `Bearer ${userParsed.token}`;
+        // api.defaults.headers["Authorization"] = `Bearer ${userParsed.token}`;
         setUser(userParsed);
       }
       setLoading(false);
@@ -42,17 +41,15 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
     setUser(null);
   }
 
-  async function handleChecked() {
-    const storagedUser = localStorage.getItem("@UNIDIGITAL:user");
-
-    const userParsed: IUser = JSON.parse(storagedUser as any);
-
-    setUser(userParsed);
-
-    localStorage.setItem("@UNIDIGITAL:user", JSON.stringify(userParsed));
-  }
-
   async function signIn(nome: string, senha: string) {
+    const data = {
+      id: '1',
+      name: "Felipe"
+    }
+
+    localStorage.setItem("@UNIDIGITAL:user", JSON.stringify(data));
+    setUser(data);
+    return;
     try {
       const { data } = await api.post("/auth", {
         nome,
@@ -79,7 +76,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({ children }) =
   if(loading) return <p>Loading..</p>
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, handleChecked }}>
+    <AuthContext.Provider value={{ user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );

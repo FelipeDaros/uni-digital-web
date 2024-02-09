@@ -10,13 +10,22 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import logo from '../../assets/logo-unidigital-horizontal-amarelo.png'
-import { mainListItems } from './ListMenu';
 import { useAuth } from '../../context/AuthContext';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ExitToApp from '@mui/icons-material/ExitToApp';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PeopleIcon from '@mui/icons-material/People';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import LayersIcon from '@mui/icons-material/Layers';
+import { useNavigate } from 'react-router-dom';
+
 
 const drawerWidth: number = 240;
 
@@ -64,7 +73,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         width: theme.spacing(8),
         [theme.breakpoints.down('sm')]: {
           width: 0,
-          display:'none',
+          display: 'none',
         },
       }),
     },
@@ -74,6 +83,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 //@ts-ignore
 export const DefaultMenu: React.FC = ({ children }) => {
   const { signOut } = useAuth();
+  const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(false);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -85,7 +96,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
         <Toolbar
           sx={{
             pr: '24px',
-            backgroundColor: '#28DA9D', // Definindo a cor de fundo do topo do AppBar
+            backgroundColor: '#28DA9D',
           }}
         >
           <IconButton
@@ -98,7 +109,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
               ...(open && { display: 'none' }),
             }}
           >
-            <MenuIcon color='primary'/>
+            <MenuIcon color='primary' />
           </IconButton>
           <img src={logo} style={{ width: 100 }} />
           <Typography
@@ -108,9 +119,8 @@ export const DefaultMenu: React.FC = ({ children }) => {
           >
             FELIPE DAROS
           </Typography>
-          
           <IconButton color="inherit" onClick={() => signOut()}>
-            <ExitToApp color='primary'/>
+            <ExitToApp color='primary' />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -120,7 +130,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            backgroundColor: '#28DA9D', // Definindo a cor de fundo da barra lateral (Drawer)
+            backgroundColor: '#28DA9D',
             px: [1],
           }}
         >
@@ -130,32 +140,72 @@ export const DefaultMenu: React.FC = ({ children }) => {
         </Toolbar>
         <Divider />
         <List component="nav" sx={{ backgroundColor: '#28DA9D', height: '100%', border: 'none', overflow: 'hidden' }}>
-          {mainListItems}
+          <React.Fragment>
+            <ListItemButton onClick={() => navigate('/')}>
+              <ListItemIcon>
+                <DashboardIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary="TELA INICIAL" sx={{ color: '#fff' }} />
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <ShoppingCartIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary="TELE CONSULTA" sx={{ color: '#fff' }} />
+            </ListItemButton>
+            <ListItemButton onClick={() => navigate('/signature')}>
+              <ListItemIcon>
+                <PeopleIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary="ASSINATURA" sx={{ color: '#fff' }} />
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <BarChartIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary="HIST. PAGAMENTOS" sx={{ color: '#fff' }} />
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <LayersIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary="REDE CREDENCIADA" sx={{ color: '#fff' }} />
+            </ListItemButton>
+            <ListItemButton>
+              <ListItemIcon>
+                <LayersIcon color='primary' />
+              </ListItemIcon>
+              <ListItemText primary="CONSULTA ESPEC." sx={{ color: '#fff' }} />
+            </ListItemButton>
+          </React.Fragment>
         </List>
       </Drawer>
       <Box
         component="main"
         sx={{
-          backgroundColor: '#ffffff', // Definindo a cor de fundo do conteúdo principal
+          backgroundColor: '#ffffff',
           height: '100vh',
           overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
       >
         <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
           {children}
         </Container>
+        <IconButton
+          color="primary"
+          sx={{
+            position: 'fixed',
+            bottom: '16px',
+            right: '16px',
+          }}
+        >
+          <WhatsAppIcon sx={{ fontSize: 30 }} color='success' />
+        </IconButton>
       </Box>
-      <IconButton
-        color="primary"
-        sx={{
-          position: 'fixed',
-          bottom: '16px',
-          right: '16px',
-        }}
-      >
-        <WhatsAppIcon sx={{fontSize: 30}} color='success'/>
-      </IconButton>
     </Box>
   );
 };

@@ -5,10 +5,11 @@ import { PermIdentity, VpnKey } from '@mui/icons-material';
 import { useState } from 'react';
 import { SucessToast } from '../../components/Toast/SucessToast';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 export function Login() {
   const navigate = useNavigate();
-
+  const { signIn } = useAuth();
   const [alert, setAlert] = useState(false);
 
   const handleSubmit = (event: any) => {
@@ -19,6 +20,9 @@ export function Login() {
       setAlert(true);
       setTimeout(() => { setAlert(false) }, 3000);
     }
+    
+    //@ts-ignore
+    signIn(data.get('user'), data.get('password'));
 
   };
 

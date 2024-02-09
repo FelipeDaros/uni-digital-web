@@ -14,13 +14,12 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import * as XLSX from 'xlsx'
 import { CustomButton } from "../../../../components/Button";
-import axios from "axios";
 
 type PropsXLSX = {
   nome: string;
   documento: string;
   email: string;
-  dataNascimento: string
+  data_nascimento: string
   sexo: string;
 }
 
@@ -97,7 +96,7 @@ export function StepTwo() {
 
         if (!isDependentExists) {
           handleAddDependente({
-            dataNascimento: item.dataNascimento,
+            data_nascimento: item.data_nascimento,
             documento: item.documento,
             email: item.email,
             nome: item.nome,
@@ -113,10 +112,27 @@ export function StepTwo() {
     if (formRef.current?.getData()?.senha !== formRef.current?.getData()?.confirmarSenha) {
       window.alert('Senhas não conferem')
     }
+
     const formData = new FormData();
-    formData.append('dados', dados);
+
+    // Adiciona cada chave e valor do objeto 'dados' ao FormData
+    Object.entries(dados).forEach(([key, value]) => {
+      //@ts-ignore
+      formData.append(key, value);
+    });
+
     //@ts-ignore
     formData.append('signature', signature);
+
+    // Adiciona a foto ao FormData
+    if (avatar) {
+      formData.append('foto', avatar); // 'avatar' é o nome do campo no FormData que conterá a foto
+    }
+
+    // Agora você pode acessar os valores do FormData
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
   }
 
   return (
@@ -149,8 +165,8 @@ export function StepTwo() {
             <VTextField
               required
               size="small"
-              id="dataNascimento"
-              name="dataNascimento"
+              id="data_nascimento"
+              name="data_nascimento"
               placeholder="Data"
               fullWidth
               type="date"

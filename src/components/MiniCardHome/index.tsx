@@ -3,8 +3,8 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import styled from "styled-components"
 
 const ContainerCard = styled.div`
-  width: 150px;
-  max-width: 150px;
+  width: 173px;
+  max-width: 173px;
   height: 150px;
   max-height: 150px;
   background-color: #28DA9D;

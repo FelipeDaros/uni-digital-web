@@ -1,9 +1,7 @@
 import { Grid, IconButton, MenuItem, Select, TextField } from "@mui/material";
-import { LabelText } from "./style";
-
 import AddIcon from '@mui/icons-material/Add';
-import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
 import { useState } from "react";
+import { LabelText } from "../FormRegisterClient/components/StepTwo/style";
 
 export function DependentForm() {
   const [formularioDependente, setFormularioDependente] = useState({
@@ -13,10 +11,6 @@ export function DependentForm() {
     email: "",
     sexo: "",
   });
-
-  const [handleAddDependente] = FormRegisterClientStore((state) => [
-    state.handleAddDependente
-  ]);
 
   function handleAdd() {
     //@ts-ignore

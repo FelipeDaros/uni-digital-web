@@ -82,7 +82,3 @@ export const ContainerThree = styled.div`
     width: 100%;
   }
 `
-
-export const ImgLogoPlano = styled.img`
-  width: 100px;
-`

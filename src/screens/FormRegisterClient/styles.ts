@@ -9,10 +9,6 @@ export const CenteredContainer = styled.div`
   background-color: #F5F5F5;
   padding-bottom: 100px;
   padding-top: 20px;
-
-  @media (max-width: 900px) {
-    margin-bottom: 80px;
-  }
 `;
 
 export const ImgLogo = styled.img`

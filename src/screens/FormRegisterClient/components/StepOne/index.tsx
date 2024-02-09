@@ -12,30 +12,19 @@ type SignatureProps = {
   title: string;
 }
 
-const signaturePlans: SignatureProps[] = [
-  { id: 1, name: "Plano Básico", price: 100.25, title: 'lorem' },
-  { id: 2, name: "Plano Standard", price: 450.2, title: 'teste' },
-  { id: 3, name: "Plano Premium", price: 1323.3, title: 'BEBEBE' },
-  { id: 4, name: "Plano", price: 200, title: 'TATA' },
-  { id: 5, name: "Plano B", price: 500, title: 'TETE' },
-  // Adicione mais planos conforme necessário
-]
+const signaturePlans: SignatureProps = { id: 1, name: "Plano Básico", price: 100.25, title: 'lorem' }
 
 export function StepOne() {
-  const [signature, isLoading, handleSelectedSignature] = FormRegisterClientStore((state) => [state.signature, state.isLoading, state.handleSelectedSignature]);
+  const [signature, isLoading, handleSelectedSignature, step, handleNextStep] = FormRegisterClientStore((state) => [state.signature, state.isLoading, state.handleSelectedSignature, state.step, state.handleNextStep]);
 
   function SignatureSelected(dados: SignatureProps) {
     handleSelectedSignature(dados);
   }
 
-  console.log(signature)
-
   return (
     <CenteredContainer>
       <ContainerSubscription>
-        {signaturePlans.map(item => (
-          <SubscriptionCard key={item.id} signture={item} handleSelected={() => SignatureSelected(item)} isSelected={item.id === signature.id} />
-        ))}
+        <SubscriptionCard icon="UNIDIGITAL_INIDIVIDUAL" signture={signaturePlans} handleSelected={() => SignatureSelected(signaturePlans)} isSelected={true} />
       </ContainerSubscription>
       <ContainerText>
         <Typography fontSize={12} color='white'>
@@ -60,6 +49,9 @@ export function StepOne() {
           Total <strong>{signature?.total} R$</strong>
         </Typography>
       </ContainerFooter>
+      {step !== 1 && <CustomButton disabled={isLoading} variant='contained' color='success' onClick={handleNextStep} sx={{ marginLeft: 2 }}>
+        <Typography fontWeight="bold" color="white">Pŕoximo</Typography>
+      </CustomButton>}
     </CenteredContainer>
   )
 }
