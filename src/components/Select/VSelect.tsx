@@ -1,34 +1,33 @@
-import { SelectChangeEvent, SelectProps, Select } from "@mui/material";
-import { useField } from "@unform/core";
-import { useEffect, useState } from "react";
+import { SelectChangeEvent, SelectProps, Select } from "@mui/material"
+import { useField } from "@unform/core"
+import { useEffect, useState } from "react"
 
 interface VSelectProps extends SelectProps {
-  name: string;
+  name: string
 }
 
 export function VSelect({ name, ...rest }: VSelectProps) {
-  const { fieldName, registerField, defaultValue, error } = useField(name);
+  const { fieldName, registerField, defaultValue, error } = useField(name)
 
-  const [value, setValue] = useState<string | number | readonly string[] | undefined>(defaultValue || '');
+  const [value, setValue] = useState<
+    string | number | readonly string[] | undefined
+  >(defaultValue || "")
 
   useEffect(() => {
     registerField({
       name: fieldName,
       getValue: () => value,
       setValue: (_, newValue) => setValue(newValue),
-    });
-  }, [registerField, fieldName, value]);
+    })
+  }, [registerField, fieldName, value])
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {
-    setValue(event.target.value as string | number | readonly string[] | undefined);
-  };
+    setValue(
+      event.target.value as string | number | readonly string[] | undefined,
+    )
+  }
 
   return (
-    <Select
-      error={!!error}
-      value={value}
-      onChange={handleChange}
-      {...rest}
-    />
-  );
+    <Select error={!!error} value={value} onChange={handleChange} {...rest} />
+  )
 }

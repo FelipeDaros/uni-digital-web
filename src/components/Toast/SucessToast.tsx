@@ -1,8 +1,8 @@
-import { Alert } from "@mui/material";
-import styled from "styled-components";
+import { Alert } from "@mui/material"
+import styled from "styled-components"
 
 type Props = {
-  type?: 'warning' | 'error',
+  type?: "warning" | "error"
   state: boolean
 }
 
@@ -12,7 +12,7 @@ const StyledToast = styled.div`
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000; /* Ajuste a ordem de empilhamento conforme necessário */
-`;
+`
 
 export function SucessToast({ state }: Props) {
   return (
@@ -25,5 +25,5 @@ export function SucessToast({ state }: Props) {
         </StyledToast>
       ) : null}
     </>
-  );
+  )
 }

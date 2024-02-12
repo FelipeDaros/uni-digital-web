@@ -1,9 +1,9 @@
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   /* Você pode definir diferentes pesos para diferentes elementos se desejar */
 }
 
 h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 700; /* Por exemplo, negrito (700) para títulos */
 }

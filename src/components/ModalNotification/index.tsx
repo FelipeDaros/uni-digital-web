@@ -54,14 +54,12 @@ type Props = {
   title: string
   description: string
   changeState: () => void
-  onOk: () => void
 }
 
-export function VModalConfirm({
+export function VModalNotification({
   changeState,
   isState,
   description,
-  onOk,
   title,
 }: Props) {
   return (
@@ -74,12 +72,9 @@ export function VModalConfirm({
           {description}
         </p>
         <Grid container direction="row" gap={3}>
-          <CustomButton variant="outlined" onClick={changeState} color="error">
-            Cancelar
-          </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={onOk}
+            onClick={changeState}
             color="success"
             sx={{ color: "#fff" }}
           >

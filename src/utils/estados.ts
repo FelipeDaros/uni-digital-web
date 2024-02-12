@@ -1,4 +1,8 @@
-export const statesArray: { value: string; label: string; disabled?: boolean }[] = [
+export const statesArray: {
+  value: string
+  label: string
+  disabled?: boolean
+}[] = [
   { value: "vazio", label: "Selecionar", disabled: true },
   { value: "AC", label: "Acre" },
   { value: "AL", label: "Alagoas" },
@@ -27,4 +31,4 @@ export const statesArray: { value: string; label: string; disabled?: boolean }[]
   { value: "SP", label: "São Paulo" },
   { value: "SE", label: "Sergipe" },
   { value: "TO", label: "Tocantins" },
-];
+]

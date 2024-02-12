@@ -1,21 +1,21 @@
-import { Box, Stack, Typography } from "@mui/material";
-import styled from "styled-components";
+import { Box, Stack, Typography } from "@mui/material"
+import styled from "styled-components"
 
 const ContainerCard = styled.div`
   width: 350px;
   height: 150px;
-  background-color: #28DA9D;
+  background-color: #28da9d;
   border-radius: 10px;
   display: flex;
   align-items: center;
   margin: 2px;
   padding: 10px;
-`;
+`
 
 type Props = {
-  valor: number;
-  data: string;
-};
+  valor: number
+  data: string
+}
 
 export function CardHomeTwo({ valor, data }: Props) {
   return (
@@ -30,9 +30,12 @@ export function CardHomeTwo({ valor, data }: Props) {
           </Typography>
         </Box>
         <Typography sx={{ fontSize: 24 }} color="white">
-          {valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}
+          {valor.toLocaleString("pt-br", {
+            style: "currency",
+            currency: "BRL",
+          })}
         </Typography>
       </Stack>
     </ContainerCard>
-  );
+  )
 }

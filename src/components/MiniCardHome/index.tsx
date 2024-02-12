@@ -1,5 +1,5 @@
-import { Icon, Typography } from "@mui/material";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { Icon, Typography } from "@mui/material"
+import { OverridableComponent } from "@mui/material/OverridableComponent"
 import styled from "styled-components"
 
 const ContainerCard = styled.div`
@@ -7,7 +7,7 @@ const ContainerCard = styled.div`
   max-width: 173px;
   height: 150px;
   max-height: 150px;
-  background-color: #28DA9D;
+  background-color: #28da9d;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -20,18 +20,22 @@ const ContainerCard = styled.div`
     cursor: pointer;
     opacity: 0.8;
   }
-`;
+`
 
 type Props = {
-  icon: OverridableComponent<any>,
-  title: string;
+  icon: OverridableComponent<any>
+  title: string
 }
 
 export function MiniCardHome({ icon: Icon, title }: Props) {
   return (
     <ContainerCard>
-      <Icon sx={{ fontSize: 42, color: '#fff' }} />
-      <Typography sx={{ fontSize: 14, marginTop: 2 }} textAlign="center" color="white">
+      <Icon sx={{ fontSize: 42, color: "#fff" }} />
+      <Typography
+        sx={{ fontSize: 14, marginTop: 2 }}
+        textAlign="center"
+        color="white"
+      >
         {title}
       </Typography>
     </ContainerCard>

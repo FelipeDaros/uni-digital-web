@@ -1,12 +1,12 @@
-import { Box, Stack, Typography } from "@mui/material";
-import styled from "styled-components";
+import { Box, Stack, Typography } from "@mui/material"
+import styled from "styled-components"
 
 const ContainerCard = styled.div`
   width: 350px;
   max-width: 350px;
   height: 150px;
   max-height: 150px;
-  background-color: #28DA9D;
+  background-color: #28da9d;
   border-radius: 10px;
   margin: 2px;
 
@@ -14,7 +14,7 @@ const ContainerCard = styled.div`
     cursor: pointer;
     opacity: 0.8;
   }
-`;
+`
 
 const BoxContaienr = styled.div`
   background-color: #317267;

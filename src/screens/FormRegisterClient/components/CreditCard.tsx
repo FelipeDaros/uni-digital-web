@@ -1,10 +1,8 @@
-import { FormControl, Grid, TextField } from "@mui/material";
-
+import { FormControl, Grid, TextField } from "@mui/material"
 
 export function CreditCard() {
-
   return (
-    <FormControl sx={{marginTop: 2}}>
+    <FormControl sx={{ marginTop: 2 }}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={3}>
           <TextField
@@ -71,5 +69,5 @@ export function CreditCard() {
         </Grid>
       </Grid>
     </FormControl>
-  );
+  )
 }

@@ -1,9 +1,9 @@
 import { IconButton, TextField, Typography } from "@mui/material"
 import styled from "styled-components"
 
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
-import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
+import AddIcon from "@mui/icons-material/Add"
+import RemoveIcon from "@mui/icons-material/Remove"
+import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 
 export const ContainerDependentes = styled.div`
   width: 80%;
@@ -18,7 +18,7 @@ export const ContainerDependentes = styled.div`
     flex-direction: column;
     align-items: center;
   }
-`;
+`
 
 export const ContainerOne = styled.div`
   width: 50%;
@@ -28,7 +28,7 @@ export const ContainerOne = styled.div`
   align-items: center;
   flex-direction: column;
   overflow: hidden;
-  
+
   @media (max-width: 900px) {
     width: 80%;
     flex-direction: column;
@@ -36,7 +36,7 @@ export const ContainerOne = styled.div`
     margin-top: 10px;
     text-align: center;
   }
-`;
+`
 
 export const ContainerTwo = styled.div`
   width: 15%;
@@ -54,7 +54,7 @@ export const ContainerTwo = styled.div`
     margin-top: 10px;
     text-align: center;
   }
-`;
+`
 
 export const ContainerThree = styled.div`
   width: 25%;
@@ -79,27 +79,43 @@ export const TruncatedText = styled(Typography)`
   overflow: hidden;
   width: 100%;
   padding: 2px;
-`;
+`
 
 type Props = {
-  dependents: number | undefined;
+  dependents: number | undefined
 }
 
 export function ContainerDependentesComponent({ dependents }: Props) {
-  const [handleAddDependents, handleRemoveDependents, isLoading] = FormRegisterClientStore((state) => [state.handleAddDependents, state.handleRemoveDependents, state.isLoading]);
+  const [handleAddDependents, handleRemoveDependents, isLoading] =
+    FormRegisterClientStore((state) => [
+      state.handleAddDependents,
+      state.handleRemoveDependents,
+      state.isLoading,
+    ])
 
   return (
     <ContainerDependentes>
       <ContainerOne>
         <TruncatedText fontSize={12}>
-          Além dos dependentes contemplado pela assinatura escolhida, você pode adicionar extras em sua assinatura
+          Além dos dependentes contemplado pela assinatura escolhida, você pode
+          adicionar extras em sua assinatura
         </TruncatedText>
       </ContainerOne>
       <ContainerTwo>
-        <IconButton disabled={isLoading} onClick={() => handleRemoveDependents()}>
+        <IconButton
+          disabled={isLoading}
+          onClick={() => handleRemoveDependents()}
+        >
           <RemoveIcon color="success" sx={{ fontSize: 18 }} />
         </IconButton>
-        <TextField disabled={isLoading} type="number" value={dependents} sx={{borderColor: '#A8B0B5'}} size="small" variant="outlined" />
+        <TextField
+          disabled={isLoading}
+          type="number"
+          value={dependents}
+          sx={{ borderColor: "#A8B0B5" }}
+          size="small"
+          variant="outlined"
+        />
         <IconButton disabled={isLoading} onClick={() => handleAddDependents()}>
           <AddIcon color="success" sx={{ fontSize: 18 }} />
         </IconButton>
@@ -108,9 +124,7 @@ export function ContainerDependentesComponent({ dependents }: Props) {
         <TruncatedText fontSize={12}>
           Adicional por dependente R$ 0,00 / mës
         </TruncatedText>
-        <TruncatedText fontSize={12}>
-          Total R$ 0,00 / mës
-        </TruncatedText>
+        <TruncatedText fontSize={12}>Total R$ 0,00 / mës</TruncatedText>
       </ContainerThree>
     </ContainerDependentes>
   )

@@ -1,31 +1,40 @@
-import { Box, Button, CssBaseline, Grid, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
-import logo from '../../assets/logo-unidigital-horizontal-amarelo.png';
-import { ContainerBox, Image, StyledContainer } from './styles';
-import { PermIdentity, VpnKey } from '@mui/icons-material';
-import { useState } from 'react';
-import { SucessToast } from '../../components/Toast/SucessToast';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import {
+  Box,
+  Button,
+  CssBaseline,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material"
+import logo from "../../assets/logo-unidigital-horizontal-amarelo.png"
+import { ContainerBox, Image, StyledContainer } from "./styles"
+import { PermIdentity, VpnKey } from "@mui/icons-material"
+import { useState } from "react"
+import { SucessToast } from "../../components/Toast/SucessToast"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../../context/AuthContext"
 
 export function Login() {
-  const navigate = useNavigate();
-  const { signIn } = useAuth();
-  const [alert, setAlert] = useState(false);
+  const navigate = useNavigate()
+  const { signIn } = useAuth()
+  const [alert, setAlert] = useState(false)
 
   const handleSubmit = (event: any) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
 
-    if (!data.get('user')) {
-      setAlert(true);
-      setTimeout(() => { setAlert(false) }, 3000);
+    if (!data.get("user")) {
+      setAlert(true)
+      setTimeout(() => {
+        setAlert(false)
+      }, 3000)
     }
-    
+
     //@ts-ignore
-    signIn(data.get('user'), data.get('password'));
-
-  };
-
+    signIn(data.get("user"), data.get("password"))
+  }
 
   return (
     <StyledContainer>
@@ -34,7 +43,15 @@ export function Login() {
       <ContainerBox>
         <SucessToast state={alert} />
         <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
-          <Typography fontWeight="bold" fontSize={22} marginBottom={6} color="#28DA9D" textAlign="center">Área do cliente</Typography>
+          <Typography
+            fontWeight="bold"
+            fontSize={22}
+            marginBottom={6}
+            color="#28DA9D"
+            textAlign="center"
+          >
+            Área do cliente
+          </Typography>
           <TextField
             margin="normal"
             required
@@ -73,7 +90,7 @@ export function Login() {
           />
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <IconButton onClick={() => navigate('/forgout')}>
+              <IconButton onClick={() => navigate("/forgout")}>
                 <Typography color="GrayText">Esqueci a senha</Typography>
               </IconButton>
             </Grid>
@@ -84,10 +101,12 @@ export function Login() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color='success'
+                color="success"
                 sx={{ mt: 3, mb: 2, borderRadius: 2 }}
               >
-                <Typography textAlign="center" color="white">Entrar</Typography>
+                <Typography textAlign="center" color="white">
+                  Entrar
+                </Typography>
               </Button>
             </Grid>
           </Grid>

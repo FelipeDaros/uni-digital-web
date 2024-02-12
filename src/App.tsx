@@ -1,8 +1,8 @@
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import { theme } from './styled'
-import { AuthContextProvider } from './context/AuthContext'
-import { Router } from './routes/Router'
-import { DrawerProvider } from './context/DrawerContext'
+import { CssBaseline, ThemeProvider } from "@mui/material"
+import { theme } from "./styled"
+import { AuthContextProvider } from "./context/AuthContext"
+import { Router } from "./routes/Router"
+import { DrawerProvider } from "./context/DrawerContext"
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
           <CssBaseline />
           <Router />
         </DrawerProvider>
-      </AuthContextProvider >
+      </AuthContextProvider>
     </ThemeProvider>
   )
 }

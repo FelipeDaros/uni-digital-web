@@ -1,9 +1,9 @@
-import { Grid, IconButton, MenuItem, Select, TextField } from "@mui/material";
-import { LabelText } from "./style";
+import { Grid, IconButton, MenuItem, Select, TextField } from "@mui/material"
+import { LabelText } from "./style"
 
-import AddIcon from '@mui/icons-material/Add';
-import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
-import { useState } from "react";
+import AddIcon from "@mui/icons-material/Add"
+import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
+import { useState } from "react"
 
 export function DependentForm() {
   const [formularioDependente, setFormularioDependente] = useState({
@@ -12,23 +12,23 @@ export function DependentForm() {
     data_nascimento: "",
     email: "",
     sexo: "",
-  });
+  })
 
   const [handleAddDependente] = FormRegisterClientStore((state) => [
-    state.handleAddDependente
-  ]);
+    state.handleAddDependente,
+  ])
 
   function handleAdd() {
     //@ts-ignore
-    handleAddDependente(formularioDependente);
+    handleAddDependente(formularioDependente)
 
     setFormularioDependente({
       data_nascimento: "",
       documento: "",
       email: "",
       nome: "",
-      sexo: ""
-    });
+      sexo: "",
+    })
   }
 
   return (
@@ -43,7 +43,12 @@ export function DependentForm() {
           color="success"
           variant="standard"
           value={formularioDependente.nome}
-          onChange={(e) => setFormularioDependente((state) => ({ ...state, nome: e.target.value }))}
+          onChange={(e) =>
+            setFormularioDependente((state) => ({
+              ...state,
+              nome: e.target.value,
+            }))
+          }
         />
       </Grid>
       <Grid item xs={12} sm={2} marginTop={2}>
@@ -56,7 +61,12 @@ export function DependentForm() {
           color="success"
           variant="standard"
           value={formularioDependente.documento}
-          onChange={(e) => setFormularioDependente((state) => ({ ...state, documento: e.target.value }))}
+          onChange={(e) =>
+            setFormularioDependente((state) => ({
+              ...state,
+              documento: e.target.value,
+            }))
+          }
         />
       </Grid>
       <Grid item xs={12} sm={2} marginTop={2}>
@@ -69,7 +79,12 @@ export function DependentForm() {
           color="success"
           variant="standard"
           value={formularioDependente.data_nascimento} // Updated property name
-          onChange={(e) => setFormularioDependente((state) => ({ ...state, data_nascimento: e.target.value }))} // Updated property name
+          onChange={(e) =>
+            setFormularioDependente((state) => ({
+              ...state,
+              data_nascimento: e.target.value,
+            }))
+          } // Updated property name
         />
       </Grid>
       <Grid item xs={12} sm={2} marginTop={2}>
@@ -82,7 +97,12 @@ export function DependentForm() {
           color="success"
           variant="standard"
           value={formularioDependente.sexo}
-          onChange={(e) => setFormularioDependente((state) => ({ ...state, sexo: e.target.value }))}
+          onChange={(e) =>
+            setFormularioDependente((state) => ({
+              ...state,
+              sexo: e.target.value,
+            }))
+          }
         >
           <MenuItem value="M">Masculino</MenuItem>
           <MenuItem value="F">Feminino</MenuItem>
@@ -99,11 +119,26 @@ export function DependentForm() {
           color="success"
           variant="standard"
           value={formularioDependente.email}
-          onChange={(e) => setFormularioDependente((state) => ({ ...state, email: e.target.value }))}
+          onChange={(e) =>
+            setFormularioDependente((state) => ({
+              ...state,
+              email: e.target.value,
+            }))
+          }
         />
       </Grid>
-      <Grid item xs={12} sm={1} marginTop={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <IconButton onClick={handleAdd} size="small" sx={{ backgroundColor: '#28DA9D' }}>
+      <Grid
+        item
+        xs={12}
+        sm={1}
+        marginTop={2}
+        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        <IconButton
+          onClick={handleAdd}
+          size="small"
+          sx={{ backgroundColor: "#28DA9D" }}
+        >
           <AddIcon color="primary" sx={{ fontSize: 16 }} />
         </IconButton>
       </Grid>

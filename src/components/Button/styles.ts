@@ -1,13 +1,11 @@
-import { Button } from "@mui/material";
-import styled from "styled-components";
-
+import { Button } from "@mui/material"
+import styled from "styled-components"
 
 export const CustomButton = styled(Button)`
-
   @media (max-width: 900px) {
     margin-top: 10px;
     margin-bottom: 10px;
-    
-    width: 80%
+
+    width: 80%;
   }
-`;
+`

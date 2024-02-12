@@ -1,9 +1,20 @@
-import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import RemoveIcon from '@mui/icons-material/Remove';
-import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
+import {
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material"
+import RemoveIcon from "@mui/icons-material/Remove"
+import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 
 export function DependentTable() {
-  const [dependentes, handleRemoveDependente] = FormRegisterClientStore((state) => [state.dependentes, state.handleRemoveDependente]);
+  const [dependentes, handleRemoveDependente] = FormRegisterClientStore(
+    (state) => [state.dependentes, state.handleRemoveDependente],
+  )
 
   return (
     <TableContainer component={Paper}>
@@ -21,11 +32,15 @@ export function DependentTable() {
         <TableBody>
           {dependentes.map((row) => (
             <TableRow
-              key={`${row.documento}`+`${row.nome}`}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              key={`${row.documento}` + `${row.nome}`}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell>
-                <IconButton onClick={() => handleRemoveDependente(row.documento)} size="small" sx={{ backgroundColor: '#28DA9D' }}>
+                <IconButton
+                  onClick={() => handleRemoveDependente(row.documento)}
+                  size="small"
+                  sx={{ backgroundColor: "#28DA9D" }}
+                >
                   <RemoveIcon />
                 </IconButton>
               </TableCell>

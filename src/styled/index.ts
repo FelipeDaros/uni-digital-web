@@ -1,5 +1,4 @@
-import { createTheme } from "@mui/material";
-
+import { createTheme } from "@mui/material"
 
 export const theme = createTheme({
   breakpoints: {
@@ -13,21 +12,19 @@ export const theme = createTheme({
   },
   palette: {
     success: {
-      main: '#28DA9D',
+      main: "#28DA9D",
     },
     warning: {
-      main: '#F47920',
+      main: "#F47920",
     },
     primary: {
-      main: '#FFFFFF',
+      main: "#FFFFFF",
     },
     grey: {
-      "100": '#363636',
-    }
+      "100": "#363636",
+    },
   },
   typography: {
-    fontFamily: [
-      'poppins'
-    ].join(',')
-  }
-});
+    fontFamily: ["poppins"].join(","),
+  },
+})

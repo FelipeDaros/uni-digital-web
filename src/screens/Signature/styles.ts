@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "styled-components"
 
 export const VisuallyHiddenInput = styled.input`
   clip: rect(0 0 0 0);
@@ -10,4 +10,4 @@ export const VisuallyHiddenInput = styled.input`
   left: 0;
   white-space: nowrap;
   width: 1px;
-`;
+`

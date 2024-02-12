@@ -1,34 +1,59 @@
-import { Container, FormControlLabel, Grid, MenuItem, Paper, Radio, RadioGroup, Stack, Typography, Modal } from "@mui/material";
-import { Form } from "@unform/web";
-import { CustomButton } from "../../components/Button";
-import { LabelText } from "../FormRegisterClient/components/StepTwo/style";
-import { VTextField } from "../../components/Input/VTextField";
-import { VSelect } from "../../components/Select/VSelect";
-import { statesArray } from "../../utils/estados";
-import { VModalConfirm } from "../../components/ModalConfirm";
-import { useState } from "react";
-import { theme } from "../../styled";
+import {
+  Container,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  Paper,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material"
+import { CustomButton } from "../../components/Button"
+import { LabelText } from "../FormRegisterClient/components/StepTwo/style"
+import { VTextField } from "../../components/Input/VTextField"
+import { VSelect } from "../../components/Select/VSelect"
+import { statesArray } from "../../utils/estados"
+import { VModalConfirm } from "../../components/ModalConfirm"
+import { useEffect, useRef, useState } from "react"
+import { theme } from "../../styled"
 
+import { Form } from "@unform/web"
+import { FormHandles } from "@unform/core"
+import { useNavigate } from "react-router-dom"
 
 export function Profile() {
-  const [isStateSignature, setIsStateSignature] = useState(false);
+  const navigation = useNavigate();
+  const [isStateSignature, setIsStateSignature] = useState(false)
+  const formRef = useRef<FormHandles>(null)
 
-  const handleStateSignature = () => setIsStateSignature(!isStateSignature);
+  const handleStateSignature = () => setIsStateSignature(!isStateSignature)
 
   function handleSave(dados: any) {
     console.log(dados)
   }
 
   async function handleAlterSignature() {
-    handleStateSignature();
+    handleStateSignature()
   }
+
+  function fetchData() {
+    formRef.current?.setData({
+      firstName: "felipe",
+    })
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
 
   return (
     <Container maxWidth="md" sx={{ marginTop: 4 }}>
-      <Form placeholder="form" onSubmit={handleSave}>
+      <Form ref={formRef} placeholder="form" onSubmit={handleSave}>
         <Grid container spacing={2} component={Paper} pr={2} pb={2}>
           <Grid p={2}>
-            <Typography fontWeight="bold" textAlign="start">Dados cadastrais</Typography>
+            <Typography fontWeight="bold" textAlign="start">
+              Dados cadastrais
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <LabelText>Nome</LabelText>
@@ -80,30 +105,59 @@ export function Profile() {
               id="sexo"
               name="sexo"
             >
-              <FormControlLabel value="M" control={<Radio sx={{
-                color: '#28DA9D',
-                '&.Mui-checked': {
-                  color: '#28DA9D',
-                },
-              }} size="small" />} label="Masculino" />
-              <FormControlLabel value="F" control={<Radio sx={{
-                color: '#28DA9D',
-                '&.Mui-checked': {
-                  color: '#28DA9D',
-                },
-              }} size="small" />} label="Feminino" />
-              <FormControlLabel value="N" control={<Radio sx={{
-                color: '#28DA9D',
-                '&.Mui-checked': {
-                  color: '#28DA9D',
-                },
-              }} size="small" />} label="Não informar" />
+              <FormControlLabel
+                value="M"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#28DA9D",
+                      "&.Mui-checked": {
+                        color: "#28DA9D",
+                      },
+                    }}
+                    size="small"
+                  />
+                }
+                label="Masculino"
+              />
+              <FormControlLabel
+                value="F"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#28DA9D",
+                      "&.Mui-checked": {
+                        color: "#28DA9D",
+                      },
+                    }}
+                    size="small"
+                  />
+                }
+                label="Feminino"
+              />
+              <FormControlLabel
+                value="N"
+                control={
+                  <Radio
+                    sx={{
+                      color: "#28DA9D",
+                      "&.Mui-checked": {
+                        color: "#28DA9D",
+                      },
+                    }}
+                    size="small"
+                  />
+                }
+                label="Não informar"
+              />
             </RadioGroup>
           </Grid>
         </Grid>
         <Grid container spacing={2} component={Paper} pr={2} mt={2} pb={2}>
           <Grid p={2} container>
-            <Typography fontWeight="bold" textAlign="start">Contatos</Typography>
+            <Typography fontWeight="bold" textAlign="start">
+              Contatos
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
             <LabelText>Fone</LabelText>
@@ -147,7 +201,9 @@ export function Profile() {
         </Grid>
         <Grid container spacing={2} component={Paper} pr={2} mt={2} pb={2}>
           <Grid p={2} container>
-            <Typography fontWeight="bold" textAlign="start">Endereço</Typography>
+            <Typography fontWeight="bold" textAlign="start">
+              Endereço
+            </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
             <LabelText>CEP</LabelText>
@@ -225,8 +281,10 @@ export function Profile() {
               color="success"
               variant="standard"
             >
-              {statesArray.map(item => (
-                <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+              {statesArray.map((item) => (
+                <MenuItem key={item.value} value={item.value}>
+                  {item.label}
+                </MenuItem>
               ))}
             </VSelect>
           </Grid>
@@ -238,18 +296,14 @@ export function Profile() {
           marginTop={2}
           container
           sx={{
-            [theme.breakpoints.down('md')]: {
+            [theme.breakpoints.down("md")]: {
               alignItems: "center",
               justifyContent: "center",
-              gap: 3
-            }
+              gap: 3,
+            },
           }}
         >
-          <CustomButton
-            type="submit"
-            color="success"
-            variant="contained"
-          >
+          <CustomButton type="submit" color="success" variant="contained">
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>
           <CustomButton
@@ -260,23 +314,21 @@ export function Profile() {
           >
             <Typography color="#fff">Alterar Assinatura</Typography>
           </CustomButton>
-          <CustomButton
-            type="button"
-            color="success"
-            variant="contained"
-          >
+          <CustomButton onClick={() => navigation('/change-payment-method')} type="button" color="success" variant="contained">
             <Typography color="#fff">Alterar forma pagamento</Typography>
           </CustomButton>
-          <CustomButton
-            type="button"
-            color="error"
-            variant="outlined"
-          >
+          <CustomButton type="button" color="error" variant="outlined">
             <Typography>Cancelar assinatura</Typography>
           </CustomButton>
         </Grid>
       </Form>
-      <VModalConfirm onOk={handleAlterSignature} changeState={handleStateSignature} isState={isStateSignature} description="Você deseja alterear a assinatura" title="Alterar assinatura" />
-    </Container >
+      <VModalConfirm
+        onOk={handleAlterSignature}
+        changeState={handleStateSignature}
+        isState={isStateSignature}
+        description="Você deseja alterear a assinatura"
+        title="Alterar assinatura"
+      />
+    </Container>
   )
 }
