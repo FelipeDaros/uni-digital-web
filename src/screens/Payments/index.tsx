@@ -60,7 +60,7 @@ export function Payment() {
   }
 
   return (
-    <Grid margin={2} mt={4}>
+    <Grid margin={2} pt={4} pb={4}>
       <Grid container spacing={2} component={Paper} pr={2} pb={2}>
         <Grid p={2} container>
           <Typography fontWeight="bold" textAlign="start">

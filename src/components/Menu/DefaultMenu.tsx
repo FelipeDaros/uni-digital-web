@@ -156,11 +156,11 @@ export const DefaultMenu: React.FC = ({ children }) => {
         color="primary"
         sx={{
           position: "fixed",
-          bottom: "16px",
-          right: "16px",
+          bottom: "4px",
+          right: "4px",
         }}
       >
-        <WhatsAppIcon sx={{ fontSize: 30 }} color="success" />
+        <WhatsAppIcon sx={{ fontSize: 40 }} color="success" />
       </IconButton>
     </>
   )

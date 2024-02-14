@@ -14,11 +14,13 @@ import { useEffect } from "react"
 import HouseIcon from "@mui/icons-material/House"
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory"
 import TimelineIcon from "@mui/icons-material/Timeline"
+import GroupsIcon from '@mui/icons-material/Groups';
 
 import { Profile } from "../screens/Profile"
 import { Payment } from "../screens/Payments"
 import { useAuth } from "../context/AuthContext"
 import { ChangePaymentMethod } from "../screens/ChangePaymentMethod"
+import { Dependents } from "../screens/Dependents"
 
 export function RoutesAuth() {
   const { user } = useAuth()
@@ -47,12 +49,17 @@ export function RoutesAuth() {
         path: "/payment",
         label: "Hist. Pagamentos",
       },
+      {
+        icon: GroupsIcon,
+        path: "/dependents",
+        label: "Dependentes",
+      },
     ])
 
     if (user) {
       if (user.defaulterSignature) return handleNavigate()
     }
-  }, [location])
+  }, [location.pathname])
 
   return (
     <Routes>
@@ -62,6 +69,7 @@ export function RoutesAuth() {
         <Route path="/signature" element={<Signature />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/change-payment-method" element={<ChangePaymentMethod />} />
+        <Route path="/dependents" element={<Dependents />} />
       </Route>
 
       {/* Rota para redirecionar para a página principal quando a rota não existir */}

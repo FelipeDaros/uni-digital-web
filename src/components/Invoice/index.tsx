@@ -2,6 +2,8 @@ import { styled, css } from "@mui/system"
 import { Modal as BaseModal } from "@mui/base/Modal"
 import { CustomButton } from "../Button/styles"
 import { Grid } from "@mui/material"
+import { useEffect } from "react"
+import { api } from "../../config/api"
 
 const ModalContent = styled("div")(
   ({ theme }) => css`
@@ -50,22 +52,24 @@ const Modal = styled(BaseModal)`
 `
 
 type Props = {
-  isState: boolean
-  title: string
-  description: string,
-  titleOk?: string,
-  changeState: () => void
-  onOk: () => void
+  id: number;
+  isState: boolean;
+  changeState: () => void;
 }
 
-export function VModalConfirm({
-  changeState,
+export function ModalInvoice({
+  id,
   isState,
-  description,
-  onOk,
-  title,
-  titleOk = "Confirmar"
+  changeState,
 }: Props) {
+  async function fetchData(){
+    const { data } = await api.get('');
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [id]);
+
   return (
     <Modal open={isState} onClose={changeState}>
       <ModalContent>
@@ -76,16 +80,13 @@ export function VModalConfirm({
           {description}
         </p>
         <Grid container direction="row" gap={3}>
-          <CustomButton variant="outlined" onClick={changeState} color="error">
-            Cancelar
-          </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={onOk}
+            onClick={changeState}
             color="success"
             sx={{ color: "#fff" }}
           >
-            {titleOk}
+            Confirmar
           </CustomButton>
         </Grid>
       </ModalContent>

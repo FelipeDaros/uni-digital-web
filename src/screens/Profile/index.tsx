@@ -24,9 +24,12 @@ import { useNavigate } from "react-router-dom"
 export function Profile() {
   const navigation = useNavigate();
   const [isStateSignature, setIsStateSignature] = useState(false)
+  const [isStateModalCancelSignature, setIsStateModalCancelSignature] = useState(false);
   const formRef = useRef<FormHandles>(null)
 
   const handleStateSignature = () => setIsStateSignature(!isStateSignature)
+  const handleStateCancelSignature = () => setIsStateModalCancelSignature(!isStateModalCancelSignature)
+
 
   function handleSave(dados: any) {
     console.log(dados)
@@ -34,6 +37,10 @@ export function Profile() {
 
   async function handleAlterSignature() {
     handleStateSignature()
+  }
+
+  async function handleCancelSignature(){
+
   }
 
   function fetchData() {
@@ -47,7 +54,7 @@ export function Profile() {
   }, [])
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: 4 }}>
+    <Container maxWidth="md" sx={{ paddingTop: 4, paddingBottom: 4 }}>
       <Form ref={formRef} placeholder="form" onSubmit={handleSave}>
         <Grid container spacing={2} component={Paper} pr={2} pb={2}>
           <Grid p={2}>
@@ -317,7 +324,7 @@ export function Profile() {
           <CustomButton onClick={() => navigation('/change-payment-method')} type="button" color="success" variant="contained">
             <Typography color="#fff">Alterar forma pagamento</Typography>
           </CustomButton>
-          <CustomButton type="button" color="error" variant="outlined">
+          <CustomButton onClick={() => handleStateCancelSignature()} type="button" color="error" variant="outlined">
             <Typography>Cancelar assinatura</Typography>
           </CustomButton>
         </Grid>
@@ -328,6 +335,14 @@ export function Profile() {
         isState={isStateSignature}
         description="Você deseja alterear a assinatura"
         title="Alterar assinatura"
+      />
+      <VModalConfirm
+        onOk={handleCancelSignature}
+        changeState={handleStateCancelSignature}
+        isState={isStateModalCancelSignature}
+        description="Para nos ajudar a melhorar, favor informar o motivo do cancelamento"
+        title="Cancelamento UniDigital"
+        titleOk="Confirmar Cancelamento"
       />
     </Container>
   )

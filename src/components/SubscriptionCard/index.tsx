@@ -14,7 +14,6 @@ import Diversity1Icon from "@mui/icons-material/Diversity1"
 type Props = {
   signture: SignatureProps
   handleSelected: () => void
-  isSelected: boolean
   icon: "UNIDIGITAL_INIDIVIDUAL" | "UNIDIGITAL_DUPLO" | "UNIDIGITAL_FAMILIA"
 }
 
@@ -28,11 +27,10 @@ type SignatureProps = {
 export function SubscriptionCard({
   signture,
   handleSelected,
-  isSelected = false,
   icon,
 }: Props) {
   return (
-    <ContainerCard onClick={handleSelected} isSelected={isSelected}>
+    <ContainerCard onClick={handleSelected}>
       <ContainerOne>
         {icon === "UNIDIGITAL_INIDIVIDUAL" && (
           <PersonIcon sx={{ fontSize: 54 }} />

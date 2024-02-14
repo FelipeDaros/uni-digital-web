@@ -1,11 +1,7 @@
 import { Typography } from "@mui/material"
 import styled from "styled-components"
 
-type Props = {
-  isSelected: boolean
-}
-
-export const ContainerCard = styled.a<Props>`
+export const ContainerCard = styled.a`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,8 +9,7 @@ export const ContainerCard = styled.a<Props>`
   height: 100px;
   min-height: 100px;
   width: 80%;
-  border: ${(props) =>
-    props.isSelected ? "2px solid #28DA9D" : "2px solid #A8B0B5"};
+  border: 2px solid #A8B0B5;
   margin-top: 20px;
 
   &:hover {
