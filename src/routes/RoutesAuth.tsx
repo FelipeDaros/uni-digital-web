@@ -21,6 +21,7 @@ import { Payment } from "../screens/Payments"
 import { useAuth } from "../context/AuthContext"
 import { ChangePaymentMethod } from "../screens/ChangePaymentMethod"
 import { Dependents } from "../screens/Dependents"
+import { DashBoard } from "../screens/DashBoard"
 
 export function RoutesAuth() {
   const { user } = useAuth()
@@ -54,6 +55,11 @@ export function RoutesAuth() {
         path: "/dependents",
         label: "Dependentes",
       },
+      {
+        icon: GroupsIcon,
+        path: "/dashboard",
+        label: "DashBoard",
+      }
     ])
 
     if (user) {
@@ -70,6 +76,7 @@ export function RoutesAuth() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/change-payment-method" element={<ChangePaymentMethod />} />
         <Route path="/dependents" element={<Dependents />} />
+        <Route path="/dashboard" element={<DashBoard />} />
       </Route>
 
       {/* Rota para redirecionar para a página principal quando a rota não existir */}
