@@ -11,28 +11,27 @@ import {
 } from "@mui/material"
 import logo from "../../assets/logo-unidigital-horizontal-amarelo.png"
 import { ContainerBox, Image, StyledContainer } from "./styles"
-import { PermIdentity, VpnKey } from "@mui/icons-material"
-import { useState } from "react"
-import { SucessToast } from "../../components/Toast/SucessToast"
+import { PermIdentity } from "@mui/icons-material"
+import { useRef, useState } from "react"
 import { CustomButton } from "../../components/Button"
 import { useNavigate } from "react-router-dom"
+import { Form } from "@unform/web"
+import { FormHandles } from "@unform/core"
 
 export function ForgoutPassword() {
+  const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const [alert, setAlert] = useState(false)
 
-  const handleSubmit = (event: any) => {
-    setLoading(true)
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    if (!data.get("email")) {
-      window.alert("Infome E-mail, CPF ou CNPJ")
-      return
+  const handleSubmit = (data: any) => {
+    try {
+      setLoading(true)
+      navigate("/send-forgout")
+    } catch (error) {
+
+    } finally {
+      setLoading(false)
     }
-
-    navigate("/send-forgout")
-    setLoading(false)
   }
 
   return (
@@ -40,8 +39,7 @@ export function ForgoutPassword() {
       <CssBaseline />
       <Image src={logo} />
       <ContainerBox>
-        <SucessToast state={alert} />
-        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+        <Form placeholder="form" ref={formRef} onSubmit={handleSubmit}>
           <Typography
             fontWeight="bold"
             fontSize={22}
@@ -94,7 +92,7 @@ export function ForgoutPassword() {
               </CustomButton>
             </Grid>
           </Grid>
-        </Box>
+        </Form>
       </ContainerBox>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}

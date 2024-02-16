@@ -12,12 +12,12 @@ import RemoveIcon from "@mui/icons-material/Remove"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 
 export function DependentTable() {
-  const [dependentes, handleRemoveDependente] = FormRegisterClientStore(
-    (state) => [state.dependentes, state.handleRemoveDependente],
+  const [secundarios] = FormRegisterClientStore(
+    (state) => [state.secundarios],
   )
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -30,14 +30,14 @@ export function DependentTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {dependentes.map((row) => (
+          {secundarios.map((row) => (
             <TableRow
               key={`${row.documento}` + `${row.nome}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell>
                 <IconButton
-                  onClick={() => handleRemoveDependente(row.documento)}
+                  onClick={() => { }}
                   size="small"
                   sx={{ backgroundColor: "#28DA9D" }}
                 >

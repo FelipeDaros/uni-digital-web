@@ -7,8 +7,14 @@ import { useDemoData } from '@mui/x-data-grid-generator';
 import { CustomButton } from "../../components/Button";
 
 import AddIcon from '@mui/icons-material/Add';
+import { ModalAddDependets } from "../../components/ModalAddDependets";
+import { useState } from "react";
 
 export function Dependents() {
+  const [isStateModalAddDependets, setIsStateModalAddDependets] = useState(false);
+
+  const handleIsStateModalAddDependets = () => setIsStateModalAddDependets(!isStateModalAddDependets);
+
   const { data } = useDemoData({
     dataSet: 'Employee',
     rowLength: 50,
@@ -78,7 +84,7 @@ export function Dependents() {
         }}
       />
       <Grid mt={2} justifyContent="end" display="flex">
-        <CustomButton startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
+        <CustomButton onClick={handleIsStateModalAddDependets} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Novo
         </CustomButton>
       </Grid>
@@ -87,6 +93,11 @@ export function Dependents() {
           {...data}
         />
       </Paper>
+      <ModalAddDependets 
+        changeState={handleIsStateModalAddDependets}
+        isState={isStateModalAddDependets}
+        onOk={() => {}}
+      />
     </Grid >
   )
 }

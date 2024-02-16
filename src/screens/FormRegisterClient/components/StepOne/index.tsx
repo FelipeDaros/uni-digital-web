@@ -26,17 +26,13 @@ const signaturePlans: SignatureProps = {
 }
 
 export function StepOne() {
-  const [signature, isLoading, handleSelectedSignature, step, handleNextStep] =
-    FormRegisterClientStore((state) => [
-      state.signature,
-      state.isLoading,
-      state.handleSelectedSignature,
-      state.step,
-      state.handleNextStep,
-    ])
+  const [step, handleNextStep] = FormRegisterClientStore(
+    (state) => [state.step, state.handleNextStep],
+  )
+
 
   function SignatureSelected(dados: SignatureProps) {
-    handleSelectedSignature(dados)
+
   }
 
   return (
@@ -54,7 +50,7 @@ export function StepOne() {
           Deseja adicionar mais dependentes ?
         </Typography>
       </ContainerText>
-      <ContainerDependentesComponent dependents={signature?.dependents} />
+      <ContainerDependentesComponent />
       <ContainerText>
         <Typography fontSize={12} color="white">
           Você possui algum cupom de desconto?
@@ -69,7 +65,6 @@ export function StepOne() {
           sx={{ width: 300 }}
         />
         <CustomButton
-          disabled={isLoading}
           sx={{ marginLeft: 2 }}
           color="success"
           variant="outlined"
@@ -79,15 +74,14 @@ export function StepOne() {
       </ContainerCupom>
       <ContainerFooter>
         <Typography fontSize={14} color="#28DA9D">
-          Cupom desconto <strong>{signature?.discount} R$</strong>
+          Cupom desconto <strong> R$</strong>
         </Typography>
         <Typography fontSize={14} color="#28DA9D">
-          Total <strong>{signature?.total} R$</strong>
+          Total <strong> R$</strong>
         </Typography>
       </ContainerFooter>
       {step !== 1 && (
         <CustomButton
-          disabled={isLoading}
           variant="contained"
           color="success"
           onClick={handleNextStep}

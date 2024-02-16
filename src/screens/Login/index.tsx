@@ -1,48 +1,49 @@
 import {
-  Box,
   Button,
   CssBaseline,
   Grid,
   IconButton,
   InputAdornment,
-  TextField,
   Typography,
 } from "@mui/material"
 import logo from "../../assets/logo-unidigital-horizontal-amarelo.png"
 import { ContainerBox, Image, StyledContainer } from "./styles"
 import { PermIdentity, VpnKey } from "@mui/icons-material"
-import { useState } from "react"
-import { SucessToast } from "../../components/Toast/SucessToast"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
+import { ErrorToast } from "../../components/Toast/ErrorToast"
+import { Form } from "@unform/web"
+import { FormHandles } from "@unform/core"
+import { VTextField } from "../../components/Input/VTextField"
+import { Loading } from "../../components/Loading"
 
 export function Login() {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
+  const formRef = useRef<FormHandles>(null)
+
   const { signIn } = useAuth()
-  const [alert, setAlert] = useState(false)
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
 
-    if (!data.get("user")) {
-      setAlert(true)
-      setTimeout(() => {
-        setAlert(false)
-      }, 3000)
+  const handleSubmit = (data: any) => {
+    try {
+      setLoading(true)
+      signIn(data.user, data.password);
+    } catch (error) {
+
+    } finally {
+      setLoading(false)
     }
-
-    //@ts-ignore
-    signIn(data.get("user"), data.get("password"))
   }
 
   return (
     <StyledContainer>
+      <Loading isLoading={loading} />
       <CssBaseline />
       <Image src={logo} />
       <ContainerBox>
-        <SucessToast state={alert} />
-        <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
+        <Form placeholder="form" ref={formRef} onSubmit={handleSubmit}>
           <Typography
             fontWeight="bold"
             fontSize={22}
@@ -52,7 +53,7 @@ export function Login() {
           >
             Área do cliente
           </Typography>
-          <TextField
+          <VTextField
             margin="normal"
             required
             fullWidth
@@ -70,7 +71,7 @@ export function Login() {
               ),
             }}
           />
-          <TextField
+          <VTextField
             margin="normal"
             required
             fullWidth
@@ -110,7 +111,7 @@ export function Login() {
               </Button>
             </Grid>
           </Grid>
-        </Box>
+        </Form>
       </ContainerBox>
     </StyledContainer>
   )

@@ -12,8 +12,8 @@ import RemoveIcon from "@mui/icons-material/Remove"
 import { FormAlterSignatureStore } from "./store/FormAlterSignatureStore"
 
 export function DependentTable() {
-  const [dependentes, handleRemoveDependente] = FormAlterSignatureStore(
-    (state) => [state.dependentes, state.handleRemoveDependente],
+  const [secundarios] = FormAlterSignatureStore(
+    (state) => [state.secundarios],
   )
 
   return (
@@ -30,14 +30,14 @@ export function DependentTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {dependentes.map((row) => (
+          {secundarios.map((row) => (
             <TableRow
               key={`${row.documento}` + `${row.nome}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell>
                 <IconButton
-                  onClick={() => handleRemoveDependente(row.documento)}
+                  onClick={() => { }}
                   size="small"
                   sx={{ backgroundColor: "#28DA9D" }}
                 >
@@ -48,7 +48,7 @@ export function DependentTable() {
                 {row.nome}
               </TableCell>
               <TableCell align="right">{row.documento}</TableCell>
-              <TableCell align="right">{row.data_nascimento}</TableCell>
+              <TableCell align="right">{row.dataNascimento}</TableCell>
               <TableCell align="right">{row.sexo}</TableCell>
               <TableCell align="right">{row.email}</TableCell>
             </TableRow>

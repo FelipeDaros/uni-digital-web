@@ -4,6 +4,7 @@ import styled from "styled-components"
 import AddIcon from "@mui/icons-material/Add"
 import RemoveIcon from "@mui/icons-material/Remove"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
+import { handleKeyPress } from "../../../../utils/handleKeyPress"
 
 export const ContainerDependentes = styled.div`
   width: 80%;
@@ -81,16 +82,13 @@ export const TruncatedText = styled(Typography)`
   padding: 2px;
 `
 
-type Props = {
-  dependents: number | undefined
-}
-
-export function ContainerDependentesComponent({ dependents }: Props) {
-  const [handleAddDependents, handleRemoveDependents, isLoading] =
+export function ContainerDependentesComponent() {
+  const [handleAddDependents, handleRemoveDependents, totalDependets, handleNumberDependents] =
     FormRegisterClientStore((state) => [
       state.handleAddDependents,
       state.handleRemoveDependents,
-      state.isLoading,
+      state.totalDependets,
+      state.handleNumberDependents
     ])
 
   return (
@@ -103,20 +101,20 @@ export function ContainerDependentesComponent({ dependents }: Props) {
       </ContainerOne>
       <ContainerTwo>
         <IconButton
-          disabled={isLoading}
           onClick={() => handleRemoveDependents()}
         >
           <RemoveIcon color="success" sx={{ fontSize: 18 }} />
         </IconButton>
         <TextField
-          disabled={isLoading}
-          type="number"
-          value={dependents}
-          sx={{ borderColor: "#A8B0B5" }}
+          onKeyPress={handleKeyPress}
+          type="text"
+          value={totalDependets}
+          onChange={e => handleNumberDependents(Number(e.target.value))}
+          sx={{ borderColor: "#A8B0B5", textAlign: 'center' }}
           size="small"
-          variant="outlined"
+          variant="standard"
         />
-        <IconButton disabled={isLoading} onClick={() => handleAddDependents()}>
+        <IconButton onClick={() => handleAddDependents()}>
           <AddIcon color="success" sx={{ fontSize: 18 }} />
         </IconButton>
       </ContainerTwo>

@@ -14,13 +14,13 @@ export function DependentForm() {
     sexo: "",
   })
 
-  const [handleAddDependente] = FormRegisterClientStore((state) => [
-    state.handleAddDependente,
+  const [handleSecundarios] = FormRegisterClientStore((state) => [
+    state.handleSecundarios,
   ])
 
   function handleAdd() {
     //@ts-ignore
-    handleAddDependente(formularioDependente)
+    handleSecundarios(formularioDependente)
 
     setFormularioDependente({
       data_nascimento: "",
@@ -32,7 +32,7 @@ export function DependentForm() {
   }
 
   return (
-    <Grid container spacing={3} direction="row">
+    <Grid container mt={2} spacing={2} pr={2} pl={2} pb={2}>
       <Grid item xs={12} sm={3} marginTop={2}>
         <LabelText htmlFor="">Nome</LabelText>
         <TextField
@@ -61,6 +61,7 @@ export function DependentForm() {
           color="success"
           variant="standard"
           value={formularioDependente.documento}
+          inputProps={{ maxLength: 11 }}
           onChange={(e) =>
             setFormularioDependente((state) => ({
               ...state,
