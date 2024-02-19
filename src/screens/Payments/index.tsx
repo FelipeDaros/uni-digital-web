@@ -50,7 +50,7 @@ export function Payment() {
     setIsStateModalBoletoDetails(!isStateModalBoletoDetails)
 
   useEffect(() => {
-    if (user?.defaulterSignature) {
+    if (user?.user.ativo !== 1) {
       validatePaymentDefaulter()
     }
   }, [])

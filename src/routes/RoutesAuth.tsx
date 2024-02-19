@@ -63,7 +63,7 @@ export function RoutesAuth() {
     ])
 
     if (user) {
-      if (user.defaulterSignature) return handleNavigate()
+      if (user.user.ativo !== 1) return handleNavigate()
     }
   }, [location.pathname])
 

@@ -10,12 +10,16 @@ import ShareIcon from "@mui/icons-material/Share"
 import { VirtualCard } from "../../components/VirtualCard"
 import { CardHomeOne } from "../../components/CardHomeOne"
 import { CardHomeTwo } from "../../components/CardHomeTwo"
+import { useAuth } from "../../context/AuthContext"
 
 export function Home() {
+    const { user } = useAuth();
+
   return (
     <Grid container>
       <Grid container>
-        <VirtualCard />
+        {/* @ts-ignore */}
+        <VirtualCard nome={user?.user?.nome} codigo={user?.user.documento} data_nascimento={user?.user.data_nascimento} />
       </Grid>
       <Grid container>
         <CardHomeOne nome="Felipe" />

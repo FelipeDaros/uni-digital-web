@@ -20,8 +20,11 @@ import { theme } from "../../styled"
 import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
 import { useNavigate } from "react-router-dom"
+import { api } from "../../config/api"
+import { useAuth } from "../../context/AuthContext"
 
 export function Profile() {
+  const { user } = useAuth();
   const navigation = useNavigate();
   const [isStateSignature, setIsStateSignature] = useState(false)
   const [isStateModalCancelSignature, setIsStateModalCancelSignature] = useState(false);
@@ -43,10 +46,8 @@ export function Profile() {
 
   }
 
-  function fetchData() {
-    formRef.current?.setData({
-      firstName: "felipe",
-    })
+  async function fetchData() {
+    const { data } = await api.get(`/auth/show/${user?.user.id}`);
   }
 
   useEffect(() => {

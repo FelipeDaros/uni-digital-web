@@ -24,7 +24,7 @@ export function CopyToClipboardButton({ cod_bar }: Props) {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={2000}
         onClose={() => setOpen(false)}
-        open={open}
+        open={open} 
       />
     </>
   )

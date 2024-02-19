@@ -1,4 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material"
+import moment from "moment"
 import styled from "styled-components"
 
 const ContainerCard = styled.div`
@@ -26,7 +27,13 @@ const BoxContaienr = styled.div`
   padding: 10px;
 `
 
-export function VirtualCard() {
+type Props = {
+    nome: string;
+    codigo: string;
+    data_nascimento: Date;
+}
+
+export function VirtualCard({ codigo, nome, data_nascimento }: Props) {
   return (
     <ContainerCard>
       <BoxContaienr>
@@ -43,13 +50,13 @@ export function VirtualCard() {
       >
         <Box>
           <Typography sx={{ fontSize: 16 }} color="white">
-            Código: <strong>4675.2342.3424</strong>
+            Código: <strong>{codigo}</strong>
           </Typography>
           <Typography sx={{ fontSize: 16 }} color="white">
-            Nome: Felipe Daros
+            Nome: {nome}
           </Typography>
           <Typography sx={{ fontSize: 16 }} color="white">
-            Data Nasc: 02/06/1998
+            Data Nasc: {moment(data_nascimento).format(`DD/MM/YYYY`)}
           </Typography>
         </Box>
         <Box>

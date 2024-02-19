@@ -1,5 +1,6 @@
 import axios from "axios"
+import { URL_LOCALHOST } from "../../env"
 
 export const api = axios.create({
-  baseURL: "",
+  baseURL: URL_LOCALHOST,
 })
