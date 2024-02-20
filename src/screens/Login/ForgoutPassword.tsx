@@ -1,12 +1,9 @@
 import {
   Backdrop,
-  Box,
-  Button,
   CircularProgress,
   CssBaseline,
   Grid,
   InputAdornment,
-  TextField,
   Typography,
 } from "@mui/material"
 import logo from "../../assets/logo-unidigital-horizontal-amarelo.png"
@@ -17,18 +14,21 @@ import { CustomButton } from "../../components/Button"
 import { useNavigate } from "react-router-dom"
 import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
+import { api } from "../../config/api"
+import { VTextField } from "../../components/Input/VTextField"
 
 export function ForgoutPassword() {
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = async (data: any) => {
     try {
       setLoading(true)
+      await api.post(`/auth/forgout-password`, data);
       navigate("/send-forgout")
     } catch (error) {
-
+        
     } finally {
       setLoading(false)
     }
@@ -59,16 +59,16 @@ export function ForgoutPassword() {
             Informe seu e-mail, CPF ou CNPJ e você receberá instruções para
             recuperação de sua senha no seu e-mail cadastrado
           </Typography>
-          <TextField
+          <VTextField
             margin="normal"
             required
             fullWidth
-            id="email"
-            type="email"
+            id="usuario"
+            type="text"
             color="success"
             label="E-mail, CPF ou CNPJ"
-            name="email"
-            autoComplete="email"
+            name="usuario"
+            autoComplete="usuario"
             autoFocus
             InputProps={{
               endAdornment: (
