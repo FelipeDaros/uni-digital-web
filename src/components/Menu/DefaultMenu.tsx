@@ -132,13 +132,16 @@ export const DefaultMenu: React.FC = ({ children }) => {
           <Box flex={1} sx={{ backgroundColor: "#28DA9D" }}>
             <List component="nav">
               {drawerOptions.map((drawerOption) => (
-                <ListItemLink
-                  to={drawerOption.path}
-                  key={drawerOption.path}
-                  icon={drawerOption.icon}
-                  label={drawerOption.label}
-                  onClick={smDown ? toggleDrawerOpen : undefined}
-                />
+                <>
+                  {!drawerOption.disabled &&
+                    <ListItemLink
+                      to={drawerOption.path}
+                      key={drawerOption.id}
+                      icon={drawerOption.icon}
+                      label={drawerOption.label}
+                      onClick={smDown ? toggleDrawerOpen : undefined}
+                    />}
+                </>
               ))}
             </List>
           </Box>

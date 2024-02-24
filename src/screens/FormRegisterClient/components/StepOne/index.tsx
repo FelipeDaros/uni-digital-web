@@ -11,38 +11,17 @@ import { ContainerDependentesComponent } from "./ContainerDependentes"
 import { CustomButton } from "../../../../components/Button"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 
-type SignatureProps = {
-  id: number
-  name: string
-  price: number
-  title: string
-}
-
-const signaturePlans: SignatureProps = {
-  id: 1,
-  name: "Plano Básico",
-  price: 100.25,
-  title: "lorem",
-}
-
 export function StepOne() {
-  const [step, handleNextStep] = FormRegisterClientStore(
-    (state) => [state.step, state.handleNextStep],
+  const [step, handleNextStep, product, total] = FormRegisterClientStore(
+    (state) => [state.step, state.handleNextStep, state.product, state.total],
   )
-
-
-  function SignatureSelected(dados: SignatureProps) {
-
-  }
 
   return (
     <CenteredContainer>
       <ContainerSubscription>
         <SubscriptionCard
+          produto={product}
           icon="UNIDIGITAL_INIDIVIDUAL"
-          signture={signaturePlans}
-          handleSelected={() => SignatureSelected(signaturePlans)}
-          isSelected={true}
         />
       </ContainerSubscription>
       <ContainerText>
@@ -50,7 +29,8 @@ export function StepOne() {
           Deseja adicionar mais dependentes ?
         </Typography>
       </ContainerText>
-      <ContainerDependentesComponent />
+      {/* @ts-ignore */}
+      <ContainerDependentesComponent limit={product.qtd_secundario_padrao}/>
       <ContainerText>
         <Typography fontSize={12} color="white">
           Você possui algum cupom de desconto?
@@ -77,7 +57,10 @@ export function StepOne() {
           Cupom desconto <strong> R$</strong>
         </Typography>
         <Typography fontSize={14} color="#28DA9D">
-          Total <strong> R$</strong>
+          Total <strong>{total.toLocaleString("pt-br", {
+          style: "currency",
+          currency: "BRL",
+        })} </strong>
         </Typography>
       </ContainerFooter>
       {step !== 1 && (

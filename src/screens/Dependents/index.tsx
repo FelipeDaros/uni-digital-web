@@ -1,70 +1,81 @@
 import { Grid, OutlinedInput, Paper, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
-
-import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { CustomButton } from "../../components/Button";
 
 import AddIcon from '@mui/icons-material/Add';
 import { ModalAddDependets } from "../../components/ModalAddDependets";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { api } from "../../config/api";
+import { useAuth } from "../../context/AuthContext";
 
 export function Dependents() {
+  const [loading, setLoading] = useState(false);
+  const [gridData, setGridData] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
+  const { user } = useAuth()
   const [isStateModalAddDependets, setIsStateModalAddDependets] = useState(false);
 
   const handleIsStateModalAddDependets = () => setIsStateModalAddDependets(!isStateModalAddDependets);
 
-  const { data } = useDemoData({
-    dataSet: 'Employee',
-    rowLength: 50,
-    maxColumns: 5
-  });
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/auth/dependentes/${user?.user.id}`, {
+        params: {
+          pageSize: pageSize,
+          page: page
+        }
+      });
+      const payload = {
+        rows: data.data,
+        columns,
+        experimentalFeatures: true,
 
-  console.log(data)
+      }
+      // @ts-ignore
+      setGridData(payload)
+    } catch (error) {
 
-  const coluns = [
-    {
-      "field": "id",
-      "headerName": "ID",
-      "width": '5%',
-    },
-    {
-      "field": "name",
-      "headerName": "NOME",
-      "dataGeneratorUniquenessEnabled": true,
-      "width": '30%',
-      "groupable": false,
-      "aggregable": false
-    },
-    {
-      "field": "cpf",
-      "headerName": "CPF",
-      "dataGeneratorUniquenessEnabled": true,
-      "width": '10%',
-      "editable": true,
-      "groupable": false,
-      "aggregable": false
-    },
-    {
-      "field": "fone",
-      "headerName": "Fone",
-      "dataGeneratorUniquenessEnabled": true,
-      "width": '10%',
-      "editable": true,
-      "groupable": false,
-      "aggregable": false
-    },
-    {
-      "field": "email",
-      "headerName": "email",
-      "dataGeneratorUniquenessEnabled": true,
-      "width": '25%',
-      "editable": true,
-      "groupable": false,
-      "aggregable": false
+    } finally {
+      setLoading(false);
     }
-  ]
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [pageSize])
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    {
+      field: 'nome',
+      headerName: 'Nome',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'documento',
+      headerName: 'Documento',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'celular',
+      headerName: 'Celular',
+      type: 'number',
+      width: 200,
+      editable: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 400,
+      editable: true,
+    }
+  ];
 
   return (
     <Grid margin={2} pt={4} pb={4}>
@@ -89,14 +100,25 @@ export function Dependents() {
         </CustomButton>
       </Grid>
       <Paper sx={{ width: '100%', marginTop: 2 }}>
-        <DataGrid
-          {...data}
-        />
+        {gridData &&
+          <DataGrid
+            {...gridData}
+            initialState={{
+              pagination: { paginationModel: { pageSize: pageSize, page} },
+            }}
+            loading={loading}
+            pageSizeOptions={[10, 25, 50]}
+            onPaginationModelChange={e => {
+              setPage(e.page)
+              setPageSize(e.pageSize)
+            }}
+          />
+        }
       </Paper>
-      <ModalAddDependets 
+      <ModalAddDependets
         changeState={handleIsStateModalAddDependets}
         isState={isStateModalAddDependets}
-        onOk={() => {}}
+        onOk={() => { }}
       />
     </Grid >
   )

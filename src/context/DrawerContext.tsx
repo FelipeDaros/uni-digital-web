@@ -2,9 +2,11 @@ import { OverridableComponent } from "@mui/material/OverridableComponent"
 import { createContext, useCallback, useContext, useState } from "react"
 
 interface IDrawerOption {
-  icon: OverridableComponent<any>
-  path: string
-  label: string
+  id: number;
+  icon: OverridableComponent<any>;
+  path: string;
+  label: string;
+  disabled: boolean;
 }
 
 interface IDrawerContextData {

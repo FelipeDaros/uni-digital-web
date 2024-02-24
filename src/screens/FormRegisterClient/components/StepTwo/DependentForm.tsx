@@ -4,8 +4,11 @@ import { LabelText } from "./style"
 import AddIcon from "@mui/icons-material/Add"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 import { useState } from "react"
+import { VModalNotification } from "../../../../components/ModalNotification"
 
 export function DependentForm() {
+  const [stateModal, setStateModal] = useState(false);
+  const [msgModal, setMsgModal] = useState("");
   const [formularioDependente, setFormularioDependente] = useState({
     nome: "",
     documento: "",
@@ -14,11 +17,26 @@ export function DependentForm() {
     sexo: "",
   })
 
-  const [handleSecundarios] = FormRegisterClientStore((state) => [
-    state.handleSecundarios,
+  const handleChangeStateModal = () => setStateModal(!stateModal);
+
+  const [handleSecundarios, totalDependets, secundarios] = FormRegisterClientStore((state) => [
+    state.handleSecundarios, state.totalDependets, state.secundarios
   ])
 
   function handleAdd() {
+    if (!formularioDependente.data_nascimento.trim() || !formularioDependente.documento.trim() || !formularioDependente.email.trim() || !formularioDependente.nome.trim() || !formularioDependente.sexo.trim()) {
+      handleChangeStateModal()
+      setMsgModal("Preencha todos os campos")
+      return
+    }
+
+    console.log(totalDependets, secundarios.length)
+    if (totalDependets === secundarios.length) {
+      handleChangeStateModal()
+      setMsgModal("O limite de dependentes foi execidido!")
+      return
+    }
+
     //@ts-ignore
     handleSecundarios(formularioDependente)
 
@@ -143,6 +161,12 @@ export function DependentForm() {
           <AddIcon color="primary" sx={{ fontSize: 16 }} />
         </IconButton>
       </Grid>
+      <VModalNotification
+        changeState={handleChangeStateModal}
+        description={msgModal}
+        isState={stateModal}
+        title="Notificação"
+      />
     </Grid>
   )
 }

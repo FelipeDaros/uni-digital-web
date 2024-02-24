@@ -16,6 +16,10 @@ import { VSelect } from "../../../../components/Select/VSelect";
 import { CreditCard } from "../CreditCard";
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
 import { handleKeyPress } from "../../../../utils/handleKeyPress";
+import { api } from "../../../../config/api";
+import { VModalNotification } from "../../../../components/ModalNotification";
+import { VModalError } from "../../../../components/ModalError";
+import { useNavigate } from "react-router-dom";
 
 const TIPO_PAGAMENTO = ["PIX", "BOLETO", "CARTAO"]
 
@@ -28,6 +32,11 @@ type PropsXLSX = {
 }
 
 export function StepTwo() {
+  const navigate = useNavigate();
+  const [stateModal, setStateModal] = useState(false);
+  const [msgModal, setMsgModal] = useState("");
+  const [stateModalError, setStateModalError] = useState(false);
+  const [msgErrorModal, setMsgErrorModal] = useState("");
   const formRef = useRef<FormHandles>(null)
   const [avatar, setAvatar] = useState(null)
   const [avatarFile, setAvatarFile] = useState(null)
@@ -35,9 +44,47 @@ export function StepTwo() {
   const [selectedSexo, setSelectedSexo] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
 
-  const [handleSecundarios, secundarios, handleLoading] = FormRegisterClientStore(
-    (state) => [state.handleSecundarios, state.secundarios, state.handleLoading],
+  const [handleSecundarios, secundarios, handleLoading, product, total, totalDependets] = FormRegisterClientStore(
+    (state) => [state.handleSecundarios, state.secundarios, state.handleLoading, state.product, state.total, state.totalDependets],
   )
+
+  const handleChangeStateModal = () => setStateModal(!stateModal);
+  const handleChangeStateModalErro = () => setStateModalError(!stateModalError);
+
+  async function handleSave(dados: any) {
+    try {
+      handleLoading()
+      //@ts-ignore
+      if (
+        dados.password !==
+        dados.confirmpassword
+      ) {
+        handleChangeStateModal()
+        setMsgModal("As senhas não conferem")
+        return
+      }
+
+      const formData = {
+        ...dados,
+        secundarios,
+        qtd_secundario: secundarios.length,
+        total,
+        id_produto: product.id,
+        sexo: selectedSexo,
+        tipo_pagamento: selectedPayment
+      }
+
+      await api.post(`/compras/store`, formData);
+      navigate("/");
+    } catch (error: any) {
+      if (!!error.response) {
+        handleChangeStateModalErro()
+        setMsgErrorModal(error.response.data.message)
+      }
+    } finally {
+      handleLoading()
+    }
+  }
 
   const handleAcceptTerms = () => setAcceptTerms(!acceptTerms);
 
@@ -69,14 +116,10 @@ export function StepTwo() {
         method: "GET",
       })
       const data = await response.json()
-      console.log(data)
+
       //@ts-ignore
-
-      formRef.current?.setData({
-        uf: data.uf,
-        cidade: data.localidade,
-      });
-
+      formRef.current.setFieldValue("uf", data.uf)
+      formRef.current.setFieldValue("cidade", data.localidade)
     } catch (error) {
       console.error(error)
     } finally {
@@ -94,6 +137,12 @@ export function StepTwo() {
       const sheet = workbook.Sheets[sheetName]
       const parsedData: PropsXLSX[] = XLSX.utils.sheet_to_json(sheet)
 
+      if (parsedData.length > totalDependets) {
+        setMsgModal("A quantidade de dependetes na planilha é maior do que a informado no inicío da operação")
+        handleChangeStateModal()
+        return
+      }
+
       parsedData.forEach((item) => {
         handleSecundarios({
           dataNascimento: item.data_nascimento,
@@ -103,39 +152,6 @@ export function StepTwo() {
           sexo: item.sexo,
         })
       })
-    }
-  }
-
-  async function handleSave(dados: any) {
-    //@ts-ignore
-    if (
-      formRef.current?.getData()?.senha !==
-      formRef.current?.getData()?.confirmarSenha
-    ) {
-      window.alert("Senhas não conferem")
-    }
-
-    const formData = new FormData()
-
-    // Adiciona cada chave e valor do objeto 'dados' ao FormData
-    Object.entries(dados).forEach(([key, value]) => {
-      //@ts-ignore
-      formData.append(key, value)
-    })
-
-    //@ts-ignore
-    formData.append("secundarios", secundarios)
-    formData.append("tipo_pagamento", selectedPayment)
-    formData.append("sexo", selectedSexo)
-
-    // Adiciona a foto ao FormData
-    if (avatar) {
-      formData.append("avatar", avatar) // 'avatar' é o nome do campo no FormData que conterá a foto
-    }
-
-    // Agora você pode acessar os valores do FormData
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1])
     }
   }
 
@@ -172,7 +188,9 @@ export function StepTwo() {
             </CustomButton>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Nome</LabelText>
+            <Grid>
+              <LabelText>Nome</LabelText>
+            </Grid>
             <VTextField
               id="nome"
               name="nome"
@@ -184,35 +202,40 @@ export function StepTwo() {
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>CPF</LabelText>
+            <Grid>
+              <LabelText>Documento (CPF/CNPJ)</LabelText>
+            </Grid>
             <VTextField
               onKeyPress={handleKeyPress}
-              id="cpf"
-              name="cpf"
+              id="documento"
+              name="documento"
               size="small"
-              autoComplete="given-cpf"
+              autoComplete="given-documento"
               required
               color="success"
-              autoFocus
               type="text"
               inputProps={{ maxLength: 11 }}
             />
           </Grid>
           <Grid item xs={4} sm={4}>
-            <LabelText>Data nascimento</LabelText>
+            <Grid>
+              <LabelText>Data nascimento</LabelText>
+            </Grid>
             <VTextField
               id="dataNascimento"
               name="dataNascimento"
               size="small"
+              placeholder="Data nascimento"
               autoComplete="given-datanascimento"
               required
               color="success"
-              autoFocus
               type="date"
             />
           </Grid>
           <Grid item xs={12}>
-            <LabelText htmlFor="">Sexo</LabelText>
+            <Grid>
+              <LabelText htmlFor="">Sexo</LabelText>
+            </Grid>
             <RadioGroup
               row
               aria-labelledby="demo-radio-buttons-group-label"
@@ -276,7 +299,9 @@ export function StepTwo() {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Fone</LabelText>
+            <Grid>
+              <LabelText>Fone</LabelText>
+            </Grid>
             <VTextField
               id="fone"
               name="fone"
@@ -284,11 +309,13 @@ export function StepTwo() {
               autoComplete="given-fone"
               required
               color="success"
-              autoFocus
+              inputProps={{ maxLength: 10 }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Celular</LabelText>
+            <Grid>
+              <LabelText>Celular</LabelText>
+            </Grid>
             <VTextField
               id="celular"
               name="celular"
@@ -296,11 +323,13 @@ export function StepTwo() {
               autoComplete="given-celular"
               required
               color="success"
-              autoFocus
+              inputProps={{ maxLength: 11 }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Email</LabelText>
+            <Grid>
+              <LabelText>Email</LabelText>
+            </Grid>
             <VTextField
               id="email"
               name="email"
@@ -308,8 +337,8 @@ export function StepTwo() {
               autoComplete="given-email"
               required
               color="success"
-              autoFocus
               type="email"
+              inputProps={{ maxLength: 40 }}
             />
           </Grid>
         </Grid>
@@ -320,7 +349,9 @@ export function StepTwo() {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>CEP</LabelText>
+            <Grid>
+              <LabelText>CEP</LabelText>
+            </Grid>
             <VTextField
               id="cep"
               name="cep"
@@ -329,14 +360,15 @@ export function StepTwo() {
               required
               color="success"
               onBlur={handleAlterCep}
-              autoFocus
               helperText="Somente números"
               onKeyPress={handleKeyPress}
               inputProps={{ maxLength: 8 }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Endereço</LabelText>
+            <Grid>
+              <LabelText>Endereço</LabelText>
+            </Grid>
             <VTextField
               id="endereco"
               name="endereco"
@@ -344,11 +376,12 @@ export function StepTwo() {
               autoComplete="given-endereco"
               required
               color="success"
-              autoFocus
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Número</LabelText>
+            <Grid>
+              <LabelText>Número</LabelText>
+            </Grid>
             <VTextField
               id="numero"
               name="numero"
@@ -356,12 +389,13 @@ export function StepTwo() {
               autoComplete="given-numero"
               required
               color="success"
-              autoFocus
               type="number"
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Bairro</LabelText>
+            <Grid>
+              <LabelText>Bairro</LabelText>
+            </Grid>
             <VTextField
               id="bairro"
               name="bairro"
@@ -369,12 +403,13 @@ export function StepTwo() {
               autoComplete="given-name"
               required
               color="success"
-              autoFocus
               type="text"
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Cidade</LabelText>
+            <Grid>
+              <LabelText>Cidade</LabelText>
+            </Grid>
             <VTextField
               id="cidade"
               name="cidade"
@@ -382,13 +417,14 @@ export function StepTwo() {
               autoComplete="cidade"
               required
               color="success"
-              autoFocus
               type="text"
               disabled
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>UF</LabelText>
+            <Grid>
+              <LabelText>UF</LabelText>
+            </Grid>
             <VTextField
               id="uf"
               name="uf"
@@ -396,7 +432,6 @@ export function StepTwo() {
               autoComplete="given-uf"
               required
               color="success"
-              autoFocus
               type="text"
               disabled
             />
@@ -409,7 +444,9 @@ export function StepTwo() {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Senha</LabelText>
+            <Grid>
+              <LabelText>Senha</LabelText>
+            </Grid>
             <VTextField
               id="password"
               name="password"
@@ -417,12 +454,13 @@ export function StepTwo() {
               autoComplete="given-password"
               required
               color="success"
-              autoFocus
               type="password"
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <LabelText>Confirmar senha</LabelText>
+            <Grid>
+              <LabelText>Confirmar senha</LabelText>
+            </Grid>
             <VTextField
               id="confirmpassword"
               name="confirmpassword"
@@ -430,36 +468,37 @@ export function StepTwo() {
               autoComplete="given-confirmpassword"
               required
               color="success"
-              autoFocus
               type="password"
             />
           </Grid>
         </Grid>
-        <Grid container mt={2} spacing={2} component={Paper} pr={2} pb={2}>
-          <Grid p={2} container>
-            <Typography fontWeight="bold" textAlign="start">
-              Dependentes
-            </Typography>
+        {product.add_secundarios === 1 &&
+          <Grid container mt={2} spacing={2} component={Paper} pr={2} pb={2}>
+            <Grid p={2} container>
+              <Typography fontWeight="bold" textAlign="start">
+                Dependentes
+              </Typography>
+            </Grid>
+            <DependentForm />
+            <DependentTable />
+            <Grid p={2} container>
+              <CustomButton
+                color="success"
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon color="primary" />}
+              >
+                <Typography color="white">Importar</Typography>
+                <VisuallyHiddenInput
+                  type="file"
+                  accept=".xlsx, .xls, .ods"
+                  multiple={false}
+                  onChange={importXLS}
+                />
+              </CustomButton>
+            </Grid>
           </Grid>
-          <DependentForm />
-          <DependentTable />
-          <Grid p={2} container>
-            <CustomButton
-              color="success"
-              component="label"
-              variant="contained"
-              startIcon={<CloudUploadIcon color="primary" />}
-            >
-              <Typography color="white">Importar</Typography>
-              <VisuallyHiddenInput
-                type="file"
-                accept=".xlsx, .xls, .ods"
-                multiple={false}
-                onChange={importXLS}
-              />
-            </CustomButton>
-          </Grid>
-        </Grid>
+        }
         <Grid container mt={2} spacing={2} component={Paper} pr={2} pb={2}>
           <Grid p={2} container>
             <Typography fontWeight="bold" textAlign="start">
@@ -524,6 +563,18 @@ export function StepTwo() {
           </CustomButton>
         </Grid>
       </Form>
+      <VModalNotification
+        changeState={handleChangeStateModal}
+        description={msgModal}
+        isState={stateModal}
+        title="Notificação"
+      />
+      <VModalError
+        changeState={handleChangeStateModalErro}
+        description={msgErrorModal}
+        isState={stateModalError}
+        title="Erro"
+      />
     </Container>
   )
 }

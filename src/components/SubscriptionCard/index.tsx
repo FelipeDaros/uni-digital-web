@@ -10,27 +10,20 @@ import {
 import PersonIcon from "@mui/icons-material/Person"
 import PeopleIcon from "@mui/icons-material/People"
 import Diversity1Icon from "@mui/icons-material/Diversity1"
+import { IProduct } from "../../interfaces/IProduct"
 
 type Props = {
-  signture: SignatureProps
+  produto: IProduct,
   handleSelected: () => void
   icon: "UNIDIGITAL_INIDIVIDUAL" | "UNIDIGITAL_DUPLO" | "UNIDIGITAL_FAMILIA"
 }
 
-type SignatureProps = {
-  id: number
-  title: string
-  price: number
-  description: string
-}
-
 export function SubscriptionCard({
-  signture,
-  handleSelected,
+  produto,
   icon,
 }: Props) {
   return (
-    <ContainerCard onClick={handleSelected}>
+    <ContainerCard>
       <ContainerOne>
         {icon === "UNIDIGITAL_INIDIVIDUAL" && (
           <PersonIcon sx={{ fontSize: 54 }} />
@@ -40,7 +33,7 @@ export function SubscriptionCard({
           <Diversity1Icon sx={{ fontSize: 54 }} />
         )}
         <TruncatedText sx={{ textAlign: "center", fontWeight: "bold" }}>
-          {signture.title}
+          {produto.nome}
         </TruncatedText>
       </ContainerOne>
       <ContainerTwo>
@@ -48,7 +41,7 @@ export function SubscriptionCard({
           fontSize={12}
           sx={{ textAlign: "center", textOverflow: "ellipsis" }}
         >
-          {signture.description}
+          {produto.descricao}
         </Typography>
       </ContainerTwo>
       <ContainerThree>
@@ -56,7 +49,8 @@ export function SubscriptionCard({
           fontSize={12}
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          {signture.price.toLocaleString("pt-br", {
+          {/* @ts-ignore */}
+          {String(produto.preco).toLocaleString("pt-br", {
             style: "currency",
             currency: "BRL",
           })}

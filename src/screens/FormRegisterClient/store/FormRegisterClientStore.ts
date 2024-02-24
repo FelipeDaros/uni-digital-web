@@ -10,9 +10,17 @@ type SecundarioProps = {
 
 type Product = {
   id?: number;
-  title?: string;
-  description?: string;
-  price?: number;
+  nome?: string;
+  descricao?: string;
+  observacao?: string;
+  preco?: number;
+  qtd_secundario_padrao?: number;
+  add_secundarios?: number;
+  tipo?: string
+  ativo?: number;
+  id_cadastrante?: number;
+  created_at?: Date | null;
+  update_at?: Date | null;
 }
 
 type Props = {
@@ -21,13 +29,15 @@ type Props = {
   secundarios: SecundarioProps[];
   totalDependets: number;
   product: Product;
+  valorPorDependente: number;
+  total: number;
   handleNextStep: () => void;
-  handleNumberDependents: (quantity: number) => void;
   handleProduct: (product: Product) => void;
   handleSecundarios: (secundario: SecundarioProps) => void;
-  handleAddDependents: () => void
-  handleRemoveDependents: () => void
   handleLoading: () => void;
+  setHandleValorPorDependente: (valor: number) => void;
+  setValorTotal: (valor: number) => void;
+  handleTotalDependete: (valor: number) => void;
 }
 
 export const FormRegisterClientStore = create<Props>((set, get) => ({
@@ -36,13 +46,15 @@ export const FormRegisterClientStore = create<Props>((set, get) => ({
   secundarios: [],
   totalDependets: 0,
   product: {},
+  valorPorDependente: 0,
+  total: 0,
   handleNextStep: () => set((state) => ({ step: state.step + 1 })),
-  handleNumberDependents: (quantity: number) => set(() => ({ totalDependets: quantity })),
   handleProduct: (product: Product) => set(() => ({ product })),
   handleSecundarios: (secundario: SecundarioProps) => {
     set((state) => ({ secundarios: [...state.secundarios, secundario] }))
   },
-  handleAddDependents: () => set((state) => ({ totalDependets: state.totalDependets + 1 })),
-  handleRemoveDependents: () => set((state) => ({ totalDependets: state.totalDependets <= 0 ? 0 : - 1 })),
-  handleLoading: () => set((state) => ({ isLoading: !state.isLoading }))
+  handleLoading: () => set((state) => ({ isLoading: !state.isLoading })),
+  setHandleValorPorDependente: (valor: number) => set(() => ({valorPorDependente: valor})),
+  setValorTotal: (valor: number) => set(() => ({total: valor})),
+  handleTotalDependete: (valor: number) => set(() => ({totalDependets: valor}))
 }))

@@ -29,6 +29,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
 
       if (storagedUser) {
         const userParsed = JSON.parse(storagedUser)
+        
         api.defaults.headers["Authorization"] = `Bearer ${userParsed.access_token}`;
         setUser(userParsed)
       }
@@ -45,12 +46,11 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
 
   async function signIn(usuario: string, password: string) {
     try {
-      console.log(usuario, password)
       const { data } = await api.post("/auth/login", {
         usuario,
         password,
       })
-      
+
       api.defaults.headers["Authorization"] = `Bearer ${data.access_token}`
 
       if (data) {

@@ -12,7 +12,7 @@ export function RouteRegisterNoAuth() {
       <Route path="/" element={<Login />} />
       <Route path="/forgout" element={<ForgoutPassword />} />
       <Route path="/send-forgout" element={<SendForgout />} />
-      <Route path="/register" element={<FormRegisterClient />} />
+      <Route path="/register/:id" element={<FormRegisterClient />} />
       <Route path="/concluded" element={<FeedBackScreen />} />
       <Route path="/confirm-password/:id" element={<NewPassword />} />
 

@@ -36,31 +36,41 @@ export function RoutesAuth() {
   useEffect(() => {
     setDrawerOptions([
       {
+        id: 1,
         icon: HouseIcon,
         path: "/",
         label: "Página inicial",
+        disabled: !(user?.user.tipo === "T" || user?.user.tipo === "S" || user?.user.tipo === "A")
       },
       {
+        id: 2,
         icon: WorkHistoryIcon,
         path: "/signature",
         label: "Assinatura",
+        disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       },
       {
+        id: 3,
         icon: TimelineIcon,
         path: "/payment",
         label: "Hist. Pagamentos",
+        disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       },
       {
+        id: 4,
         icon: GroupsIcon,
         path: "/dependents",
         label: "Dependentes",
+        disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       },
       {
+        id: 5,
         icon: GroupsIcon,
         path: "/dashboard",
         label: "DashBoard",
+        disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       }
-    ])
+    ]);    
 
     if (user) {
       if (user.user.ativo !== 1) return handleNavigate()
@@ -80,7 +90,7 @@ export function RoutesAuth() {
       </Route>
 
       {/* Rota para redirecionar para a página principal quando a rota não existir */}
-      <Route path="*" element={<Navigate to="/" />} />
+      {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>
   )
 }
