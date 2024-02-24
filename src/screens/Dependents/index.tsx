@@ -9,8 +9,11 @@ import { ModalAddDependets } from "../../components/ModalAddDependets";
 import { useEffect, useState } from "react";
 import { api } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
+import { VModalError } from "../../components/ModalError";
 
 export function Dependents() {
+  const [stateModalErro, setStateModalErro] = useState(false);
+  const [msgErro, setMsgErro] = useState("");
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
@@ -19,6 +22,7 @@ export function Dependents() {
   const [isStateModalAddDependets, setIsStateModalAddDependets] = useState(false);
 
   const handleIsStateModalAddDependets = () => setIsStateModalAddDependets(!isStateModalAddDependets);
+  const handleStateModalErro = () => setStateModalErro(!stateModalErro);
 
   async function fetchData() {
     try {
@@ -41,6 +45,24 @@ export function Dependents() {
 
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleAddDependent(dados: any){
+    if(!dados.nome && !dados.data_nascimento && !dados.email && !dados.documento && !dados.sexo){
+      return
+    }
+
+    try {
+      setLoading(true);
+      await api.post('/auth/add-dependente', dados);
+      fetchData();
+    } catch (error: any) {
+      if(!!error.response){
+        setMsgErro(error.response.data.message);
+      }
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -118,7 +140,13 @@ export function Dependents() {
       <ModalAddDependets
         changeState={handleIsStateModalAddDependets}
         isState={isStateModalAddDependets}
-        onOk={() => { }}
+        onOk={handleAddDependent}
+      />
+      <VModalError 
+        changeState={handleStateModalErro}
+        description={msgErro}
+        isState={stateModalErro}
+        title="Erro"
       />
     </Grid >
   )

@@ -4,7 +4,7 @@ import { CustomButton } from "../Button/styles"
 import { FormControlLabel, Grid, Radio, RadioGroup } from "@mui/material"
 import { LabelText } from "../../screens/FormRegisterClient/components/StepTwo/style"
 import { Form } from "@unform/web"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { FormHandles } from "@unform/core"
 import { VTextField } from "../Input/VTextField"
 
@@ -57,7 +57,7 @@ const Modal = styled(BaseModal)`
 type Props = {
   isState: boolean
   changeState: () => void
-  onOk: () => void
+  onOk: (payload: any) => void
 }
 
 export function ModalAddDependets({
@@ -65,17 +65,21 @@ export function ModalAddDependets({
   isState,
   onOk
 }: Props) {
+  const [sexo, setSexo] = useState("");
   const formRef = useRef<FormHandles>(null)
 
-  function handleSave(dados: any) {
-    console.log(dados)
-  }
-
+  const onSubmit = (data: any) => {
+    const payload = {
+      ...data,
+      sexo
+    }
+    onOk(payload);
+  };
 
   return (
     <Modal open={isState} onClose={changeState}>
       <ModalContent>
-        <Form ref={formRef} placeholder="form" onSubmit={handleSave}>
+        <Form ref={formRef} placeholder="form" onSubmit={onSubmit}>
           <h2 id="unstyled-modal-title" className="modal-title">
             Novo dependente
           </h2>
@@ -95,15 +99,14 @@ export function ModalAddDependets({
           <Grid item xs={12} sm={4}>
             <LabelText>CPF</LabelText>
             <VTextField
-              id="cpf"
-              name="cpf"
+              id="documento"
+              name="documento"
               size="small"
               required
               color="success"
               fullWidth
               autoFocus
-              inputProps={{ maxLength: 11, pattern: '[a-z]' }}
-              type="text"
+              inputProps={{ maxLength: 11 }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -140,6 +143,8 @@ export function ModalAddDependets({
               defaultValue="N"
               id="sexo"
               name="sexo"
+              value={sexo}
+              onChange={e => setSexo(e.target.value)}
             >
               <FormControlLabel
                 value="M"
