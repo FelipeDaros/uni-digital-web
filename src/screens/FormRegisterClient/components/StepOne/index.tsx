@@ -10,11 +10,21 @@ import {
 import { ContainerDependentesComponent } from "./ContainerDependentes"
 import { CustomButton } from "../../../../components/Button"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
+import { ModalCupom } from "../../../../components/ModalCupom"
+import { useState } from "react"
 
 export function StepOne() {
+  const [stateModalCupom, setStateModalCupom] = useState(false);
   const [step, handleNextStep, product, total] = FormRegisterClientStore(
     (state) => [state.step, state.handleNextStep, state.product, state.total],
   )
+
+  const handleStateModalCupom = () => setStateModalCupom(!stateModalCupom);
+
+  function handleCupom(cupom: any){
+    console.log(cupom)
+    handleStateModalCupom()
+  }
 
   return (
     <CenteredContainer>
@@ -37,19 +47,13 @@ export function StepOne() {
         </Typography>
       </ContainerText>
       <ContainerCupom>
-        <TextField
-          name="cupom"
-          type="text"
-          size="small"
-          variant="outlined"
-          sx={{ width: 300 }}
-        />
         <CustomButton
           sx={{ marginLeft: 2 }}
           color="success"
           variant="outlined"
+          onClick={handleStateModalCupom}
         >
-          Validar Cupom
+          Selecionar cupom
         </CustomButton>
       </ContainerCupom>
       <ContainerFooter>
@@ -75,6 +79,11 @@ export function StepOne() {
           </Typography>
         </CustomButton>
       )}
+      <ModalCupom 
+        isState={stateModalCupom}
+        onOk={handleCupom}
+        changeState={handleStateModalCupom}
+      />
     </CenteredContainer>
   )
 }
