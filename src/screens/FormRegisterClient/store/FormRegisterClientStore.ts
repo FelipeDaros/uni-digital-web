@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { ICupom } from "../../../interfaces/ICupom"
 
 type SecundarioProps = {
   nome: string
@@ -31,16 +32,20 @@ type Props = {
   product: Product;
   valorPorDependente: number;
   total: number;
+  cupom: ICupom | null;
   handleNextStep: () => void;
   handleProduct: (product: Product) => void;
   handleSecundarios: (secundario: SecundarioProps) => void;
+  handleRemoveSecundarios: (documento: string) => void;
   handleLoading: () => void;
   setHandleValorPorDependente: (valor: number) => void;
   setValorTotal: (valor: number) => void;
   handleTotalDependete: (valor: number) => void;
+  handleSelectCupom: (cupom: ICupom) => void;
 }
 
 export const FormRegisterClientStore = create<Props>((set, get) => ({
+  cupom: null,
   isLoading: false,
   step: 0,
   secundarios: [],
@@ -53,8 +58,10 @@ export const FormRegisterClientStore = create<Props>((set, get) => ({
   handleSecundarios: (secundario: SecundarioProps) => {
     set((state) => ({ secundarios: [...state.secundarios, secundario] }))
   },
+  handleRemoveSecundarios: (documento: string) => set((state) => ({secundarios: state.secundarios.filter(item => item.documento !== documento)})),
   handleLoading: () => set((state) => ({ isLoading: !state.isLoading })),
   setHandleValorPorDependente: (valor: number) => set(() => ({valorPorDependente: valor})),
   setValorTotal: (valor: number) => set(() => ({total: valor})),
-  handleTotalDependete: (valor: number) => set(() => ({totalDependets: valor}))
+  handleTotalDependete: (valor: number) => set(() => ({totalDependets: valor})),
+  handleSelectCupom: (cupom: ICupom) => set(() => ({ cupom }))
 }))

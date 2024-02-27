@@ -1,7 +1,7 @@
 import { Avatar, Checkbox, Container, FormControlLabel, Grid, MenuItem, Paper, Radio, RadioGroup, Typography } from "@mui/material";
 import { FormHandles } from "@unform/core";
 import { Form } from "@unform/web";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import * as XLSX from "xlsx"
 
@@ -10,13 +10,11 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import { FormAlterSignatureStore } from "./store/FormAlterSignatureStore";
 import { CustomButton } from "../../components/Button";
 import { VisuallyHiddenInput } from "./styles";
-import { LabelText } from "../FormRegisterClient/components/StepTwo/style";
-import { VTextField } from "../../components/Input/VTextField";
-import { handleKeyPress } from "../../utils/handleKeyPress";
 import { DependentForm } from "./DependentForm";
 import { DependentTable } from "./DependentTable";
 import { VSelect } from "../../components/Select/VSelect";
 import { CreditCard } from "./CreditCard";
+import { api } from "../../config/api";
 
 
 const TIPO_PAGAMENTO = ["PIX", "BOLETO", "CARTAO"]
@@ -31,30 +29,18 @@ type PropsXLSX = {
 
 export function Signature() {
   const formRef = useRef<FormHandles>(null)
-  const [avatar, setAvatar] = useState(null)
-  const [avatarFile, setAvatarFile] = useState(null)
   const [selectedPayment, setSelectedPayment] = useState("");
-  const [selectedSexo, setSelectedSexo] = useState("");
-  const [acceptTerms, setAcceptTerms] = useState(false);
+
+  const [stateModalError, setStateModalError] = useState(false);
+  const [msgErrorModal, setMsgErrorModal] = useState("");
 
   const [handleSecundarios, secundarios, handleLoading] = FormAlterSignatureStore(
     (state) => [state.handleSecundarios, state.secundarios, state.handleLoading],
   )
 
-  const handleAcceptTerms = () => setAcceptTerms(!acceptTerms);
-
   const handleChange = (event: any) => {
     setSelectedPayment(event.target.value as string);
   };
-
-  function handleAvatarChange(e: any) {
-    const file = e.target.files[0]
-    if (file) {
-      setAvatar(file)
-      //@ts-ignore
-      setAvatarFile(URL.createObjectURL(file))
-    }
-  }
 
   async function handleAlterCep() {
     try {
@@ -109,37 +95,44 @@ export function Signature() {
   }
 
   async function handleSave(dados: any) {
-    //@ts-ignore
-    if (
-      formRef.current?.getData()?.senha !==
-      formRef.current?.getData()?.confirmarSenha
-    ) {
-      window.alert("Senhas não conferem")
-    }
+    try {
+      handleLoading()
+      // const formData = {
+      //   ...dados,
+      //   secundarios,
+      //   qtd_secundario: secundarios.length,
+      //   total,
+      //   id_produto: product.id,
+      //   sexo: selectedSexo,
+      //   tipo_pagamento: selectedPayment
+      // }
 
-    const formData = new FormData()
-
-    // Adiciona cada chave e valor do objeto 'dados' ao FormData
-    Object.entries(dados).forEach(([key, value]) => {
-      //@ts-ignore
-      formData.append(key, value)
-    })
-
-    //@ts-ignore
-    formData.append("secundarios", secundarios)
-    formData.append("tipo_pagamento", selectedPayment)
-    formData.append("sexo", selectedSexo)
-
-    // Adiciona a foto ao FormData
-    if (avatar) {
-      formData.append("avatar", avatar) // 'avatar' é o nome do campo no FormData que conterá a foto
-    }
-
-    // Agora você pode acessar os valores do FormData
-    for (const pair of formData.entries()) {
-      console.log(pair[0], pair[1])
+      // await api.post(`/compras/store`, formData);
+      
+    } catch (error: any) {
+      if (!!error.response) {
+        // handleChangeStateModalErro()
+        // setMsgErrorModal(error.response.data.message)
+      }
+    } finally {
+      handleLoading()
     }
   }
+  
+  async function fetchData(){
+    try {
+      handleLoading()
+      await api.get('/produtos/list');
+    } catch (error) {
+      
+    }finally{
+      handleLoading()
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
 
   return (
     <Container maxWidth="md" sx={{ paddingTop: 4, paddingBottom: 4 }}>

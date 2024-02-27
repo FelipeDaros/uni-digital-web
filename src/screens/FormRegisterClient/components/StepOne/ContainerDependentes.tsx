@@ -91,14 +91,14 @@ type Props = {
 
 export function ContainerDependentesComponent({ limit }: Props) {
   const [dependents, setDependetes] = useState(0);
-  const [product, valorPorDependente, total, setHandleValorPorDependente, setValorTotal, handleTotalDependete] =
+  const [product, valorPorDependente, total, setValorTotal, handleTotalDependete, cupom] =
     FormRegisterClientStore((state) => [
       state.product,
       state.valorPorDependente,
       state.total,
-      state.setHandleValorPorDependente,
       state.setValorTotal,
-      state.handleTotalDependete
+      state.handleTotalDependete,
+      state.cupom
     ])
 
   function handleNumberDependents(value: any) {
@@ -113,32 +113,79 @@ export function ContainerDependentesComponent({ limit }: Props) {
     if (product.tipo === "PF" && product.add_secundarios === 1) {
       if (value >= 1) {
         valorPorDependente = 10;
-        setHandleValorPorDependente(valorPorDependente);
         // @ts-ignore
-        setValorTotal((value * parseFloat(valorPorDependente)) + parseFloat(product.preco))
-        // setValorAdicional(parseFloat(parseFloat((value * valorPorDependente)) + parseFloat(product.preco)).toFixed(2));
+        let calculo = (value * parseFloat(valorPorDependente)) + parseFloat(product.preco);
+
+        if (cupom) {
+          if (cupom.tipo === 'VALOR_TOTAL') {
+            calculo = calculo - cupom.valor;
+          }
+
+          if (cupom.tipo === 'PORCENTAGEM') {
+            let desconto = (cupom.valor / 100) * calculo; // Calcula o valor do desconto
+            calculo = calculo - desconto; // Subtrai o desconto do cálculo original
+          }
+        }
+
+        setValorTotal(calculo);
       }
     }
 
     if (product.tipo === "PJ" && product.add_secundarios === 1) {
       if (value >= 1 && value <= 10) {
         valorPorDependente = 27.90;
-        setHandleValorPorDependente(valorPorDependente);
         // @ts-ignore
-        setValorTotal((value * parseFloat(valorPorDependente)) + parseFloat(product.preco))
+        let calculo = (value * parseFloat(valorPorDependente)) + parseFloat(product.preco);
+
+        if (cupom) {
+          if (cupom.tipo === 'VALOR_TOTAL') {
+            calculo = calculo - cupom.valor;
+          }
+
+          if (cupom.tipo === 'PORCENTAGEM') {
+            let desconto = (cupom.valor / 100) * calculo; // Calcula o valor do desconto
+            calculo = calculo - desconto; // Subtrai o desconto do cálculo original
+          }
+        }
+
+        setValorTotal(calculo);
       }
       if (value >= 11 && value <= 29) {
         valorPorDependente = 26;
-        setHandleValorPorDependente(valorPorDependente);
         // @ts-ignore
-        setValorTotal((value * parseFloat(valorPorDependente)) + parseFloat(product.preco))
+        let calculo = (value * parseFloat(valorPorDependente)) + parseFloat(product.preco);
+
+        if (cupom) {
+          if (cupom.tipo === 'VALOR_TOTAL') {
+            calculo = calculo - cupom.valor;
+          }
+
+          if (cupom.tipo === 'PORCENTAGEM') {
+            let desconto = (cupom.valor / 100) * calculo; // Calcula o valor do desconto
+            calculo = calculo - desconto; // Subtrai o desconto do cálculo original
+          }
+        }
+
+        setValorTotal(calculo);
       }
 
       if (value >= 30) {
         valorPorDependente = 23.72;
-        setHandleValorPorDependente(valorPorDependente);
         // @ts-ignore
-        setValorTotal((value * parseFloat(valorPorDependente)) + parseFloat(product.preco))
+        let calculo = (value * parseFloat(valorPorDependente)) + parseFloat(product.preco);
+
+        if (cupom) {
+          if (cupom.tipo === 'VALOR_TOTAL') {
+            calculo = calculo - cupom.valor;
+          }
+
+          if (cupom.tipo === 'PORCENTAGEM') {
+            let desconto = (cupom.valor / 100) * calculo; // Calcula o valor do desconto
+            calculo = calculo - desconto; // Subtrai o desconto do cálculo original
+          }
+        }
+
+        setValorTotal(calculo);
       }
     }
   }

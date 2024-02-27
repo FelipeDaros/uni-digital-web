@@ -31,8 +31,7 @@ export function SendForgout() {
           fontSize={14}
           textAlign="center"
         >
-          Um e-mail foi enviado para u***********@*******.com o link para que
-          você mude a sua senha.
+          Um e-mail foi enviado para o endereço informado com o link de recuperação de senha.
         </Typography>
         <Typography
           fontWeight="bold"

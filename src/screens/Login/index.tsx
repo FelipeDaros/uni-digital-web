@@ -16,21 +16,26 @@ import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
 import { VTextField } from "../../components/Input/VTextField"
 import { Loading } from "../../components/Loading"
+import { VModalError } from "../../components/ModalError"
 
 export function Login() {
   const [loading, setLoading] = useState(false);
+  const [msgErrorModal, setMsgErrorModal] = useState("");
+  const [stateModalError, setStateModalError] = useState(false);
   const navigate = useNavigate()
   const formRef = useRef<FormHandles>(null)
 
+  const handleChangeStateModalErro = () => setStateModalError(!stateModalError);
+
   const { signIn } = useAuth()
 
-
-  const handleSubmit = (data: any) => {
+  const handleSubmit = async (data: any) => {
     try {
       setLoading(true)
-      signIn(data.user, data.password);
-    } catch (error) {
-
+      await signIn(data.user, data.password);
+    } catch (error: any) {
+      handleChangeStateModalErro()
+      setMsgErrorModal(error.message)
     } finally {
       setLoading(false)
     }
@@ -112,6 +117,12 @@ export function Login() {
           </Grid>
         </Form>
       </ContainerBox>
+      <VModalError
+        changeState={handleChangeStateModalErro}
+        description={msgErrorModal}
+        isState={stateModalError}
+        title="Erro"
+      />
     </StyledContainer>
   )
 }

@@ -1,6 +1,5 @@
 import {
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -8,12 +7,13 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material"
-import RemoveIcon from "@mui/icons-material/Remove"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 
+import DeleteIcon from '@mui/icons-material/Delete';
+
 export function DependentTable() {
-  const [secundarios] = FormRegisterClientStore(
-    (state) => [state.secundarios],
+  const [secundarios, handleRemoveSecundarios] = FormRegisterClientStore(
+    (state) => [state.secundarios, state.handleRemoveSecundarios],
   )
 
   return (
@@ -37,11 +37,11 @@ export function DependentTable() {
             >
               <TableCell>
                 <IconButton
-                  onClick={() => { }}
+                  onClick={() => handleRemoveSecundarios(row.documento)}
                   size="small"
-                  sx={{ backgroundColor: "#28DA9D" }}
+                  color="error"
                 >
-                  <RemoveIcon />
+                  <DeleteIcon />
                 </IconButton>
               </TableCell>
               <TableCell component="th" scope="row">

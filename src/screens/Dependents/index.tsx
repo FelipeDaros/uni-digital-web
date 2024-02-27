@@ -57,6 +57,7 @@ export function Dependents() {
       setLoading(true);
       await api.post('/auth/add-dependente', dados);
       fetchData();
+      handleIsStateModalAddDependets();
     } catch (error: any) {
       if(!!error.response){
         setMsgErro(error.response.data.message);
@@ -104,7 +105,7 @@ export function Dependents() {
       <Typography fontWeight="bold" textAlign="start">
         Cadastro de dependentes
       </Typography>
-      <p>Informe oas pessoas vinculadas ao seu UniDigital</p>
+      <p>Informe as pessoas vinculadas ao seu UniDigital</p>
       <OutlinedInput
         id="outlined-adornment-weight"
         endAdornment={<SearchIcon />}

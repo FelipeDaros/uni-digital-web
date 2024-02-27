@@ -1,47 +1,52 @@
 import {
-  Chip,
   Grid,
-  Pagination,
   Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material"
-import { CustomButton } from "../../components/Button"
 import { VModalNotification } from "../../components/ModalNotification"
 import { useEffect, useState } from "react"
 import { ModalBoletoDetails } from "./components/ModalBoletoDetails"
 import { useAuth } from "../../context/AuthContext"
+import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { api } from "../../config/api"
 
-function createData(
-  id: number,
-  status: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { id, status, calories, fat, carbs, protein }
-}
-
-const rows = [
-  createData(1, "PENDENTE", 159, 6.0, 24, 4.0),
-  createData(2, "PENDENTE", 237, 9.0, 37, 4.3),
-  createData(3, "PAGO", 262, 16.0, 24, 6.0),
-  createData(4, "PAGO", 305, 3.7, 67, 4.3),
-  createData(5, "PAGO", 356, 16.0, 49, 3.9),
-]
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'nome',
+    headerName: 'Nome',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'documento',
+    headerName: 'Documento',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'celular',
+    headerName: 'Celular',
+    type: 'number',
+    width: 200,
+    editable: true,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 400,
+    editable: true,
+  }
+];
 
 export function Payment() {
   const { user } = useAuth()
+  const [loading, setLoading] = useState(false);
   const [isStateModalDefaulter, setIsStateModalDefaulter] = useState(false)
-  const [isStateModalBoletoDetails, setIsStateModalBoletoDetails] =
-    useState(false)
+  const [isStateModalBoletoDetails, setIsStateModalBoletoDetails] = useState(false)
+  const [gridData, setGridData] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
 
   const handleStateModalDefaulter = () =>
     setIsStateModalDefaulter(!isStateModalDefaulter)
@@ -49,11 +54,37 @@ export function Payment() {
   const handleStateModalBoletoDetails = () =>
     setIsStateModalBoletoDetails(!isStateModalBoletoDetails)
 
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/pagamentos/historico-pagamento`, {
+        params: {
+          pageSize: pageSize,
+          page: page
+        }
+      });
+      const payload = {
+        rows: data.data,
+        columns,
+        experimentalFeatures: true,
+
+      }
+      // @ts-ignore
+      setGridData(payload)
+    } catch (error) {
+
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     if (user?.user.ativo !== 1) {
       validatePaymentDefaulter()
     }
-  }, [])
+
+    fetchData()
+  }, [pageSize])
 
   function validatePaymentDefaulter() {
     setIsStateModalDefaulter(true)
@@ -101,54 +132,22 @@ export function Payment() {
           Histórico de faturas
         </Typography>
       </Grid>
-      <TableContainer
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: 650,
-        }}
-      >
-        <Table sx={{ maxWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Vencimento</TableCell>
-              <TableCell align="center">Valor</TableCell>
-              <TableCell align="center">Detalhes</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell align="center">
-                  <Chip
-                    label={row.status}
-                    color={row.status === "PAGO" ? "success" : "warning"}
-                    variant="outlined"
-                  />
-                </TableCell>
-                <TableCell align="center">{row.calories}</TableCell>
-                <TableCell align="center">{row.fat}</TableCell>
-                <TableCell align="center">
-                  <CustomButton variant="outlined" color="success">
-                    Visualizar
-                  </CustomButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Stack spacing={2} mt={2}>
-          <Pagination
-            count={5}
-            variant="outlined"
-            shape="rounded"
-            color="success"
-            size="small"
+      <Paper sx={{ width: '100%', marginTop: 2 }}>
+        {gridData &&
+          <DataGrid
+            {...gridData}
+            initialState={{
+              pagination: { paginationModel: { pageSize: pageSize, page } },
+            }}
+            loading={loading}
+            pageSizeOptions={[10, 25, 50]}
+            onPaginationModelChange={e => {
+              setPage(e.page)
+              setPageSize(e.pageSize)
+            }}
           />
-        </Stack>
-      </TableContainer>
+        }
+      </Paper>
       <VModalNotification
         title="Assinatura"
         description="Sua assinatura não está ativa. Por favor, regularize para ter acesso a todos os serviços do UniDigital"

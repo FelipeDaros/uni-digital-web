@@ -40,7 +40,11 @@ export function Profile() {
     async function handleSave(dados: any) {
         try {
             setLoading(true);
-            await api.put(`/auth/update/${user?.user.id}`, dados);
+            const payload = {
+                ...dados,
+                sexo: radio
+            }
+            await api.put(`/auth/update/${user?.user.id}`, payload);
         } catch (error) {
 
         } finally {
@@ -49,6 +53,7 @@ export function Profile() {
     }
 
     async function handleAlterSignature() {
+        navigation('/signature')
         handleStateSignature()
     }
 
