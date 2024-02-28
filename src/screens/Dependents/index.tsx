@@ -1,7 +1,7 @@
 import { Grid, OutlinedInput, Paper, Typography } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, ptBR } from '@mui/x-data-grid';
 import { CustomButton } from "../../components/Button";
 
 import AddIcon from '@mui/icons-material/Add';
@@ -10,6 +10,35 @@ import { useEffect, useState } from "react";
 import { api } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
 import { VModalError } from "../../components/ModalError";
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', width: 90 },
+  {
+    field: 'nome',
+    headerName: 'Nome',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'documento',
+    headerName: 'Documento',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'celular',
+    headerName: 'Celular',
+    type: 'number',
+    width: 200,
+    editable: true,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    width: 400,
+    editable: true,
+  }
+];
 
 export function Dependents() {
   const [stateModalErro, setStateModalErro] = useState(false);
@@ -71,35 +100,6 @@ export function Dependents() {
     fetchData()
   }, [pageSize])
 
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'nome',
-      headerName: 'Nome',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'documento',
-      headerName: 'Documento',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'celular',
-      headerName: 'Celular',
-      type: 'number',
-      width: 200,
-      editable: true,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      width: 400,
-      editable: true,
-    }
-  ];
-
   return (
     <Grid margin={2} pt={4} pb={4}>
       <Typography fontWeight="bold" textAlign="start">
@@ -135,6 +135,7 @@ export function Dependents() {
               setPage(e.page)
               setPageSize(e.pageSize)
             }}
+            localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
           />
         }
       </Paper>
