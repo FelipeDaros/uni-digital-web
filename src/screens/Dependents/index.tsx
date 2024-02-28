@@ -46,7 +46,7 @@ export function Dependents() {
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const { user } = useAuth()
   const [isStateModalAddDependets, setIsStateModalAddDependets] = useState(false);
 

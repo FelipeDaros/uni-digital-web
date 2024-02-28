@@ -50,7 +50,7 @@ export function Cupom(){
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(2);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   async function fetchData() {
     try {

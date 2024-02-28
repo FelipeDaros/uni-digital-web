@@ -46,7 +46,7 @@ export function Payment() {
   const [isStateModalBoletoDetails, setIsStateModalBoletoDetails] = useState(false)
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
 
   const handleStateModalDefaulter = () =>
     setIsStateModalDefaulter(!isStateModalDefaulter)

@@ -86,7 +86,7 @@ export function ModalCupom({
   isState,
   onOk
 }: Props) {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);

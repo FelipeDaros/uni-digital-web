@@ -18,6 +18,7 @@ import DonutSmallIcon from '@mui/icons-material/DonutSmall';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 
 import { Profile } from "../screens/Profile"
 import { Payment } from "../screens/Payments"
@@ -28,6 +29,9 @@ import { DashBoard } from "../screens/DashBoard"
 import { Cupom } from "../screens/Cupom"
 import { RegisterCupom } from "../screens/Cupom/RegisterCupom"
 import { Policies } from "../screens/Policies"
+import { RegisterPolicy } from "../screens/Policies/RegisterPolicy"
+import { Administers } from "../screens/Administers"
+import { RegisterAdminister } from "../screens/Administers/RegisterPolicy"
 
 export function RoutesAuth() {
   const { user } = useAuth()
@@ -89,8 +93,15 @@ export function RoutesAuth() {
         path: "/policies",
         label: "Políticas",
         disabled: !(user?.user.tipo === "A")
+      },
+      {
+        id: 8,
+        icon: SupervisorAccountIcon,
+        path: "/administers",
+        label: "Administradores",
+        disabled: !(user?.user.tipo === "A")
       }
-    ]);    
+    ]);
 
     if (user) {
       if (user.user.ativo !== 1) return handleNavigate()
@@ -107,11 +118,14 @@ export function RoutesAuth() {
         <Route path="/change-payment-method" element={<ChangePaymentMethod />} />
         <Route path="/dependents" element={<Dependents />} />
         <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/cupom" element={<Cupom />}/>
-        <Route path="/register-cupom" element={<RegisterCupom />}/>
-        <Route path="/policies" element={<Policies />}/>
-      </Route>
+        <Route path="/cupom" element={<Cupom />} />
+        <Route path="/register-cupom" element={<RegisterCupom />} />
+        <Route path="/policies" element={<Policies />} />
+        <Route path="/register-policy" element={<RegisterPolicy />} />
 
+        <Route path="/administers" element={<Administers />} />
+        <Route path="/register-administer" element={<RegisterAdminister />} />
+      </Route>
       {/* Rota para redirecionar para a página principal quando a rota não existir */}
       {/* <Route path="*" element={<Navigate to="/" />} /> */}
     </Routes>

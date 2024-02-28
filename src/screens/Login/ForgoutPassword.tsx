@@ -16,26 +16,23 @@ import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
 import { api } from "../../config/api"
 import { VTextField } from "../../components/Input/VTextField"
-import { VModalError } from "../../components/ModalError"
+import { useToast } from "../../components/Toast"
 
 export function ForgoutPassword() {
+  const { showToast, Toast } = useToast();
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
-  const [msgErrorModal, setMsgErrorModal] = useState("");
-  const [stateModalError, setStateModalError] = useState(false);
-
-  const handleChangeStateModalErro = () => setStateModalError(!stateModalError);
 
   const handleSubmit = async (data: any) => {
     try {
       setLoading(true)
       await api.post(`/auth/forgout-password`, data);
       navigate("/send-forgout")
+      showToast('Recuperação enviada!', 'success')
     } catch (error: any) {
       if (!!error.response) {
-        handleChangeStateModalErro()
-        setMsgErrorModal(error.response.data.message)
+        showToast(error.response.data.message, 'error')
       }
     } finally {
       setLoading(false)
@@ -108,12 +105,7 @@ export function ForgoutPassword() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <VModalError
-        changeState={handleChangeStateModalErro}
-        description={msgErrorModal}
-        isState={stateModalError}
-        title="Erro"
-      />
+      <Toast />
     </StyledContainer>
   )
 }

@@ -9,45 +9,32 @@ import { api } from "../../config/api";
 
 import { CustomButton } from "../../components/Button";
 import { useToast } from "../../components/Toast";
+import { useNavigate } from "react-router-dom";
 
 
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
   {
-    field: 'descricao',
-    headerName: 'Descricao',
-    width: 300,
-  },
-  {
-    field: 'codigo',
-    headerName: 'Código',
-    width: 300,
-  },
-  {
     field: 'tipo',
     headerName: 'Tipo',
-    width: 150,
+    width: 200,
   },
   {
-    field: 'valor',
-    headerName: 'Valor',
-    type: 'number',
-    width: 150,
+    field: 'descricao',
+    headerName: 'Descricao',
+    width: 400,
   },
-  {
-    field: 'ativo',
-    headerName: 'Ativo',
-    width: 50,
-  }
 ];
 
 export function Policies(){
+  const navigate = useNavigate();
   const { showToast, Toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
-  const [pageSize, setPageSize] = useState(2);
-  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [page, setPage] = useState(0
+    );
 
   async function fetchData() {
     try {
@@ -98,7 +85,7 @@ export function Policies(){
         }}
       />
       <Grid mt={2} justifyContent="end" display="flex">
-        <CustomButton onClick={() => {}} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
+        <CustomButton onClick={() => navigate('/register-policy')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Novo
         </CustomButton>
       </Grid>
@@ -110,7 +97,7 @@ export function Policies(){
               pagination: { paginationModel: { pageSize: pageSize, page} },
             }}
             loading={loading}
-            pageSizeOptions={[2, 5, 10]}
+            pageSizeOptions={[5, 10, 20]}
             onPaginationModelChange={e => {
               setPage(e.page)
               setPageSize(e.pageSize)

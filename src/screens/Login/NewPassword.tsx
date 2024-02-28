@@ -1,4 +1,4 @@
-import { Backdrop, CircularProgress, CssBaseline, Grid, InputAdornment, Typography } from "@mui/material";
+import { CssBaseline, Grid, InputAdornment, Typography } from "@mui/material";
 import { ContainerBox, StyledContainer, Image } from "./styles";
 
 import logo from "../../assets/logo-unidigital-horizontal-amarelo.png"
@@ -12,9 +12,11 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "../../config/api";
 import { Loading } from "../../components/Loading";
 import { VModalNotification } from "../../components/ModalNotification";
+import { useToast } from "../../components/Toast";
 
 
 export function NewPassword() {
+    const { showToast, Toast } = useToast();
     const { id } = useParams();
     const formRef = useRef<FormHandles>(null);
     const navigate = useNavigate()
@@ -29,7 +31,7 @@ export function NewPassword() {
             setLoading(true);
             const { data } = await api.get(`/auth/verify-code/${id}`);
             if (data.status === 'sucess') return setIsValid(true);
-        } catch (error) {
+        } catch (error: any) {
             setDisabled(true);
             return setIsValid(false);
         } finally {
@@ -39,7 +41,7 @@ export function NewPassword() {
     }
 
     const handleSubmit = async (data: any) => {
-        if(!data.password){
+        if (!data.password) {
             return
         }
         const payload = {
@@ -50,8 +52,11 @@ export function NewPassword() {
             setLoading(true)
             await api.post(`/auth/update-password`, payload);
             navigate("/")
-        } catch (error) {
-
+            showToast('Senha alterada com sucesso!', 'success')
+        } catch (error: any) {
+            if (!!error.response) {
+                showToast(error.response.data.message, 'error')
+            }
         } finally {
             setLoading(false)
         }
@@ -143,12 +148,7 @@ export function NewPassword() {
                     </Grid>
                 </Form>
             </ContainerBox>
-            <Backdrop
-                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={loading}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            <Toast />
         </StyledContainer>
     )
 }
