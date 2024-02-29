@@ -1,7 +1,6 @@
 import {
   Route,
   Routes,
-  Navigate,
   useLocation,
   useNavigate,
 } from "react-router-dom"
@@ -19,6 +18,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
 
 import { Profile } from "../screens/Profile"
 import { Payment } from "../screens/Payments"
@@ -32,6 +32,8 @@ import { Policies } from "../screens/Policies"
 import { RegisterPolicy } from "../screens/Policies/RegisterPolicy"
 import { Administers } from "../screens/Administers"
 import { RegisterAdminister } from "../screens/Administers/RegisterPolicy"
+import { Products } from "../screens/Products"
+import { RegisterProduct } from "../screens/Products/RegisterProduct"
 
 export function RoutesAuth() {
   const { user } = useAuth()
@@ -89,13 +91,20 @@ export function RoutesAuth() {
       },
       {
         id: 7,
+        icon: ProductionQuantityLimitsIcon,
+        path: "/products",
+        label: "Produtos",
+        disabled: !(user?.user.tipo === "A")
+      },
+      {
+        id: 8,
         icon: NewspaperIcon,
         path: "/policies",
         label: "Políticas",
         disabled: !(user?.user.tipo === "A")
       },
       {
-        id: 8,
+        id: 9,
         icon: SupervisorAccountIcon,
         path: "/administers",
         label: "Administradores",
@@ -125,6 +134,9 @@ export function RoutesAuth() {
 
         <Route path="/administers" element={<Administers />} />
         <Route path="/register-administer" element={<RegisterAdminister />} />
+
+        <Route path="/products" element={<Products />} />
+        <Route path="/register-product" element={<RegisterProduct />} />
       </Route>
       {/* Rota para redirecionar para a página principal quando a rota não existir */}
       {/* <Route path="*" element={<Navigate to="/" />} /> */}

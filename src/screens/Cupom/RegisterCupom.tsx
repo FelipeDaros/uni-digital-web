@@ -9,7 +9,7 @@ import { Loading } from "../../components/Loading";
 import { Form } from "@unform/web";
 import { handleKeyPress } from "../../utils/handleKeyPress";
 import { useNavigate } from "react-router-dom";
-import { DataGrid, GridColDef, ptBR, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 import { api } from "../../config/api";
 
 const columns: GridColDef[] = [
@@ -53,7 +53,7 @@ export function RegisterCupom() {
     try {
       setLoading(true);
 
-      const { data } = await api.get('/produtos/list-produtos-ativos-cadastro-cupom', {
+      const { data } = await api.get('/produtos/list-all', {
         params: {
           pageSize: pageSize,
           page: page
