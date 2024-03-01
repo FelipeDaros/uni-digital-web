@@ -113,7 +113,6 @@ export function RegisterPolicy() {
                     </CustomButton>
                 </Grid>
             </Form>
-            <Toast />
         </Container>
     )
 }

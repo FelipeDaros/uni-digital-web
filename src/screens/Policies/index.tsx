@@ -10,6 +10,7 @@ import { api } from "../../config/api";
 import { CustomButton } from "../../components/Button";
 import { useToast } from "../../components/Toast";
 import { useNavigate } from "react-router-dom";
+import { theme } from "../../styled";
 
 
 
@@ -84,7 +85,13 @@ export function Policies(){
           'aria-label': 'weight',
         }}
       />
-      <Grid mt={2} justifyContent="end" display="flex">
+      <Grid mt={2} justifyContent="end" display="flex"
+      sx={{
+        [theme.breakpoints.down("md")]: {
+          alignItems: "center",
+          justifyContent: "center"
+        },
+      }}>
         <CustomButton onClick={() => navigate('/register-policy')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Novo
         </CustomButton>

@@ -10,6 +10,7 @@ import { api } from "../../config/api";
 
 import { CustomButton } from "../../components/Button";
 import { useToast } from "../../components/Toast";
+import { theme } from "../../styled";
 
 
 
@@ -100,7 +101,12 @@ export function Cupom(){
           'aria-label': 'weight',
         }}
       />
-      <Grid mt={2} justifyContent="end" display="flex">
+      <Grid mt={2} justifyContent="end" display="flex" sx={{
+        [theme.breakpoints.down("md")]: {
+          alignItems: "center",
+          justifyContent: "center"
+        },
+      }}>
         <CustomButton onClick={() => navigate('/register-cupom')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Novo
         </CustomButton>
@@ -122,7 +128,6 @@ export function Cupom(){
           />
         }
       </Paper>
-      <Toast />
     </Grid >
   )
 }

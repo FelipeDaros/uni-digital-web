@@ -13,13 +13,13 @@ import { CardHomeTwo } from "../../components/CardHomeTwo"
 import { useAuth } from "../../context/AuthContext"
 
 export function Home() {
-    const { user } = useAuth();
+  const { user } = useAuth();
 
   return (
     <Grid container>
       <Grid container>
         {/* @ts-ignore */}
-        <VirtualCard nome={user?.user?.nome} codigo={user?.user.documento} data_nascimento={user?.user.data_nascimento}/>
+        <VirtualCard nome={user?.user?.nome} codigo={user?.user.documento} data_nascimento={user?.user.data_nascimento} />
       </Grid>
       <Grid container>
         <CardHomeOne nome="Felipe" />

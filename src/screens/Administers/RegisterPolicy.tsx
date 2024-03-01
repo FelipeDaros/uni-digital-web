@@ -32,7 +32,7 @@ export function RegisterAdminister() {
             }
             await api.post('/auth/create-admin', payload);
             showToast('Política cadastrada com sucesso!', 'success')
-            navigate('/administers');
+            // navigate('/administers');
         } catch (error: any) {
             if (!!error.response) {
                 showToast(error.response.data.message, 'error')
@@ -346,7 +346,6 @@ export function RegisterAdminister() {
                     </CustomButton>
                 </Grid>
             </Form>
-            <Toast />
         </Container>
     )
 }

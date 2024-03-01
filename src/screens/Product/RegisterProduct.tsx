@@ -9,12 +9,12 @@ import { Loading } from "../../components/Loading";
 import { Form } from "@unform/web";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../config/api";
-import { useToast } from "../../components/Toast";
 import { handleKeyPress } from "../../utils/handleKeyPress";
+import { useToast } from "../../context/ToastContext";
 
 
 export function RegisterProduct() {
-  const { showToast, Toast } = useToast();
+  const { showToast } = useToast()
   const navigate = useNavigate();
   const formRef = useRef<FormHandles>(null)
   const [loading, setLoading] = useState(false);
@@ -30,12 +30,18 @@ export function RegisterProduct() {
         tipo: tipo,
         add_secundarios: secundarios
       }
-      await api.post('/produtos/store', payload);
-      showToast('Produto cadastrado com sucesso!', 'success')
+      const { data } = await api.post('/produtos/store', payload);
+      showToast({
+        color: 'success',
+        message: data.message
+      })
       navigate('/products');
     } catch (error: any) {
       if (!!error.response) {
-        showToast(error.response.data.message, 'error')
+        showToast({
+          color: 'success',
+          message: error.response.data.message
+        })
       }
     } finally {
       setLoading(false);
@@ -239,7 +245,6 @@ export function RegisterProduct() {
           </CustomButton>
         </Grid>
       </Form>
-      <Toast />
     </Container>
   )
 }

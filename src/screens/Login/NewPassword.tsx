@@ -148,7 +148,6 @@ export function NewPassword() {
                     </Grid>
                 </Form>
             </ContainerBox>
-            <Toast />
         </StyledContainer>
     )
 }

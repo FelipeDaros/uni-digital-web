@@ -3,6 +3,8 @@ import { theme } from "./styled"
 import { AuthContextProvider } from "./context/AuthContext"
 import { Router } from "./routes/Router"
 import { DrawerProvider } from "./context/DrawerContext"
+import { useToast } from "./components/Toast"
+import { ToastContextProvider } from "./context/ToastContext"
 
 function App() {
   return (
@@ -10,8 +12,11 @@ function App() {
       <AuthContextProvider>
         {/* @ts-ignore */}
         <DrawerProvider>
-          <CssBaseline />
-          <Router />
+          {/* @ts-ignore */}
+          <ToastContextProvider>
+            <CssBaseline />
+            <Router />
+          </ToastContextProvider>
         </DrawerProvider>
       </AuthContextProvider>
     </ThemeProvider>

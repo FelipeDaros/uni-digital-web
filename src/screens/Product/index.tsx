@@ -10,18 +10,33 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { api } from "../../config/api";
 
 import { CustomButton } from "../../components/Button";
-import { useToast } from "../../components/Toast";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { theme } from "../../styled";
+import { useToast } from "../../context/ToastContext";
+
+type PropsColor = {
+  colorCircle: 1 | 0;
+}
+
+const Circle = styled.div<PropsColor>`
+  width: 20px; /* Adicionando 'px' após o valor de largura */
+  height: 20px; /* Adicionando 'px' após o valor de altura */
+  border-radius: 50px;
+  background-color: ${props => props.colorCircle === 1 ? '#27da9d' : '#e8e8e8'};
+`;
+
 
 export function Products() {
   const navigate = useNavigate();
-  const { showToast, Toast } = useToast();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(5);
   const [page, setPage] = useState(0);
 
   const columns: GridColDef[] = [
+    { field: 'status', headerName: '', width: 30, renderCell: (params) => (<Circle colorCircle={params.row.ativo} />) },
     { field: 'id', headerName: 'ID', width: 90 },
     {
       field: 'nome',
@@ -46,7 +61,7 @@ export function Products() {
     },
     {
       field: 'actions',
-      headerName: 'Actions',
+      headerName: 'Ação',
       width: 100,
       renderCell: (params) => (
         <IconButton onClick={() => params.row.ativo === 1 ? handleAlterProduct(params.row.id, params.row, 0) : handleAlterProduct(params.row.id, params.row, 1)}>
@@ -65,10 +80,16 @@ export function Products() {
       }
       const { data } = await api.put(`/produtos/update/${id}`, payload)
       await fetchData();
-      showToast(data.message, 'success')
+      showToast({
+        color: 'success',
+        message: data.message
+      })
     } catch (error: any) {
       if (!!error.response) {
-        showToast(error.response.data.message, 'error')
+        showToast({
+          color: 'error',
+          message: error.response.data.message
+        })
       }
     } finally {
       setLoading(false)
@@ -95,7 +116,10 @@ export function Products() {
       setGridData(payload)
     } catch (error: any) {
       if (!!error.response) {
-        showToast(error.response.data.message, 'error')
+        showToast({
+          color: 'error',
+          message: error.response.data.message
+        })
       }
     } finally {
       setLoading(false);
@@ -123,7 +147,12 @@ export function Products() {
           'aria-label': 'weight',
         }}
       />
-      <Grid mt={2} justifyContent="end" display="flex">
+      <Grid mt={2} justifyContent="end" display="flex" sx={{
+        [theme.breakpoints.down("md")]: {
+          alignItems: "center",
+          justifyContent: "center"
+        },
+      }}>
         <CustomButton onClick={() => navigate('/register-product')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Novo
         </CustomButton>
@@ -146,7 +175,6 @@ export function Products() {
           />
         }
       </Paper>
-      <Toast />
     </Grid >
   )
 }

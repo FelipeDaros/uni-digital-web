@@ -1,4 +1,5 @@
 import {
+  Navigate,
   Route,
   Routes,
   useLocation,
@@ -32,8 +33,9 @@ import { Policies } from "../screens/Policies"
 import { RegisterPolicy } from "../screens/Policies/RegisterPolicy"
 import { Administers } from "../screens/Administers"
 import { RegisterAdminister } from "../screens/Administers/RegisterPolicy"
-import { Products } from "../screens/Products"
-import { RegisterProduct } from "../screens/Products/RegisterProduct"
+import { Products } from "../screens/Product"
+import { RegisterProduct } from "../screens/Product/RegisterProduct"
+
 
 export function RoutesAuth() {
   const { user } = useAuth()
@@ -138,8 +140,7 @@ export function RoutesAuth() {
         <Route path="/products" element={<Products />} />
         <Route path="/register-product" element={<RegisterProduct />} />
       </Route>
-      {/* Rota para redirecionar para a página principal quando a rota não existir */}
-      {/* <Route path="*" element={<Navigate to="/" />} /> */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )
 }

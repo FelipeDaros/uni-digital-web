@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { api } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
 import { VModalError } from "../../components/ModalError";
+import { theme } from "../../styled";
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -117,7 +118,12 @@ export function Dependents() {
           'aria-label': 'weight',
         }}
       />
-      <Grid mt={2} justifyContent="end" display="flex">
+      <Grid mt={2} justifyContent="end" display="flex" sx={{
+        [theme.breakpoints.down("md")]: {
+          alignItems: "center",
+          justifyContent: "center"
+        },
+      }}>
         <CustomButton onClick={handleIsStateModalAddDependets} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Novo
         </CustomButton>

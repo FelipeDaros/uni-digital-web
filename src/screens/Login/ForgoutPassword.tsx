@@ -105,7 +105,6 @@ export function ForgoutPassword() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Toast />
     </StyledContainer>
   )
 }
