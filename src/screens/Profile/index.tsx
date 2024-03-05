@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom"
 import { api } from "../../config/api"
 import { useAuth } from "../../context/AuthContext"
 import { Loading } from "../../components/Loading"
-import { useToast } from "../../components/Toast"
+import { useToast } from "../../context/ToastContext"
 
 export function Profile() {
   const { showToast } = useToast();
@@ -47,10 +47,13 @@ export function Profile() {
         sexo: radio
       }
       const { data } = await api.put(`/auth/update/${user?.user.id}`, payload);
-      showToast('sucess', data.message);
+      showToast({color: 'success', message: data.message});
     } catch (error: any) {
       if (!!error.response) {
-        showToast('error', error.response.data.message)
+        showToast({
+          color: 'error',
+          message: error.response.data.message
+        })
       }
     } finally {
       setLoading(false)
@@ -93,7 +96,10 @@ export function Profile() {
       setRadio(data.data.sexo);
     } catch (error: any) {
       if (!!error.response) {
-        showToast('error', error.response.data.message)
+        showToast({
+          color: 'error',
+          message: error.response.data.message
+        })
       }
     } finally {
       setLoading(false)

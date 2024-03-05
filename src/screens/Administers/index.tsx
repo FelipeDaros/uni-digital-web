@@ -9,13 +9,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { api } from "../../config/api";
 
 import { CustomButton } from "../../components/Button";
-import { useToast } from "../../components/Toast";
 import { useNavigate } from "react-router-dom";
 import { theme } from "../../styled";
+import { useToast } from "../../context/ToastContext";
 
 export function Administers() {
   const navigate = useNavigate();
-  const { showToast, Toast } = useToast();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(5);
@@ -55,11 +55,17 @@ export function Administers() {
     try {
       setLoading(true)
       await api.post(`/auth/delete-admin/${id}`);
-      showToast('Administrador excluído com sucesso!', 'success')
+      showToast({
+        message: 'Administrador excluído com sucesso!',
+        color: 'success'
+      })
       fetchData();
     } catch (error: any) {
       if (!!error.response) {
-        showToast(error.response.data.message, 'error')
+        showToast({
+          message: error.response.data.message,
+          color: 'error'
+        })
       }
     } finally {
       setLoading(false)
@@ -87,7 +93,7 @@ export function Administers() {
       setGridData(payload)
     } catch (error: any) {
       if (!!error.response) {
-        showToast(error.response.data.message, 'error')
+        showToast({ message: error.response.data.message, color: 'error' })
       }
     } finally {
       setLoading(false)
@@ -128,6 +134,7 @@ export function Administers() {
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid
+            // @ts-ignore
             {...gridData}
             initialState={{
               pagination: { paginationModel: { pageSize: pageSize, page } },

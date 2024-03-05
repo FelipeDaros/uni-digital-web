@@ -50,3 +50,9 @@ export const DrawerProvider: React.FC = ({ children }) => {
     </DrawerContext.Provider>
   )
 }
+
+export function useDrawer(){
+  const context = useContext(DrawerContext);
+
+  return context;
+}

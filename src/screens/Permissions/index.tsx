@@ -28,19 +28,18 @@ const columns: GridColDef[] = [
   },
 ];
 
-export function Policies() {
+export function Permissions() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
-  const [pageSize, setPageSize] = useState(5);
-  const [page, setPage] = useState(0
-  );
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(0);
 
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get('/politicas/list', {
+      const { data } = await api.get('/permissoes/list', {
         params: {
           pageSize: pageSize,
           page: page
@@ -57,10 +56,7 @@ export function Policies() {
       setGridData(payload)
     } catch (error: any) {
       if (!!error.response) {
-        showToast({
-          message: error.response.data.message,
-          color: 'error'
-        })
+        showToast({ message: error.response.data.message, color: 'error' })
       }
     } finally {
       setLoading(false);
@@ -74,9 +70,9 @@ export function Policies() {
   return (
     <Grid margin={2} pt={4} pb={4}>
       <Typography fontWeight="bold" textAlign="start">
-        Cadastro de políticas
+        Cadastro de permissões
       </Typography>
-      <p>Cadastre suas políticas de uso da plataforma</p>
+      <p>Cadastre suas permissões de uso da plataforma</p>
       <OutlinedInput
         id="outlined-adornment-weight"
         endAdornment={<SearchIcon />}
@@ -88,27 +84,26 @@ export function Policies() {
           'aria-label': 'weight',
         }}
       />
-      <Grid mt={2} justifyContent="end" display="flex"
+      <Grid mt={2} gap={1} justifyContent="end" display="flex"
         sx={{
           [theme.breakpoints.down("md")]: {
             alignItems: "center",
             justifyContent: "center"
           },
         }}>
-        <CustomButton onClick={() => navigate('/register-policy')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
-          Novo
+        <CustomButton onClick={() => navigate('/register-permission')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
+          Cadastrar perfil
         </CustomButton>
       </Grid>
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid
-            // @ts-ignore
             {...gridData}
             initialState={{
               pagination: { paginationModel: { pageSize: pageSize, page } },
             }}
             loading={loading}
-            pageSizeOptions={[5, 10, 20]}
+            pageSizeOptions={[10, 25, 50]}
             onPaginationModelChange={e => {
               setPage(e.page)
               setPageSize(e.pageSize)

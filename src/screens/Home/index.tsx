@@ -1,4 +1,4 @@
-import { Grid, Stack } from "@mui/material"
+import { Grid } from "@mui/material"
 import { MiniCardHome } from "../../components/MiniCardHome"
 
 import AddToQueueIcon from "@mui/icons-material/AddToQueue"
@@ -7,6 +7,7 @@ import BadgeIcon from "@mui/icons-material/Badge"
 import ShowChartIcon from "@mui/icons-material/ShowChart"
 import SupportAgentIcon from "@mui/icons-material/SupportAgent"
 import ShareIcon from "@mui/icons-material/Share"
+
 import { VirtualCard } from "../../components/VirtualCard"
 import { CardHomeOne } from "../../components/CardHomeOne"
 import { CardHomeTwo } from "../../components/CardHomeTwo"
@@ -14,12 +15,11 @@ import { useAuth } from "../../context/AuthContext"
 
 export function Home() {
   const { user } = useAuth();
-
   return (
     <Grid container>
       <Grid container>
         {/* @ts-ignore */}
-        <VirtualCard nome={user?.user?.nome} codigo={user?.user.documento} data_nascimento={user?.user.data_nascimento} />
+        <VirtualCard nome={user?.user?.nome} codigo={user?.user.documento} data_nascimento={user?.user.data_nascimento} nome_produto={user.produto.nome}/>
       </Grid>
       <Grid container>
         <CardHomeOne nome="Felipe" />

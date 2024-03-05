@@ -16,10 +16,10 @@ import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
 import { api } from "../../config/api"
 import { VTextField } from "../../components/Input/VTextField"
-import { useToast } from "../../components/Toast"
+import { useToast } from "../../context/ToastContext"
 
 export function ForgoutPassword() {
-  const { showToast, Toast } = useToast();
+  const { showToast } = useToast();
   const formRef = useRef<FormHandles>(null)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -29,10 +29,16 @@ export function ForgoutPassword() {
       setLoading(true)
       await api.post(`/auth/forgout-password`, data);
       navigate("/send-forgout")
-      showToast('Recuperação enviada!', 'success')
+      showToast({
+        message: 'Recuperação enviada!',
+        color: 'success'
+      })
     } catch (error: any) {
       if (!!error.response) {
-        showToast(error.response.data.message, 'error')
+        showToast({
+          message: error.response.data.message,
+          color: 'error'
+        })
       }
     } finally {
       setLoading(false)

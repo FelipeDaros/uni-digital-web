@@ -1,4 +1,5 @@
 import { IAssinatura } from "./IAssinatura";
+import { IProduct } from "./IProduct";
 import { IUser } from "./IUser";
 
 export interface IAuth {
@@ -9,4 +10,5 @@ export interface IAuth {
   access_token: string;
   token_type: string;
   expires_in: number;
+  produto: IProduct;
 }

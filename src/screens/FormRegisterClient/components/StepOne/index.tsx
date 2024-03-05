@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material"
+import { OutlinedInput, Typography } from "@mui/material"
 import { SubscriptionCard } from "../../../../components/SubscriptionCard"
 import {
   CenteredContainer,
@@ -10,13 +10,18 @@ import {
 import { ContainerDependentesComponent } from "./ContainerDependentes"
 import { CustomButton } from "../../../../components/Button"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
-import { ModalCupom } from "../../../../components/ModalCupom"
 import { useState } from "react"
 import { ICupom } from "../../../../interfaces/ICupom"
 
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import { api } from "../../../../config/api"
+import { useToast } from "../../../../context/ToastContext"
+
 export function StepOne() {
+  const { showToast } = useToast();
+  const [codigo, setCodigo] = useState("");
   const [stateModalCupom, setStateModalCupom] = useState(false);
-  const [step, handleNextStep, product, total, handleSelectCupom, totalDependets, setValorTotal, cupom] = FormRegisterClientStore(
+  const [step, handleNextStep, product, total, handleSelectCupom, totalDependets, setValorTotal, cupom, handleLoading] = FormRegisterClientStore(
     (state) => [
       state.step,
       state.handleNextStep,
@@ -25,18 +30,44 @@ export function StepOne() {
       state.handleSelectCupom,
       state.totalDependets,
       state.setValorTotal,
-      state.cupom
+      state.cupom,
+      state.handleLoading
     ],
   )
 
   const handleStateModalCupom = () => setStateModalCupom(!stateModalCupom);
 
-  function handleCupom(data: any) {
-    const cupom = data.row as ICupom;
-    console.log(cupom)
-    handleSelectCupom(cupom);
-    calculoAssinaturaComDesconto(cupom);
-    handleStateModalCupom()
+  async function handleCupom() {
+    if (!codigo.trim()) {
+      setCodigo("");
+      return;
+    }
+
+    try {
+      handleLoading()
+      const { data } = await api.get(`/cupons/show/${codigo}`);
+      const cupom = data.data;
+      if (!cupom) {
+
+        showToast({
+          color: 'warning',
+          message: 'Cupom não encontrado.'
+        });
+        setCodigo("")
+        return
+      }
+
+      handleSelectCupom(cupom);
+      calculoAssinaturaComDesconto(cupom);
+      handleStateModalCupom()
+    } catch (error: any) {
+      showToast({
+        color: 'error',
+        message: error.response.data.message
+      });
+    } finally {
+      handleLoading()
+    }
   }
 
   function calculoAssinaturaComDesconto(cupom: ICupom) {
@@ -114,6 +145,7 @@ export function StepOne() {
     <CenteredContainer>
       <ContainerSubscription>
         <SubscriptionCard
+          // @ts-ignore
           produto={product}
           icon="UNIDIGITAL_INIDIVIDUAL"
         />
@@ -131,14 +163,25 @@ export function StepOne() {
         </Typography>
       </ContainerText>
       <ContainerCupom>
-        <CustomButton
-          sx={{ marginLeft: 2 }}
+        <OutlinedInput
+          id="outlined-adornment-weight"
+          endAdornment={<ConfirmationNumberIcon color="success" />}
+          aria-describedby="outlined-weight-helper-text"
           color="success"
-          variant="outlined"
-          onClick={handleStateModalCupom}
-        >
-          Selecionar cupom
-        </CustomButton>
+          size="small"
+          onBlur={handleCupom}
+          onKeyPress={e => {
+            if (e.key === 'Enter') {
+              handleCupom();
+            }
+          }}
+          onChange={e => setCodigo(e.target.value)}
+          value={codigo}
+          placeholder="Insira o código"
+          inputProps={{
+            'aria-label': 'weight',
+          }}
+        />
       </ContainerCupom>
       <ContainerFooter>
         <Typography fontSize={14} color="#28DA9D">
@@ -163,11 +206,6 @@ export function StepOne() {
           </Typography>
         </CustomButton>
       )}
-      <ModalCupom
-        isState={stateModalCupom}
-        onOk={handleCupom}
-        changeState={handleStateModalCupom}
-      />
     </CenteredContainer>
   )
 }

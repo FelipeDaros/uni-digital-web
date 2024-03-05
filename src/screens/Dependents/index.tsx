@@ -9,8 +9,8 @@ import { ModalAddDependets } from "../../components/ModalAddDependets";
 import { useEffect, useState } from "react";
 import { api } from "../../config/api";
 import { useAuth } from "../../context/AuthContext";
-import { VModalError } from "../../components/ModalError";
 import { theme } from "../../styled";
+import { useToast } from "../../context/ToastContext";
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -42,17 +42,18 @@ const columns: GridColDef[] = [
 ];
 
 export function Dependents() {
-  const [stateModalErro, setStateModalErro] = useState(false);
+  const { user } = useAuth();
+  const { showToast } = useToast();
+
   const [msgErro, setMsgErro] = useState("");
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
-  const { user } = useAuth()
+
   const [isStateModalAddDependets, setIsStateModalAddDependets] = useState(false);
 
   const handleIsStateModalAddDependets = () => setIsStateModalAddDependets(!isStateModalAddDependets);
-  const handleStateModalErro = () => setStateModalErro(!stateModalErro);
 
   async function fetchData() {
     try {
@@ -78,8 +79,8 @@ export function Dependents() {
     }
   }
 
-  async function handleAddDependent(dados: any){
-    if(!dados.nome && !dados.data_nascimento && !dados.email && !dados.documento && !dados.sexo){
+  async function handleAddDependent(dados: any) {
+    if (!dados.nome && !dados.data_nascimento && !dados.email && !dados.documento && !dados.sexo) {
       return
     }
 
@@ -89,10 +90,14 @@ export function Dependents() {
       fetchData();
       handleIsStateModalAddDependets();
     } catch (error: any) {
-      if(!!error.response){
+      if (!!error.response) {
         setMsgErro(error.response.data.message);
+        showToast({
+          color: 'error',
+          message: msgErro
+        })
       }
-    }finally{
+    } finally {
       setLoading(false)
     }
   }
@@ -131,9 +136,10 @@ export function Dependents() {
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid
+            // @ts-ignore
             {...gridData}
             initialState={{
-              pagination: { paginationModel: { pageSize: pageSize, page} },
+              pagination: { paginationModel: { pageSize: pageSize, page } },
             }}
             loading={loading}
             pageSizeOptions={[10, 25, 50]}
@@ -149,12 +155,6 @@ export function Dependents() {
         changeState={handleIsStateModalAddDependets}
         isState={isStateModalAddDependets}
         onOk={handleAddDependent}
-      />
-      <VModalError 
-        changeState={handleStateModalErro}
-        description={msgErro}
-        isState={stateModalErro}
-        title="Erro"
       />
     </Grid >
   )

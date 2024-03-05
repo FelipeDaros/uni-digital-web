@@ -35,6 +35,10 @@ import { Administers } from "../screens/Administers"
 import { RegisterAdminister } from "../screens/Administers/RegisterPolicy"
 import { Products } from "../screens/Product"
 import { RegisterProduct } from "../screens/Product/RegisterProduct"
+import { Permissions } from "../screens/Permissions"
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import { RegisterPermission } from "../screens/Permissions/RegisterPermission"
+import { RegisterScreen } from "../screens/Permissions/RegisterScreen"
 
 
 export function RoutesAuth() {
@@ -111,6 +115,13 @@ export function RoutesAuth() {
         path: "/administers",
         label: "Administradores",
         disabled: !(user?.user.tipo === "A")
+      },
+      {
+        id: 10,
+        icon: VpnKeyIcon,
+        path: "/permissions",
+        label: "Permissões",
+        disabled: !(user?.user.tipo === "A")
       }
     ]);
 
@@ -139,6 +150,10 @@ export function RoutesAuth() {
 
         <Route path="/products" element={<Products />} />
         <Route path="/register-product" element={<RegisterProduct />} />
+
+        <Route path="/permissions" element={<Permissions />} />
+        <Route path="/register-permission" element={<RegisterPermission />} />
+        
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

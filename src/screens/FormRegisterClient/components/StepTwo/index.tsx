@@ -17,9 +17,8 @@ import { CreditCard } from "../CreditCard";
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore";
 import { handleKeyPress } from "../../../../utils/handleKeyPress";
 import { api } from "../../../../config/api";
-import { VModalNotification } from "../../../../components/ModalNotification";
-import { VModalError } from "../../../../components/ModalError";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../../../../context/ToastContext";
 
 const TIPO_PAGAMENTO = ["PIX", "BOLETO", "CARTAO"]
 
@@ -33,10 +32,7 @@ type PropsXLSX = {
 
 export function StepTwo() {
   const navigate = useNavigate();
-  const [stateModal, setStateModal] = useState(false);
-  const [msgModal, setMsgModal] = useState("");
-  const [stateModalError, setStateModalError] = useState(false);
-  const [msgErrorModal, setMsgErrorModal] = useState("");
+  const [msgErrorModal, setMsgErro] = useState("");
   const formRef = useRef<FormHandles>(null)
   const [avatar, setAvatar] = useState(null)
   const [avatarFile, setAvatarFile] = useState(null)
@@ -44,12 +40,11 @@ export function StepTwo() {
   const [selectedSexo, setSelectedSexo] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
 
+  const { showToast } = useToast();
+
   const [handleSecundarios, secundarios, handleLoading, product, total, totalDependets] = FormRegisterClientStore(
     (state) => [state.handleSecundarios, state.secundarios, state.handleLoading, state.product, state.total, state.totalDependets],
   )
-
-  const handleChangeStateModal = () => setStateModal(!stateModal);
-  const handleChangeStateModalErro = () => setStateModalError(!stateModalError);
 
   async function handleSave(dados: any) {
     try {
@@ -59,8 +54,7 @@ export function StepTwo() {
         dados.password !==
         dados.confirmpassword
       ) {
-        handleChangeStateModal()
-        setMsgModal("As senhas não conferem")
+        setMsgErro("As senhas não conferem")
         return
       }
 
@@ -78,8 +72,11 @@ export function StepTwo() {
       navigate("/");
     } catch (error: any) {
       if (!!error.response) {
-        handleChangeStateModalErro()
-        setMsgErrorModal(error.response.data.message)
+        setMsgErro(error.response.data.message)
+        showToast({
+          color: 'error',
+          message: msgErrorModal
+        })
       }
     } finally {
       handleLoading()
@@ -138,8 +135,11 @@ export function StepTwo() {
       const parsedData: PropsXLSX[] = XLSX.utils.sheet_to_json(sheet)
 
       if (parsedData.length > totalDependets) {
-        setMsgModal("A quantidade de dependetes na planilha é maior do que a informado no inicío da operação")
-        handleChangeStateModal()
+        setMsgErro("A quantidade de dependetes na planilha é maior do que a informado no inicío da operação")
+        showToast({
+          color: 'error',
+          message: msgErrorModal
+        })
         return
       }
 
@@ -563,18 +563,6 @@ export function StepTwo() {
           </CustomButton>
         </Grid>
       </Form>
-      <VModalNotification
-        changeState={handleChangeStateModal}
-        description={msgModal}
-        isState={stateModal}
-        title="Notificação"
-      />
-      <VModalError
-        changeState={handleChangeStateModalErro}
-        description={msgErrorModal}
-        isState={stateModalError}
-        title="Erro"
-      />
     </Container>
   )
 }

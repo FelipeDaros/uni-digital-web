@@ -3,12 +3,12 @@ import {
   Paper,
   Typography,
 } from "@mui/material"
-import { VModalNotification } from "../../components/ModalNotification"
 import { useEffect, useState } from "react"
 import { ModalBoletoDetails } from "./components/ModalBoletoDetails"
 import { useAuth } from "../../context/AuthContext"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { api } from "../../config/api"
+import { useToast } from "../../context/ToastContext"
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -41,15 +41,12 @@ const columns: GridColDef[] = [
 
 export function Payment() {
   const { user } = useAuth()
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [isStateModalDefaulter, setIsStateModalDefaulter] = useState(false)
   const [isStateModalBoletoDetails, setIsStateModalBoletoDetails] = useState(false)
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
-
-  const handleStateModalDefaulter = () =>
-    setIsStateModalDefaulter(!isStateModalDefaulter)
 
   const handleStateModalBoletoDetails = () =>
     setIsStateModalBoletoDetails(!isStateModalBoletoDetails)
@@ -87,7 +84,10 @@ export function Payment() {
   }, [pageSize])
 
   function validatePaymentDefaulter() {
-    setIsStateModalDefaulter(true)
+    showToast({
+      color: 'info',
+      message: 'Sua assinatura não está ativa. Por favor, regularize para ter acesso a todos os serviços do UniDigital'
+    })
   }
 
   return (
@@ -135,6 +135,7 @@ export function Payment() {
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid
+            // @ts-ignore
             {...gridData}
             initialState={{
               pagination: { paginationModel: { pageSize: pageSize, page } },
@@ -148,12 +149,6 @@ export function Payment() {
           />
         }
       </Paper>
-      <VModalNotification
-        title="Assinatura"
-        description="Sua assinatura não está ativa. Por favor, regularize para ter acesso a todos os serviços do UniDigital"
-        isState={isStateModalDefaulter}
-        changeState={handleStateModalDefaulter}
-      />
       <ModalBoletoDetails
         isState={isStateModalBoletoDetails}
         changeState={handleStateModalBoletoDetails}

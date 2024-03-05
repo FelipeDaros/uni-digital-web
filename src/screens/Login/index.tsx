@@ -16,16 +16,14 @@ import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
 import { VTextField } from "../../components/Input/VTextField"
 import { Loading } from "../../components/Loading"
-import { VModalError } from "../../components/ModalError"
+import { useToast } from "../../context/ToastContext"
 
 export function Login() {
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [msgErrorModal, setMsgErrorModal] = useState("");
-  const [stateModalError, setStateModalError] = useState(false);
   const navigate = useNavigate()
   const formRef = useRef<FormHandles>(null)
-
-  const handleChangeStateModalErro = () => setStateModalError(!stateModalError);
 
   const { signIn } = useAuth()
 
@@ -33,9 +31,16 @@ export function Login() {
     try {
       setLoading(true)
       await signIn(data.user, data.password);
+      showToast({
+        color: 'success',
+        message: 'Login efetuado com sucesso!'
+      })
     } catch (error: any) {
-      handleChangeStateModalErro()
       setMsgErrorModal(error.message)
+      showToast({
+        color: 'error',
+        message: msgErrorModal
+      })
     } finally {
       setLoading(false)
     }
@@ -117,12 +122,6 @@ export function Login() {
           </Grid>
         </Form>
       </ContainerBox>
-      <VModalError
-        changeState={handleChangeStateModalErro}
-        description={msgErrorModal}
-        isState={stateModalError}
-        title="Erro"
-      />
     </StyledContainer>
   )
 }

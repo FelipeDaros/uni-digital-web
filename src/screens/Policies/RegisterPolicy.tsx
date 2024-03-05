@@ -11,11 +11,10 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../../config/api";
 import { VSelect } from "../../components/Select/VSelect";
 import { PropsPolicyType, typesPolicy } from "../../utils/typePolicy";
-import { useToast } from "../../components/Toast";
-
+import { useToast } from "../../context/ToastContext";
 
 export function RegisterPolicy() {
-    const { showToast, Toast } = useToast();
+    const { showToast } = useToast();
     const navigate = useNavigate();
     const formRef = useRef<FormHandles>(null)
     const [loading, setLoading] = useState(false);
@@ -29,11 +28,17 @@ export function RegisterPolicy() {
                 tipo
             }
             await api.post('/politicas/store', payload);
-            showToast('Política cadastrada com sucesso!', 'success')
+            showToast({
+              color: 'success',
+              message: 'Política cadastrada com sucesso!'
+            })
             navigate('/policies');
         } catch (error: any) {
             if (!!error.response) {
-                showToast(error.response.data.message, 'error')
+                showToast({
+                  message: error.response.data.message,
+                  color: "error"
+                })
             }
         } finally {
             setLoading(false);

@@ -9,8 +9,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { api } from "../../config/api";
 
 import { CustomButton } from "../../components/Button";
-import { useToast } from "../../components/Toast";
 import { theme } from "../../styled";
+import { useToast } from "../../context/ToastContext";
 
 
 
@@ -44,8 +44,8 @@ const columns: GridColDef[] = [
   }
 ];
 
-export function Cupom(){
-  const { showToast, Toast } = useToast();
+export function Cupom() {
+  const { showToast } = useToast();
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -72,8 +72,11 @@ export function Cupom(){
       // @ts-ignore
       setGridData(payload)
     } catch (error: any) {
-      if(!!error.response){
-        showToast(error.response.data.message, 'error')
+      if (!!error.response) {
+        showToast({
+          message: error.response.data.message,
+          color: 'error'
+        })
       }
     } finally {
       setLoading(false);
@@ -84,7 +87,7 @@ export function Cupom(){
     fetchData()
   }, [page, pageSize])
 
-  return(
+  return (
     <Grid margin={2} pt={4} pb={4}>
       <Typography fontWeight="bold" textAlign="start">
         Cadastro de cupoons
@@ -114,9 +117,10 @@ export function Cupom(){
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid
+            // @ts-ignore
             {...gridData}
             initialState={{
-              pagination: { paginationModel: { pageSize: pageSize, page} },
+              pagination: { paginationModel: { pageSize: pageSize, page } },
             }}
             loading={loading}
             pageSizeOptions={[2, 5, 10]}

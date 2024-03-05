@@ -11,20 +11,18 @@ import { Form } from "@unform/web"
 import { useEffect, useRef, useState } from "react";
 import { api } from "../../config/api";
 import { Loading } from "../../components/Loading";
-import { VModalNotification } from "../../components/ModalNotification";
-import { useToast } from "../../components/Toast";
+import { useToast } from "../../context/ToastContext";
 
 
 export function NewPassword() {
-    const { showToast, Toast } = useToast();
-    const { id } = useParams();
+  const { id } = useParams();
     const formRef = useRef<FormHandles>(null);
     const navigate = useNavigate()
+
+    const { showToast } = useToast();
     const [loading, setLoading] = useState(false);
     const [isValid, setIsValid] = useState(true)
     const [disabled, setDisabled] = useState(false);
-
-    const handleChangeIsValid = () => setIsValid(!isValid);
 
     async function verifyCode() {
         try {
@@ -44,18 +42,20 @@ export function NewPassword() {
         if (!data.password) {
             return
         }
+
         const payload = {
             ...data,
             cod_recuperacao: id
         }
+
         try {
             setLoading(true)
             await api.post(`/auth/update-password`, payload);
             navigate("/")
-            showToast('Senha alterada com sucesso!', 'success')
+            showToast({message: 'Senha alterada com sucesso!', color: 'success'})
         } catch (error: any) {
             if (!!error.response) {
-                showToast(error.response.data.message, 'error')
+                showToast({message: error.response.data.message, color: 'error'})
             }
         } finally {
             setLoading(false)
@@ -70,7 +70,6 @@ export function NewPassword() {
         <StyledContainer>
             <Loading isLoading={loading} />
             <CssBaseline />
-            <VModalNotification isState={!isValid} title="Alterar senha" description="O codigo informado nao esta mais disponivel" changeState={handleChangeIsValid} />
             <Image src={logo} />
             <ContainerBox>
                 <Form placeholder="form" ref={formRef} onSubmit={handleSubmit}>

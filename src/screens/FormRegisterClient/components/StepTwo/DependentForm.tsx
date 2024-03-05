@@ -4,11 +4,12 @@ import { LabelText } from "./style"
 import AddIcon from "@mui/icons-material/Add"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 import { useState } from "react"
-import { VModalNotification } from "../../../../components/ModalNotification"
+import { useToast } from "../../../../context/ToastContext"
 
 export function DependentForm() {
+  const { showToast } = useToast();
   const [stateModal, setStateModal] = useState(false);
-  const [msgModal, setMsgModal] = useState("");
+  const [message, setMessage] = useState("");
   const [formularioDependente, setFormularioDependente] = useState({
     nome: "",
     documento: "",
@@ -26,14 +27,18 @@ export function DependentForm() {
   function handleAdd() {
     if (!formularioDependente.data_nascimento.trim() || !formularioDependente.documento.trim() || !formularioDependente.email.trim() || !formularioDependente.nome.trim() || !formularioDependente.sexo.trim()) {
       handleChangeStateModal()
-      setMsgModal("Preencha todos os campos")
+      setMessage("Preencha todos os campos")
       return
     }
 
     console.log(totalDependets, secundarios.length)
     if (totalDependets === secundarios.length) {
       handleChangeStateModal()
-      setMsgModal("O limite de dependentes foi execidido!")
+      setMessage("O limite de dependentes foi execidido!")
+      showToast({
+        color: 'error',
+        message: message
+      })
       return
     }
 
@@ -161,12 +166,6 @@ export function DependentForm() {
           <AddIcon color="primary" sx={{ fontSize: 16 }} />
         </IconButton>
       </Grid>
-      <VModalNotification
-        changeState={handleChangeStateModal}
-        description={msgModal}
-        isState={stateModal}
-        title="Notificação"
-      />
     </Grid>
   )
 }

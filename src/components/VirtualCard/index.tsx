@@ -28,17 +28,18 @@ const BoxContaienr = styled.div`
 `
 
 type Props = {
-    nome: string;
-    codigo: string;
-    data_nascimento: Date;
+  nome_produto: string;
+  nome: string;
+  codigo: string;
+  data_nascimento: Date;
 }
 
-export function VirtualCard({ codigo, nome, data_nascimento }: Props) {
+export function VirtualCard({ codigo, nome, data_nascimento, nome_produto }: Props) {
   return (
     <ContainerCard>
       <BoxContaienr>
         <Typography sx={{ fontSize: 18, paddingLeft: 1 }} color="white">
-          Nome do assinatura
+          {nome_produto}
         </Typography>
       </BoxContaienr>
       <Stack
