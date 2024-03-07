@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+import { useToast } from "../../context/ToastContext";
+import { api } from "../../config/api";
+import { useNavigate } from "react-router-dom";
+import { theme } from "../../styled";
+
 import { Grid, IconButton, OutlinedInput, Paper, Typography } from "@mui/material";
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 
@@ -7,24 +12,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import { api } from "../../config/api";
 
+import { Circle } from "../../components/Circle";
 import { CustomButton } from "../../components/Button";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { theme } from "../../styled";
-import { useToast } from "../../context/ToastContext";
-
-type PropsColor = {
-  colorCircle: 1 | 0;
-}
-
-const Circle = styled.div<PropsColor>`
-  width: 20px; /* Adicionando 'px' após o valor de largura */
-  height: 20px; /* Adicionando 'px' após o valor de altura */
-  border-radius: 50px;
-  background-color: ${props => props.colorCircle === 1 ? '#27da9d' : '#e8e8e8'};
-`;
 
 
 export function Products() {

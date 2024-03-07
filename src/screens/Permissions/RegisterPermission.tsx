@@ -1,87 +1,96 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CustomButton } from "../../components/Button";
-import { Grid, Paper, Typography } from "@mui/material";
+import { Checkbox, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, OutlinedInput, Paper, Typography, OutlinedInputProps } from "@mui/material";
 import { theme } from "../../styled";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../config/api";
-import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 
 import AddIcon from '@mui/icons-material/Add';
 import { useToast } from "../../context/ToastContext";
 import { ModalAddScreen } from "./Components/ModalAddScreen";
+import { Loading } from "../../components/Loading";
 
+type PropsFetch = {
+  tela: string;
+  permissoes: Permissao[];
+};
 
+type Permissao = {
+  id: number;
+  tipo: string;
+  created_at: string;
+};
 
 export function RegisterPermission() {
+  const { id } = useParams();
   const { showToast } = useToast();
   const navigate = useNavigate();
-
+  const [checked, setChecked] = useState([]);
+  const [telas, setTelas] = useState<PropsFetch[]>([]);
   const [isStateModal, setIsStateModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [gridData, setGridData] = useState(null);
-  const [pageSize, setPageSize] = useState(10);
-  const [page, setPage] = useState(0);
+  const [perfil, setPerfil] = useState("");
+
+  const perfilInputRef = useRef<HTMLInputElement>(null);
+
 
   const handleStateModal = () => setIsStateModal(!isStateModal);
-
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'tela',
-      headerName: 'Tela',
-      width: 200,
-    },
-    {
-      field: 'visualizar',
-      headerName: 'Visualizar',
-      width: 200,
-    },
-    {
-      field: 'cadastrar',
-      headerName: 'Cadastrar',
-      width: 200,
-    },
-    {
-      field: 'alterar',
-      headerName: 'Alterar',
-      width: 200,
-    },
-    {
-      field: 'excluir',
-      headerName: 'excluir',
-      width: 200
-    },
-  ];
 
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get('/permissoes/list', {
-        params: {
-          pageSize: pageSize,
-          page: page
+      let info = [] as PropsFetch[];
+
+      if (id) {
+        const { data } = await api.get(`/permissoes/funcao/show/${id}`)
+
+        if (data.data.permissoes && typeof data === 'object') {
+          const permissoesArray = Object.entries(data.data.permissoes);
+
+          setChecked(data.data.permissaoFuncao.map((item: any) => item.id_permissao));
+
+          setPerfil(data.data.funcao.nome)
+
+          permissoesArray.forEach(([tela, permissoes]) => {
+            const telaInfo = {
+              tela,
+              permissoes
+            };
+            // @ts-ignore
+            info.push(telaInfo);
+          });
         }
-      });
+      } else {
+        const { data } = await api.get('/permissoes/list');
 
-      const payload = {
-        rows: data.data,
-        columns,
-        experimentalFeatures: true,
+        if (data && typeof data === 'object') {
+          console.log(data.data)
+          const permissoesArray = Object.entries(data.data);
 
+          permissoesArray.forEach(([tela, permissoes]) => {
+            const telaInfo = {
+              tela,
+              permissoes
+            };
+            // @ts-ignore
+            info.push(telaInfo);
+          });
+        }
       }
-      // @ts-ignore
-      setGridData(payload)
+
+      setTelas(info);
     } catch (error: any) {
       if (!!error.response) {
         showToast({
           color: 'error',
           message: error.response.data.message
-        })
+        });
       }
     } finally {
       setLoading(false);
     }
   }
+
 
   async function handleAddScreen(dados: any) {
     if (!dados.nome) {
@@ -113,15 +122,72 @@ export function RegisterPermission() {
     }
   }
 
+  const handleToggle = (value: number) => () => {
+    // @ts-ignore
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      // @ts-ignore
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
+  async function handleSave() {
+    if (!perfil.trim()) {
+      perfilInputRef.current?.focus();
+      showToast({
+        color: 'info',
+        message: 'É necessário informar o nome do perfil'
+      })
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload = {
+        nome: perfil,
+        permissoes: checked
+      }
+
+      await api.post('/permissoes/funcao/create', payload);
+    } catch (error: any) {
+
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchData()
-  }, [page, pageSize])
+  }, [])
 
   return (
     <Grid margin={2} pt={4} pb={4}>
+      <Loading isLoading={loading} />
       <Typography fontWeight="bold" textAlign="start">
         Perfil
       </Typography>
+      <OutlinedInput
+        disabled={!!id}
+        ref={perfilInputRef}
+        sx={{ marginTop: 2 }}
+        id="outlined-adornment-weight"
+        aria-describedby="outlined-weight-helper-text"
+        color="success"
+        size="small"
+        placeholder="Informe o perfil"
+        inputProps={{
+          'aria-label': 'weight',
+        }}
+        value={perfil}
+        onChange={e => setPerfil(e.target.value)}
+      />
       <Grid mt={2} justifyContent="end" display="flex"
         sx={{
           [theme.breakpoints.down("md")]: {
@@ -133,24 +199,60 @@ export function RegisterPermission() {
           TELA
         </CustomButton>
       </Grid>
-      <Paper sx={{ width: '100%', marginTop: 2 }}>
-        {gridData &&
-          <DataGrid
-            // @ts-ignore
-            {...gridData}
-            initialState={{
-              pagination: { paginationModel: { pageSize: pageSize, page } },
-            }}
-            loading={loading}
-            pageSizeOptions={[10, 25, 50]}
-            onPaginationModelChange={e => {
-              setPage(e.page)
-              setPageSize(e.pageSize)
-            }}
-            localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
-          />
-        }
-      </Paper>
+      <Grid container gap={3}>
+        {telas.length && telas.map(item => (
+          <Paper key={item.tela} sx={{ width: 360, marginTop: 2, p: 2 }}>
+            <Typography fontWeight="bold" textAlign="start">
+              {item.tela}
+            </Typography>
+            <List>
+              {item.permissoes.map((value) => {
+                return (
+                  <ListItem
+                    key={value.id}
+                    disablePadding
+                  >
+                    <ListItemButton role={undefined} onClick={handleToggle(value.id)} dense>
+                      <ListItemIcon>
+                        <Checkbox
+                          edge="start"
+                          // @ts-ignore
+                          checked={checked.indexOf(value.id) !== -1}
+                          tabIndex={-1}
+                          disableRipple
+                          color="success"
+                        />
+                      </ListItemIcon>
+                      <ListItemText primary={value.tipo} />
+                    </ListItemButton>
+                  </ListItem>
+                );
+              })}
+            </List>
+          </Paper>
+        ))}
+      </Grid>
+      <Grid
+        direction="row"
+        display="flex"
+        gap={1}
+        marginTop={2}
+        container
+        sx={{
+          [theme.breakpoints.down("md")]: {
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 3,
+          },
+        }}
+      >
+        <CustomButton onClick={handleSave} color="success" variant="contained">
+          <Typography color="#fff">Salvar</Typography>
+        </CustomButton>
+        <CustomButton onClick={() => navigate('/permissions')} type="button" color="error" variant="outlined">
+          <Typography>Cancelar</Typography>
+        </CustomButton>
+      </Grid>
       <ModalAddScreen
         changeState={handleStateModal}
         isState={isStateModal}

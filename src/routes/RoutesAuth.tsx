@@ -153,7 +153,7 @@ export function RoutesAuth() {
 
         <Route path="/permissions" element={<Permissions />} />
         <Route path="/register-permission" element={<RegisterPermission />} />
-        
+        <Route path="/register-permission/:id" element={<RegisterPermission />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

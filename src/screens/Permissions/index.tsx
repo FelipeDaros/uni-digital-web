@@ -11,21 +11,18 @@ import { CustomButton } from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { theme } from "../../styled";
 import { useToast } from "../../context/ToastContext";
+import { Circle } from "../../components/Circle";
 
 
 
 const columns: GridColDef[] = [
+  { field: 'status', headerName: '', width: 30, renderCell: (params) => (<Circle colorCircle={params.row.ativa} />) },
   { field: 'id', headerName: 'ID', width: 90 },
   {
-    field: 'tipo',
-    headerName: 'Tipo',
+    field: 'nome',
+    headerName: 'Perfil',
     width: 200,
-  },
-  {
-    field: 'descricao',
-    headerName: 'Descricao',
-    width: 400,
-  },
+  }
 ];
 
 export function Permissions() {
@@ -39,7 +36,7 @@ export function Permissions() {
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get('/permissoes/list', {
+      const { data } = await api.get('/permissoes/funcao/list', {
         params: {
           pageSize: pageSize,
           page: page
@@ -61,6 +58,10 @@ export function Permissions() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSelected(id: number) {
+    return navigate(`/register-permission/${id}`);
   }
 
   useEffect(() => {
@@ -98,6 +99,7 @@ export function Permissions() {
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid
+            // @ts-ignore
             {...gridData}
             initialState={{
               pagination: { paginationModel: { pageSize: pageSize, page } },
@@ -109,6 +111,7 @@ export function Permissions() {
               setPageSize(e.pageSize)
             }}
             localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            onRowClick={({ row }) => handleSelected(row.id)}
           />
         }
       </Paper>
