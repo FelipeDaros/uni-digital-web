@@ -32,7 +32,6 @@ type PropsXLSX = {
 
 export function StepTwo() {
   const navigate = useNavigate();
-  const [msgErrorModal, setMsgErro] = useState("");
   const formRef = useRef<FormHandles>(null)
   const [avatar, setAvatar] = useState(null)
   const [avatarFile, setAvatarFile] = useState(null)
@@ -42,22 +41,32 @@ export function StepTwo() {
 
   const { showToast } = useToast();
 
-  const [handleSecundarios, secundarios, handleLoading, product, total, totalDependets] = FormRegisterClientStore(
-    (state) => [state.handleSecundarios, state.secundarios, state.handleLoading, state.product, state.total, state.totalDependets],
+  const [handleSecundarios, secundarios, handleLoading, product, total, totalDependets, cartao] = FormRegisterClientStore(
+    (state) => [state.handleSecundarios, state.secundarios, state.handleLoading, state.product, state.total, state.totalDependets, state.cartao],
   )
 
   async function handleSave(dados: any) {
+    if (
+      dados.password !==
+      dados.confirmpassword
+    ) {
+      showToast({
+        color: 'warning',
+        message: "As senhas não conferem"
+      })
+      return
+    }
+
+    if(!acceptTerms){
+      showToast({
+        color: 'warning',
+        message: "É necessário aceitar os termos."
+      })
+      return
+    }
+
     try {
       handleLoading()
-      //@ts-ignore
-      if (
-        dados.password !==
-        dados.confirmpassword
-      ) {
-        setMsgErro("As senhas não conferem")
-        return
-      }
-
       const formData = {
         ...dados,
         secundarios,
@@ -65,17 +74,23 @@ export function StepTwo() {
         total,
         id_produto: product.id,
         sexo: selectedSexo,
-        tipo_pagamento: selectedPayment
+        tipo_pagamento: selectedPayment,
+        foto: avatarFile,
+        cartao: cartao ?? null
+      }
+      
+      await api.post(`/compras/store`, formData);
+
+      if(selectedPayment === "P" || selectedPayment === "B"){
+        return navigate(`/awaiting-payment/${selectedPayment}`);
       }
 
-      await api.post(`/compras/store`, formData);
-      navigate("/");
+      return navigate('/');
     } catch (error: any) {
       if (!!error.response) {
-        setMsgErro(error.response.data.message)
         showToast({
           color: 'error',
-          message: msgErrorModal
+          message: error.response.data.message
         })
       }
     } finally {
@@ -90,11 +105,16 @@ export function StepTwo() {
   };
 
   function handleAvatarChange(e: any) {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      setAvatar(file)
-      //@ts-ignore
-      setAvatarFile(URL.createObjectURL(file))
+      setAvatar(URL.createObjectURL(file))
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // @ts-ignore
+        const base64String = reader.result?.split(',')[1]; // Remove o cabeçalho da string base64
+        setAvatarFile(base64String);
+      };
+      reader.readAsDataURL(file);
     }
   }
 
@@ -135,10 +155,9 @@ export function StepTwo() {
       const parsedData: PropsXLSX[] = XLSX.utils.sheet_to_json(sheet)
 
       if (parsedData.length > totalDependets) {
-        setMsgErro("A quantidade de dependetes na planilha é maior do que a informado no inicío da operação")
         showToast({
           color: 'error',
-          message: msgErrorModal
+          message: "A quantidade de dependetes na planilha é maior do que a informado no inicío da operação"
         })
         return
       }
@@ -168,7 +187,7 @@ export function StepTwo() {
             <Avatar
               sx={{ width: 62, height: 62 }}
               alt="Remy Sharp"
-              src={avatarFile ?? ""}
+              src={avatar ?? ""}
             />
             <CustomButton
               size="small"

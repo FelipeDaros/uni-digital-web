@@ -38,7 +38,7 @@ import { RegisterProduct } from "../screens/Product/RegisterProduct"
 import { Permissions } from "../screens/Permissions"
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { RegisterPermission } from "../screens/Permissions/RegisterPermission"
-import { RegisterScreen } from "../screens/Permissions/RegisterScreen"
+import { UsersPermissions } from "../screens/Permissions/UsersPermissions"
 
 
 export function RoutesAuth() {
@@ -140,20 +140,26 @@ export function RoutesAuth() {
         <Route path="/change-payment-method" element={<ChangePaymentMethod />} />
         <Route path="/dependents" element={<Dependents />} />
         <Route path="/dashboard" element={<DashBoard />} />
+
         <Route path="/cupom" element={<Cupom />} />
         <Route path="/register-cupom" element={<RegisterCupom />} />
+        <Route path="/register-cupom/:codigo" element={<RegisterCupom />} />
+
         <Route path="/policies" element={<Policies />} />
         <Route path="/register-policy" element={<RegisterPolicy />} />
+        <Route path="/register-policy/:type" element={<RegisterPolicy />} />
 
         <Route path="/administers" element={<Administers />} />
         <Route path="/register-administer" element={<RegisterAdminister />} />
 
         <Route path="/products" element={<Products />} />
         <Route path="/register-product" element={<RegisterProduct />} />
+        <Route path="/register-product/:id" element={<RegisterProduct />} />
 
         <Route path="/permissions" element={<Permissions />} />
         <Route path="/register-permission" element={<RegisterPermission />} />
         <Route path="/register-permission/:id" element={<RegisterPermission />} />
+        <Route path="/permissions-users" element={<UsersPermissions />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

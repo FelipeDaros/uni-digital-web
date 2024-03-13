@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add"
 import { FormRegisterClientStore } from "../../store/FormRegisterClientStore"
 import { useState } from "react"
 import { useToast } from "../../../../context/ToastContext"
+import { handleKeyPress } from "../../../../utils/handleKeyPress"
 
 export function DependentForm() {
   const { showToast } = useToast();
@@ -13,7 +14,7 @@ export function DependentForm() {
   const [formularioDependente, setFormularioDependente] = useState({
     nome: "",
     documento: "",
-    data_nascimento: "",
+    dataNascimento: "",
     email: "",
     sexo: "",
   })
@@ -25,7 +26,7 @@ export function DependentForm() {
   ])
 
   function handleAdd() {
-    if (!formularioDependente.data_nascimento.trim() || !formularioDependente.documento.trim() || !formularioDependente.email.trim() || !formularioDependente.nome.trim() || !formularioDependente.sexo.trim()) {
+    if (!formularioDependente.dataNascimento.trim() || !formularioDependente.documento.trim() || !formularioDependente.email.trim() || !formularioDependente.nome.trim() || !formularioDependente.sexo.trim()) {
       handleChangeStateModal()
       setMessage("Preencha todos os campos")
       return
@@ -46,7 +47,7 @@ export function DependentForm() {
     handleSecundarios(formularioDependente)
 
     setFormularioDependente({
-      data_nascimento: "",
+      dataNascimento: "",
       documento: "",
       email: "",
       nome: "",
@@ -91,22 +92,23 @@ export function DependentForm() {
               documento: e.target.value,
             }))
           }
+          onKeyPress={handleKeyPress}
         />
       </Grid>
       <Grid item xs={12} sm={2} marginTop={2}>
         <LabelText style={{ fontSize: 10 }}>Data nasci.</LabelText>
         <TextField
           size="small"
-          id="data_nascimentoDependent" // Updated the id to match the correct property name
+          id="dataNascimento" // Updated the id to match the correct property name
           fullWidth
           type="date"
           color="success"
           variant="standard"
-          value={formularioDependente.data_nascimento} // Updated property name
+          value={formularioDependente.dataNascimento} // Updated property name
           onChange={(e) =>
             setFormularioDependente((state) => ({
               ...state,
-              data_nascimento: e.target.value,
+              dataNascimento: e.target.value,
             }))
           } // Updated property name
         />

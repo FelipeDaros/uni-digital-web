@@ -12,20 +12,26 @@ import { useNavigate } from "react-router-dom";
 import { theme } from "../../styled";
 import { useToast } from "../../context/ToastContext";
 import { Circle } from "../../components/Circle";
+import { ModalPermissionUser } from "./Components/ModalPermissionUser";
 
 
 
 const columns: GridColDef[] = [
-  { field: 'status', headerName: '', width: 30, renderCell: (params) => (<Circle colorCircle={params.row.ativa} />) },
+  { field: 'status', headerName: '', width: 30, renderCell: (params) => (<Circle colorCircle={params.row.ativo} />) },
   { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'nome',
-    headerName: 'Perfil',
+    headerName: 'Nome',
+    width: 200,
+  },
+  {
+    field: 'documento',
+    headerName: 'Documento',
     width: 200,
   }
 ];
 
-export function Permissions() {
+export function UsersPermissions() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -33,10 +39,16 @@ export function Permissions() {
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
 
+  const [userId, setUserId] = useState<null | number>(null);
+
+  const [isStateModalPermissionUser, setIsStateModalPermissionUser] = useState(false);
+
+  const handleStateModalPermissionUser = () => setIsStateModalPermissionUser(!isStateModalPermissionUser);
+
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get('/permissoes/funcao/list', {
+      const { data } = await api.get('/auth/list-clientes', {
         params: {
           pageSize: pageSize,
           page: page
@@ -61,7 +73,37 @@ export function Permissions() {
   }
 
   function handleSelected(id: number) {
-    return navigate(`/register-permission/${id}`);
+    setUserId(id);
+    handleStateModalPermissionUser();
+  }
+
+  async function handleSavePermissionUser(dados: any) {
+    if (!dados.perfil) {
+      showToast({
+        color: 'info',
+        message: 'É necessário informar o perfil'
+      })
+      return
+    }
+
+    try {
+      setLoading(true)
+
+      const payload = {
+        usuario: dados.id,
+        funcao: dados.perfil
+      }
+
+      const { data } = await api.post('/permissoes/usuario/create', payload);
+      showToast({ message: data.message, color: 'success' });
+      handleStateModalPermissionUser();
+    } catch (error: any) {
+      if (!!error.response) {
+        showToast({ message: error.response.data.message, color: 'error' })
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -71,9 +113,9 @@ export function Permissions() {
   return (
     <Grid margin={2} pt={4} pb={4}>
       <Typography fontWeight="bold" textAlign="start">
-        Cadastro de permissões
+        Cadastro de permissões aos usuários
       </Typography>
-      <p>Cadastre suas permissões de uso da plataforma</p>
+      <p>Cadastre suas permissões de uso da plataforma para os usuários</p>
       <OutlinedInput
         id="outlined-adornment-weight"
         endAdornment={<SearchIcon />}
@@ -92,9 +134,6 @@ export function Permissions() {
             justifyContent: "center"
           },
         }}>
-        <CustomButton onClick={() => navigate('/permissions-users')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
-          Perfils usuários
-        </CustomButton>
         <CustomButton onClick={() => navigate('/register-permission')} startIcon={<AddIcon color="primary" />} size="small" color="success" variant="contained" sx={{ color: 'white' }}>
           Cadastrar perfil
         </CustomButton>
@@ -118,6 +157,14 @@ export function Permissions() {
           />
         }
       </Paper>
+      {userId &&
+        <ModalPermissionUser
+          changeState={handleStateModalPermissionUser}
+          isState={isStateModalPermissionUser}
+          onOk={handleSavePermissionUser}
+          userId={userId}
+        />
+      }
     </Grid >
   )
 }

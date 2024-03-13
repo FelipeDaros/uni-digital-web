@@ -20,7 +20,7 @@ export function CopyToClipboardButton({ cod_bar }: Props) {
         <ContentCopyIcon color="success" />
       </IconButton>
       <Snackbar
-        message="Copied to clibboard"
+        message="Código copiado com sucesso!"
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         autoHideDuration={2000}
         onClose={() => setOpen(false)}

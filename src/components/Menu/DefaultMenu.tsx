@@ -66,7 +66,9 @@ export const DefaultMenu: React.FC = ({ children }) => {
   const smDown = useMediaQuery(theme.breakpoints.down("sm"))
 
   const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext()
-  const { signOut } = useAuth()
+  const { signOut, user } = useAuth()
+
+  const handleOpenWhatsApp = () => window.open("https://wa.link/mfcbc6", "_blank");
 
   return (
     <>
@@ -110,7 +112,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
           >
             <Avatar
               sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-              src="https://yt3.ggpht.com/grfYgQadT8iNg9WPb-jkrKB-9224y_DBDXAOtV4Yt7cyQmtR47J_453uveQOTDsp_dRSH851TMM=s108-c-k-c0x00ffffff-no-rj"
+              src={user.user.foto ?? "https://yt3.ggpht.com/grfYgQadT8iNg9WPb-jkrKB-9224y_DBDXAOtV4Yt7cyQmtR47J_453uveQOTDsp_dRSH851TMM=s108-c-k-c0x00ffffff-no-rj"}
             />
           </Box>
           <Typography
@@ -125,7 +127,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
             component="a"
             onClick={() => navigate("/profile")}
           >
-            FELIPE DAROS
+            {user.user.nome.toUpperCase()}
           </Typography>
           <Divider />
 
@@ -156,6 +158,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
         {children}
       </Box>
       <IconButton
+        onClick={handleOpenWhatsApp}
         color="primary"
         sx={{
           position: "fixed",

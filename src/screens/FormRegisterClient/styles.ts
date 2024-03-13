@@ -1,4 +1,7 @@
 import styled from "styled-components"
+import backgroundImage from "../../assets/background-desktop.png"
+import backgroundImageMobile from "../../assets/background-mobile.png"
+import { Grid } from "@mui/material"
 
 export const CenteredContainer = styled.div`
   display: flex;
@@ -23,4 +26,19 @@ export const DivBackgroundColor = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+
+
+export const StyledContainerAwatingPayment = styled(Grid)`
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
+
+  @media (min-width: 900px) {
+    background-image: url(${backgroundImage});
+  }
+
+  @media (max-width: 900px) {
+    background-image: url(${backgroundImageMobile});
+  }
 `

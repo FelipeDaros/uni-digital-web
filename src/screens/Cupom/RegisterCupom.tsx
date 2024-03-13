@@ -8,9 +8,10 @@ import { theme } from "../../styled";
 import { Loading } from "../../components/Loading";
 import { Form } from "@unform/web";
 import { handleKeyPress } from "../../utils/handleKeyPress";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 import { api } from "../../config/api";
+import { useToast } from "../../context/ToastContext";
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -38,8 +39,9 @@ const columns: GridColDef[] = [
 ];
 
 export function RegisterCupom() {
+  const { codigo } = useParams();
+  const { showToast } = useToast();
   const navigate = useNavigate();
-  const formRef = useRef<FormHandles>(null)
   const [loading, setLoading] = useState(false);
   const [tipo, setTipo] = useState("");
   const [listar, setListar] = useState("");
@@ -48,6 +50,8 @@ export function RegisterCupom() {
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(5);
   const [page, setPage] = useState(0);
+
+  const formRef = useRef<FormHandles>(null)
 
   async function fetchData() {
     try {
@@ -67,29 +71,61 @@ export function RegisterCupom() {
       }
       // @ts-ignore
       setGridData(payload)
-      navigate('/cupom')
-    } catch (error) {
 
+      if(codigo){
+        const { data } = await api.get(`/cupons/show/${codigo}`);
+        if(data.data){
+          formRef.current.setFieldValue('descricao', data.data.descricao)
+          formRef.current.setFieldValue('limite', data.data.limite)
+          formRef.current.setFieldValue('quantidade', data.data.quantidade)
+          formRef.current.setFieldValue('valor', data.data.valor)
+          formRef.current.setFieldValue('vigencia_final', data.data.vigencia_final)
+          formRef.current.setFieldValue('vigencia_inicio', data.data.vigencia_inicio)
+          formRef.current.setFieldValue('tipo', data.data.tipo)
+          formRef.current.setFieldValue('listar', data.data.listar)
+          setTipo(data.data.tipo);
+          setListar(data.data.listar)
+          setRowSelected(data.data.id_produto)
+        }
+      }
+
+
+    } catch (error: any) {
+      if(!!error.response){
+        showToast({
+          message: error.response.data.message,
+          color: 'error'
+        })
+        return;
+      }
+
+      showToast({
+        message: error.message,
+        color: 'error'
+      })
     } finally {
       setLoading(false)
     }
   }
 
   async function handleSave(dados: any) {
-    if(!rowSelected)return;
+    console.log(rowSelected)
+    if (!rowSelected) return;
 
     try {
       setLoading(true);
       const payload = {
         ...dados,
-        id_produto: rowSelected.row.id,
+        id_produto: rowSelected,
         tipo,
-        listar
+        listar,
+        quantidade: 0
       }
       await api.post('/cupons/store', payload);
+      navigate('/cupom')
     } catch (error) {
-      
-    }finally{
+
+    } finally {
       setLoading(false);
     }
   }
@@ -109,11 +145,11 @@ export function RegisterCupom() {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <LabelText>Nome</LabelText>
+            <LabelText>Descrição</LabelText>
             <VTextField
               size="small"
-              autoComplete="nome"
-              name="nome"
+              autoComplete="descricao"
+              name="descricao"
               required
               color="success"
               fullWidth
@@ -175,20 +211,6 @@ export function RegisterCupom() {
               id="valor"
               autoFocus
               type="text"
-              onKeyPress={handleKeyPress}
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <LabelText>Quantidade</LabelText>
-            <VTextField
-              size="small"
-              autoComplete="quantidade"
-              name="quantidade"
-              required
-              color="success"
-              fullWidth
-              id="quantidade"
-              autoFocus
               onKeyPress={handleKeyPress}
             />
           </Grid>
@@ -290,7 +312,7 @@ export function RegisterCupom() {
                 setPage(e.page)
                 setPageSize(e.pageSize)
               }}
-              onCellClick={setRowSelected}
+              onRowClick={({ row }) => setRowSelected(row.id)}
               localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
             />
           }
@@ -313,7 +335,7 @@ export function RegisterCupom() {
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>
           <CustomButton onClick={() => navigate('/cupom')} type="button" color="error" variant="outlined">
-            <Typography>Cancelar</Typography>
+            <Typography>Voltar</Typography>
           </CustomButton>
         </Grid>
       </Form>

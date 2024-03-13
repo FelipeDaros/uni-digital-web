@@ -1,5 +1,5 @@
 import { FormHandles } from "@unform/core"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CustomButton } from "../../components/Button";
 import { Container, Grid, Paper, Typography, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { LabelText } from "../FormRegisterClient/components/StepTwo/style";
@@ -7,13 +7,15 @@ import { VTextField } from "../../components/Input/VTextField";
 import { theme } from "../../styled";
 import { Loading } from "../../components/Loading";
 import { Form } from "@unform/web";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../config/api";
 import { handleKeyPress } from "../../utils/handleKeyPress";
 import { useToast } from "../../context/ToastContext";
 
 
 export function RegisterProduct() {
+  const { id } = useParams();
+
   const { showToast } = useToast()
   const navigate = useNavigate();
   const formRef = useRef<FormHandles>(null)
@@ -28,9 +30,10 @@ export function RegisterProduct() {
       const payload = {
         ...dados,
         tipo: tipo,
-        add_secundarios: secundarios
+        add_secundarios: secundarios,
+        ativo: 1
       }
-      const { data } = await api.post('/produtos/store', payload);
+      const { data } = id ? await api.put(`/produtos/update/${id}`, payload) : await api.post('/produtos/store', payload);
       showToast({
         color: 'success',
         message: data.message
@@ -57,6 +60,45 @@ export function RegisterProduct() {
     setSecunarios(value);
     formRef.current?.setFieldValue("add_secundarios", value);
   }
+
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const { data } = await api.get(`produtos/show/${id}`);
+
+      if(data.data){
+        formRef.current.setFieldValue('nome', data.data.nome)
+        formRef.current.setFieldValue('descricao', data.data.descricao)
+        formRef.current.setFieldValue('observacao', data.data.observacao)
+        formRef.current.setFieldValue('preco', data.data.preco)
+        formRef.current.setFieldValue('qtd_secundario_padrao', data.data.qtd_secundario_padrao)
+        formRef.current.setFieldValue('add_secundarios', data.data.add_secundarios)
+        formRef.current.setFieldValue('tipo', data.data.tipo)
+        setSecunarios(data.data.add_secundarios);
+        setTipo(data.data.tipo);
+      }
+      
+      showToast({
+        message: 'Informações carregadas com sucesso!',
+        color: "success"
+      })
+    } catch (error) {
+      if (!!error.response) {
+        showToast({
+          color: 'success',
+          message: error.response.data.message
+        })
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (id) {
+      fetchData();
+    }
+  }, [])
 
   return (
     <Container maxWidth="md" sx={{ paddingTop: 4, paddingBottom: 4 }}>
@@ -92,7 +134,6 @@ export function RegisterProduct() {
               fullWidth
               id="descricao"
               inputProps={{ maxLength: 255 }}
-              autoFocus
             />
           </Grid>
           <Grid item xs={12}>
@@ -240,8 +281,8 @@ export function RegisterProduct() {
           <CustomButton type="submit" color="success" variant="contained">
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>
-          <CustomButton onClick={() => navigate('/administers')} type="button" color="error" variant="outlined">
-            <Typography>Cancelar</Typography>
+          <CustomButton onClick={() => navigate('/products')} type="button" color="error" variant="outlined">
+            <Typography>Voltar</Typography>
           </CustomButton>
         </Grid>
       </Form>

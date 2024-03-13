@@ -343,7 +343,7 @@ export function RegisterAdminister() {
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>
           <CustomButton onClick={() => navigate('/administers')} type="button" color="error" variant="outlined">
-            <Typography>Cancelar</Typography>
+            <Typography>Voltar</Typography>
           </CustomButton>
         </Grid>
       </Form>

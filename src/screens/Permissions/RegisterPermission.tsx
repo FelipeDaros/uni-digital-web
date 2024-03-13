@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { CustomButton } from "../../components/Button";
-import { Checkbox, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, OutlinedInput, Paper, Typography, OutlinedInputProps } from "@mui/material";
+import { Checkbox, Grid, List, ListItem, ListItemButton, ListItemIcon, ListItemText, OutlinedInput, Paper, Typography, OutlinedInputProps, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { theme } from "../../styled";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../../config/api";
@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useToast } from "../../context/ToastContext";
 import { ModalAddScreen } from "./Components/ModalAddScreen";
 import { Loading } from "../../components/Loading";
+import { LabelText } from "../FormRegisterClient/components/StepTwo/style";
 
 type PropsFetch = {
   tela: string;
@@ -30,6 +31,7 @@ export function RegisterPermission() {
   const [isStateModal, setIsStateModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [perfil, setPerfil] = useState("");
+  const [ativa, setAtiva] = useState("");
 
   const perfilInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +52,7 @@ export function RegisterPermission() {
           setChecked(data.data.permissaoFuncao.map((item: any) => item.id_permissao));
 
           setPerfil(data.data.funcao.nome)
+          setAtiva(data.data.funcao.ativa)
 
           permissoesArray.forEach(([tela, permissoes]) => {
             const telaInfo = {
@@ -150,14 +153,27 @@ export function RegisterPermission() {
     try {
       setLoading(true);
 
-      const payload = {
-        nome: perfil,
-        permissoes: checked
+      if (id) {
+        const payload = {
+          nome: perfil,
+          permissoes: checked,
+          ativa
+        }
+        const { data } = await api.post(`/permissoes/funcao/update/${id}`, payload);
+
+        showToast({ message: data.message, color: 'success' })
+      } else {
+        const payload = {
+          nome: perfil,
+          permissoes: checked
+        }
+        const { data } = await api.post('/permissoes/funcao/create', payload);
+        showToast({ message: data.message, color: 'success' })
       }
-
-      await api.post('/permissoes/funcao/create', payload);
     } catch (error: any) {
-
+      if (!!error.response) {
+        showToast({ message: error.response.data.message, color: 'error' })
+      }
     } finally {
       setLoading(false);
     }
@@ -199,6 +215,50 @@ export function RegisterPermission() {
           TELA
         </CustomButton>
       </Grid>
+      {id &&
+        <Grid item xs={12}>
+          <LabelText htmlFor="">Ativo</LabelText>
+          <RadioGroup
+            row
+            aria-labelledby="demo-radio-buttons-group-label"
+            onChange={e => setAtiva(e.target.value)}
+            value={ativa}
+            id="ativo"
+            name="ativo"
+          >
+            <FormControlLabel
+              value="1"
+              control={
+                <Radio
+                  sx={{
+                    color: "#28DA9D",
+                    "&.Mui-checked": {
+                      color: "#28DA9D",
+                    },
+                  }}
+                  size="small"
+                />
+              }
+              label="Sim"
+            />
+            <FormControlLabel
+              value="0"
+              control={
+                <Radio
+                  sx={{
+                    color: "#28DA9D",
+                    "&.Mui-checked": {
+                      color: "#28DA9D",
+                    },
+                  }}
+                  size="small"
+                />
+              }
+              label="Não"
+            />
+          </RadioGroup>
+        </Grid>
+      }
       <Grid container gap={3}>
         {telas.length && telas.map(item => (
           <Paper key={item.tela} sx={{ width: 360, marginTop: 2, p: 2 }}>
@@ -250,7 +310,7 @@ export function RegisterPermission() {
           <Typography color="#fff">Salvar</Typography>
         </CustomButton>
         <CustomButton onClick={() => navigate('/permissions')} type="button" color="error" variant="outlined">
-          <Typography>Cancelar</Typography>
+          <Typography>Voltar</Typography>
         </CustomButton>
       </Grid>
       <ModalAddScreen

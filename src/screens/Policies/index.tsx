@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Grid, OutlinedInput, Paper, Typography } from "@mui/material";
+import { Grid, IconButton, OutlinedInput, Paper, Typography } from "@mui/material";
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 
 import AddIcon from '@mui/icons-material/Add';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import SearchIcon from '@mui/icons-material/Search';
+import CreateIcon from '@mui/icons-material/Create';
 
 import { api } from "../../config/api";
 
@@ -12,30 +15,43 @@ import { useNavigate } from "react-router-dom";
 import { theme } from "../../styled";
 import { useToast } from "../../context/ToastContext";
 
-
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'tipo',
-    headerName: 'Tipo',
-    width: 200,
-  },
-  {
-    field: 'descricao',
-    headerName: 'Descricao',
-    width: 400,
-  },
-];
-
 export function Policies() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(5);
-  const [page, setPage] = useState(0
-  );
+  const [page, setPage] = useState(0);
+
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    {
+      field: 'tipo',
+      headerName: 'Tipo',
+      width: 200,
+    },
+    {
+      field: 'descricao',
+      headerName: 'Descricao',
+      width: 400,
+    },
+    {
+      field: 'acoes',
+      headerName: 'Ações',
+      width: 130,
+      renderCell: (params) => (
+        <>
+          <IconButton onClick={() => params.row.ativo === 1 ? handleAlterPolitica(params.row.id, params.row, 0) : handleAlterPolitica(params.row.id, params.row, 1)}>
+            {params.row.ativo === 1 ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </IconButton>
+          <IconButton onClick={() => handleSelected(params.row.tipo)}>
+            <CreateIcon />
+          </IconButton>
+        </>
+      ),
+    }
+  ];
 
   async function fetchData() {
     try {
@@ -65,6 +81,14 @@ export function Policies() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSelected(tipo: string) {
+    return navigate(`/register-policy/${tipo}`);
+  }
+
+  async function handleAlterPolitica(id: number, row: any, ativo: number){
+    
   }
 
   useEffect(() => {
@@ -114,6 +138,7 @@ export function Policies() {
               setPageSize(e.pageSize)
             }}
             localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            disableRowSelectionOnClick
           />
         }
       </Paper>

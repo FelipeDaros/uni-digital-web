@@ -1,48 +1,20 @@
 import { useEffect, useState } from "react";
-import { Grid, OutlinedInput, Paper, Typography } from "@mui/material";
+import { Grid, IconButton, OutlinedInput, Paper, Typography } from "@mui/material";
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CreateIcon from '@mui/icons-material/Create';
 
 import { api } from "../../config/api";
 
 import { CustomButton } from "../../components/Button";
 import { theme } from "../../styled";
 import { useToast } from "../../context/ToastContext";
-
-
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'descricao',
-    headerName: 'Descricao',
-    width: 300,
-  },
-  {
-    field: 'codigo',
-    headerName: 'Código',
-    width: 300,
-  },
-  {
-    field: 'tipo',
-    headerName: 'Tipo',
-    width: 150,
-  },
-  {
-    field: 'valor',
-    headerName: 'Valor',
-    type: 'number',
-    width: 150,
-  },
-  {
-    field: 'ativo',
-    headerName: 'Ativo',
-    width: 50,
-  }
-];
+import { Circle } from "../../components/Circle";
 
 export function Cupom() {
   const { showToast } = useToast();
@@ -50,8 +22,49 @@ export function Cupom() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
-  const [pageSize, setPageSize] = useState(2);
+  const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
+
+  const columns: GridColDef[] = [
+    { field: 'status', headerName: '', width: 30, renderCell: (params) => (<Circle colorCircle={params.row.ativo} />) },
+    { field: 'id', headerName: 'ID', width: 80 },
+    {
+      field: 'descricao',
+      headerName: 'Descricao',
+      width: 300,
+    },
+    {
+      field: 'codigo',
+      headerName: 'Código',
+      width: 250,
+    },
+    {
+      field: 'tipo',
+      headerName: 'Tipo',
+      width: 130,
+    },
+    {
+      field: 'valor',
+      headerName: 'Valor',
+      type: 'number',
+      width: 150,
+    },
+    {
+      field: 'acoes',
+      headerName: 'Ações',
+      width: 130,
+      renderCell: (params) => (
+        <>
+          <IconButton onClick={() => params.row.ativo === 1 ? handleAlterCupom(params.row.id, params.row, 0) : handleAlterCupom(params.row.id, params.row, 1)}>
+            {params.row.ativo === 1 ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </IconButton>
+          <IconButton onClick={() => handleSelected(params.row.codigo)}>
+            <CreateIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
   async function fetchData() {
     try {
@@ -80,6 +93,35 @@ export function Cupom() {
       }
     } finally {
       setLoading(false);
+    }
+  }
+
+  function handleSelected(codigo: number) {
+    return navigate(`/register-cupom/${codigo}`);
+  }
+
+  async function handleAlterCupom(id: number, row: any, ativo: number) {
+    try {
+      setLoading(true)
+      const payload = {
+        ...row,
+        ativo
+      }
+      const { data } = await api.put(`/cupons/update/${id}`, payload)
+      await fetchData();
+      showToast({
+        color: 'success',
+        message: data.message
+      })
+    } catch (error: any) {
+      if (!!error.response) {
+        showToast({
+          color: 'error',
+          message: error.response.data.message
+        })
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -123,12 +165,13 @@ export function Cupom() {
               pagination: { paginationModel: { pageSize: pageSize, page } },
             }}
             loading={loading}
-            pageSizeOptions={[2, 5, 10]}
+            pageSizeOptions={[10, 25, 50]}
             onPaginationModelChange={e => {
               setPage(e.page)
               setPageSize(e.pageSize)
             }}
             localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            disableRowSelectionOnClick
           />
         }
       </Paper>

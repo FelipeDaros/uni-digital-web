@@ -74,10 +74,10 @@ export function ModalInvoice({
     <Modal open={isState} onClose={changeState}>
       <ModalContent>
         <h2 id="unstyled-modal-title" className="modal-title">
-          {title}
+          {/* {title} */}
         </h2>
         <p id="unstyled-modal-description" className="modal-description">
-          {description}
+          {/* {description} */}
         </p>
         <Grid container direction="row" gap={3}>
           <CustomButton

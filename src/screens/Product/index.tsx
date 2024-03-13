@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-
+import CreateIcon from '@mui/icons-material/Create';
 
 import { Circle } from "../../components/Circle";
 import { CustomButton } from "../../components/Button";
@@ -54,9 +54,14 @@ export function Products() {
       headerName: 'Ação',
       width: 100,
       renderCell: (params) => (
-        <IconButton onClick={() => params.row.ativo === 1 ? handleAlterProduct(params.row.id, params.row, 0) : handleAlterProduct(params.row.id, params.row, 1)}>
-          {params.row.ativo === 1 ? <VisibilityOffIcon /> : <VisibilityIcon />}
-        </IconButton>
+        <>
+          <IconButton onClick={() => params.row.ativo === 1 ? handleAlterProduct(params.row.id, params.row, 0) : handleAlterProduct(params.row.id, params.row, 1)}>
+            {params.row.ativo === 1 ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          </IconButton>
+          <IconButton onClick={() => handleSelected(params.row.id)}>
+            <CreateIcon />
+          </IconButton>
+        </>
       ),
     },
   ];
@@ -66,7 +71,7 @@ export function Products() {
       setLoading(true)
       const payload = {
         ...row,
-        ativo,
+        ativo
       }
       const { data } = await api.put(`/produtos/update/${id}`, payload)
       await fetchData();
@@ -114,6 +119,10 @@ export function Products() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSelected(id: number) {
+    return navigate(`/register-product/${id}`);
   }
 
   useEffect(() => {
