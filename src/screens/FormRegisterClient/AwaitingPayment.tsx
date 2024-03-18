@@ -3,9 +3,30 @@ import { CopyToClipboardButton } from "../../components/CopyToClipboardButton";
 import { useParams } from "react-router-dom";
 import { CustomButton } from "../../components/Button";
 import { StyledContainerAwatingPayment } from "./styles";
+import { useEffect, useState } from "react";
+
+type RetornoProps = {
+  code: string;
+  link: string;
+}
 
 export function AwaitingPayment() {
+  const [retorno, setRetorno] = useState<null | RetornoProps>(null);
   const { type } = useParams();
+
+  async function fetchData() {
+    const { original } = JSON.parse(window.localStorage.getItem("retorno_pagamento"))
+    setRetorno(original.data);
+    // const response = await fetch('https://sandbox.api.pagseguro.com/qrcode/QRCO_2C5AE1F7-3345-4C1C-BE32-6338DDF03EEF/base64', {
+    //   method: 'GET'
+    // })/
+
+    console.log(retorno)
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return (
     <StyledContainerAwatingPayment>
@@ -13,20 +34,21 @@ export function AwaitingPayment() {
         Realize o pagamento da assinatura abaixo
       </Typography>
       <Grid mt={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-        {type === "P" &&
+        {type === "PIX" &&
           <>
             <Typography color="white" fontWeight="bold" textAlign="center">
               Copie o código abaixo e efetue o pagamento do pix
             </Typography>
-            <img
-              src="https://images.unsplash.com/photo-1533827432537-70133748f5c8?w=164&h=164&fit=crop&auto=format&dpr=2"
-              width={200}
-              height={200}
-              style={{ marginTop: 20 }}
-            />
+            {retorno &&
+              <img
+                src={retorno.link.replace("base64", "png")}
+                width={200}
+                height={200}
+                style={{ marginTop: 20 }}
+              />}
           </>
         }
-        {type === "B" &&
+        {type === "BOLETO" &&
           <>
             <Typography color="white" mb={2} fontWeight="bold" textAlign="center">
               Copie o código abaixo e efetue o pagamento do boleto
@@ -38,9 +60,9 @@ export function AwaitingPayment() {
         }
         <Grid mt={2} display="flex" alignItems="center" justifyContent="center">
           <Typography color="white" fontWeight="bold" textAlign="center">
-            asd21312qsdsaqd1231dsa
+            {retorno && retorno.code}
           </Typography>
-          <CopyToClipboardButton cod_bar="asd21312qsdsaqd1231dsa" />
+          {retorno && <CopyToClipboardButton cod_bar={retorno.code} />}
         </Grid>
       </Grid>
       <Grid mt={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">

@@ -17,7 +17,7 @@ export function CopyToClipboardButton({ cod_bar }: Props) {
   return (
     <>
       <IconButton onClick={handleClick} color="primary">
-        <ContentCopyIcon color="success" />
+        <ContentCopyIcon color="primary" />
       </IconButton>
       <Snackbar
         message="Código copiado com sucesso!"

@@ -33,6 +33,7 @@ export const StyledContainerAwatingPayment = styled(Grid)`
   height: 100%;
   width: 100%;
   min-height: 100vh;
+  min-width: 100%;
 
   @media (min-width: 900px) {
     background-image: url(${backgroundImage});

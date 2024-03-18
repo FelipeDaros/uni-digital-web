@@ -79,12 +79,14 @@ export function StepTwo() {
         cartao: cartao ?? null
       }
       
-      await api.post(`/compras/store`, formData);
+      const { data } = await api.post(`/compras/store`, formData);
 
-      if(selectedPayment === "P" || selectedPayment === "B"){
+      if(selectedPayment === "PIX" || selectedPayment === "BOLETO"){
+        window.localStorage.setItem("retorno_pagamento", JSON.stringify(data.data));
         return navigate(`/awaiting-payment/${selectedPayment}`);
       }
-
+      
+      window.localStorage.setItem("retorno_pagamento", JSON.stringify(data.data));
       return navigate('/');
     } catch (error: any) {
       if (!!error.response) {
