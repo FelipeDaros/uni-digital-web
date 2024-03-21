@@ -2,8 +2,23 @@ import { Grid, IconButton, MenuItem, Select, TextField } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import { useState } from "react"
 import { LabelText } from "../FormRegisterClient/components/StepTwo/style"
+import { handleKeyPress } from "../../utils/handleKeyPress"
+import { useToast } from "../../context/ToastContext"
 
-export function DependentForm() {
+type SecundariosProps = {
+  nome: string;
+  documento: string;
+  data_nascimento: Date | string;
+  sexo: string;
+  email: string;
+}
+
+type Props = {
+  handleAddDependente: (dependente: SecundariosProps) => void;
+}
+
+export function DependentForm({ handleAddDependente }: Props) {
+  const { showToast } = useToast();
   const [formularioDependente, setFormularioDependente] = useState({
     nome: "",
     documento: "",
@@ -13,6 +28,13 @@ export function DependentForm() {
   })
 
   function handleAdd() {
+    if(!formularioDependente.nome.trim() || !formularioDependente.email.trim() || !formularioDependente.documento.trim() || !formularioDependente.sexo.trim() || !formularioDependente.data_nascimento.trim()){
+      return showToast({
+        color: 'error',
+        message: 'Informe todos os campos!'
+      })
+    }
+
     //@ts-ignore
     handleAddDependente(formularioDependente)
 
@@ -26,7 +48,7 @@ export function DependentForm() {
   }
 
   return (
-    <Grid container spacing={3} direction="row">
+    <Grid container mt={2} spacing={2} pr={2} pl={2} pb={2}>
       <Grid item xs={12} sm={3} marginTop={2}>
         <LabelText htmlFor="">Nome</LabelText>
         <TextField
@@ -61,6 +83,8 @@ export function DependentForm() {
               documento: e.target.value,
             }))
           }
+          onKeyPress={handleKeyPress}
+          inputProps={{ maxLength: 11 }}
         />
       </Grid>
       <Grid item xs={12} sm={2} marginTop={2}>

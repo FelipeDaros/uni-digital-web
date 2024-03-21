@@ -13,8 +13,11 @@ import InstagramIcon from "@mui/icons-material/Instagram"
 import { DivBackgroundColor, ImgLogo } from "./styles"
 
 import imgLogo from "../../assets/logo-unidigital-horizontal-amarelo.png"
+import { useNavigate } from "react-router-dom"
 
 export function FeedBackScreen() {
+  const navigate = useNavigate();
+
   return (
     <>
       <DivBackgroundColor>
@@ -54,12 +57,12 @@ export function FeedBackScreen() {
             justifyContent="center"
             spacing={4}
           >
-            <CustomButton size="large" variant="contained">
+            <CustomButton color="success" size="large" variant="contained" onClick={() => navigate('/')}>
               <Typography fontSize={14} color="white">
                 Acesse o Portal UniDigital
               </Typography>
             </CustomButton>
-            <CustomButton size="large" variant="contained">
+            <CustomButton color="success" size="large" variant="contained">
               <Typography fontSize={14} color="white">
                 Acesse a Tabela de Valores
               </Typography>

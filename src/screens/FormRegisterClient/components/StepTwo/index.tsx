@@ -87,7 +87,7 @@ export function StepTwo() {
       }
       
       window.localStorage.setItem("retorno_pagamento", JSON.stringify(data.data));
-      return navigate('/');
+      return navigate('/concluded');
     } catch (error: any) {
       if (!!error.response) {
         showToast({

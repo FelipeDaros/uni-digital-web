@@ -47,7 +47,7 @@ export function Profile() {
         sexo: radio
       }
       const { data } = await api.put(`/auth/update/${user?.user.id}`, payload);
-      showToast({color: 'success', message: data.message});
+      showToast({ color: 'success', message: data.message });
     } catch (error: any) {
       if (!!error.response) {
         showToast({
@@ -372,20 +372,24 @@ export function Profile() {
           <CustomButton type="submit" color="success" variant="contained">
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>
-          <CustomButton
-            type="button"
-            color="success"
-            variant="contained"
-            onClick={handleStateSignature}
-          >
-            <Typography color="#fff">Alterar Assinatura</Typography>
-          </CustomButton>
-          <CustomButton onClick={() => navigation('/change-payment-method')} type="button" color="success" variant="contained">
-            <Typography color="#fff">Alterar forma pagamento</Typography>
-          </CustomButton>
-          <CustomButton onClick={() => handleStateCancelSignature()} type="button" color="error" variant="outlined">
-            <Typography>Cancelar assinatura</Typography>
-          </CustomButton>
+          {user.user.tipo === "T" &&
+            <>
+              <CustomButton
+                type="button"
+                color="success"
+                variant="contained"
+                onClick={handleStateSignature}
+              >
+                <Typography color="#fff">Alterar Assinatura</Typography>
+              </CustomButton>
+              <CustomButton onClick={() => navigation('/change-payment-method')} type="button" color="success" variant="contained">
+                <Typography color="#fff">Alterar forma pagamento</Typography>
+              </CustomButton>
+              <CustomButton onClick={() => handleStateCancelSignature()} type="button" color="error" variant="outlined">
+                <Typography>Cancelar assinatura</Typography>
+              </CustomButton>
+            </>
+          }
         </Grid>
       </Form>
       <VModalConfirm

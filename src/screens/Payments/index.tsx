@@ -1,43 +1,20 @@
 import {
   Grid,
+  IconButton,
   Paper,
   Typography,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { ModalBoletoDetails } from "./components/ModalBoletoDetails"
 import { useAuth } from "../../context/AuthContext"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid"
 import { api } from "../../config/api"
 import { useToast } from "../../context/ToastContext"
+import { CustomButton } from "../../components/Button"
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'nome',
-    headerName: 'Nome',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'documento',
-    headerName: 'Documento',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'celular',
-    headerName: 'Celular',
-    type: 'number',
-    width: 200,
-    editable: true,
-  },
-  {
-    field: 'email',
-    headerName: 'Email',
-    width: 400,
-    editable: true,
-  }
-];
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import FindInPageIcon from '@mui/icons-material/FindInPage';
+import { IFatura } from "../../interfaces/IFatura"
 
 export function Payment() {
   const { user } = useAuth()
@@ -47,6 +24,37 @@ export function Payment() {
   const [gridData, setGridData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
+
+  const [atual, setAtual] = useState<IFatura>(null);
+
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    {
+      field: 'metodo',
+      headerName: 'Método',
+      width: 200,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 200,
+    },
+    {
+      field: 'data_pago',
+      headerName: 'Data pagamento',
+      width: 200,
+    },
+    {
+      field: 'visualizar',
+      headerName: 'Visualizar',
+      width: 130,
+      renderCell: (params) => (
+        <IconButton onClick={handleStateModalBoletoDetails}>
+          {params.row.metodo === "BOLETO" ? <FindInPageIcon /> : <></>}
+        </IconButton>
+      ),
+    }
+  ];
 
   const handleStateModalBoletoDetails = () =>
     setIsStateModalBoletoDetails(!isStateModalBoletoDetails)
@@ -60,19 +68,32 @@ export function Payment() {
           page: page
         }
       });
+
       const payload = {
-        rows: data.data,
+        rows: data.data.historico,
         columns,
         experimentalFeatures: true,
 
       }
       // @ts-ignore
       setGridData(payload)
+      setAtual(data.data.atual);
     } catch (error) {
 
     } finally {
       setLoading(false);
     }
+  }
+
+  function validatePaymentDefaulter() {
+    showToast({
+      color: 'warning',
+      message: 'Sua assinatura não está ativa. Por favor, regularize para ter acesso a todos os serviços do UniDigital'
+    })
+  }
+
+  function handleDownload() {
+
   }
 
   useEffect(() => {
@@ -82,13 +103,6 @@ export function Payment() {
 
     fetchData()
   }, [pageSize])
-
-  function validatePaymentDefaulter() {
-    showToast({
-      color: 'info',
-      message: 'Sua assinatura não está ativa. Por favor, regularize para ter acesso a todos os serviços do UniDigital'
-    })
-  }
 
   return (
     <Grid margin={2} pt={4} pb={4}>
@@ -101,7 +115,7 @@ export function Payment() {
         <Grid direction="row" container p={2}>
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Vencimento</Typography>
-            <p>10/12/2023</p>
+            {atual && <p>{atual.data_vencimento}</p>}
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Valor</Typography>
@@ -122,9 +136,9 @@ export function Payment() {
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Em aberto</Typography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Typography fontWeight="bold">Ver detalhes</Typography>
-          </Grid>
+          <CustomButton endIcon={<CloudDownloadIcon />} type="submit" color="error" variant="contained" onClick={handleDownload}>
+            <Typography color="#fff">Download</Typography>
+          </CustomButton>
         </Grid>
       </Grid>
       <Grid p={2} container>
@@ -141,11 +155,13 @@ export function Payment() {
               pagination: { paginationModel: { pageSize: pageSize, page } },
             }}
             loading={loading}
-            pageSizeOptions={[10, 25, 50]}
+            pageSizeOptions={[5, 10, 20]}
             onPaginationModelChange={e => {
               setPage(e.page)
               setPageSize(e.pageSize)
             }}
+            localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}
+            disableRowSelectionOnClick
           />
         }
       </Paper>

@@ -73,7 +73,7 @@ export function ModalPermissionUser({
   userId
 }: Props) {
   const [loading, setLoading] = useState(false);
-  const [perfil, setPerfil] = useState(null);
+  const [perfil, setPerfil] = useState<any>(0);
   const [perfils, setPerfils] = useState<IPerfil[]>([]);
   const { showToast } = useToast();
 
@@ -106,7 +106,12 @@ export function ModalPermissionUser({
   }
 
   const onSubmit = (data: any) => {
-    onOk(data);
+    const payload = {
+      ...data,
+      perfil
+    }
+    
+    onOk(payload);
   };
 
   async function fetchPerfils() {
@@ -188,6 +193,7 @@ export function ModalPermissionUser({
                 variant="standard"
                 required
                 value={perfil}
+                onChange={e => setPerfil(e.target.value)}
               >
                 {perfils.length >= 1 && perfils.map((item) => (
                   <MenuItem key={item.id} value={item.id}>

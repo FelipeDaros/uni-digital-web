@@ -138,7 +138,7 @@ export function ModalBoletoDetails({ changeState, isState, title }: Props) {
         >
           <CustomButton
             variant="contained"
-            onClick={changeState}
+            onClick={() => {}}
             color="success"
             sx={{ color: "#fff" }}
           >
@@ -146,7 +146,7 @@ export function ModalBoletoDetails({ changeState, isState, title }: Props) {
           </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={changeState}
+            onClick={() => {}}
             color="success"
             sx={{ color: "#fff" }}
           >
@@ -154,11 +154,19 @@ export function ModalBoletoDetails({ changeState, isState, title }: Props) {
           </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={changeState}
+            onClick={() => {}}
             color="success"
             sx={{ color: "#fff" }}
           >
             Alterar forma pagamento
+          </CustomButton>
+          <CustomButton
+            variant="contained"
+            onClick={changeState}
+            color="error"
+            sx={{ color: "#fff" }}
+          >
+            Fechar
           </CustomButton>
         </Grid>
       </ModalContent>

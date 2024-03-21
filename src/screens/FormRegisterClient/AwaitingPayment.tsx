@@ -1,6 +1,6 @@
 import { Grid, Typography } from "@mui/material";
 import { CopyToClipboardButton } from "../../components/CopyToClipboardButton";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CustomButton } from "../../components/Button";
 import { StyledContainerAwatingPayment } from "./styles";
 import { useEffect, useState } from "react";
@@ -11,6 +11,7 @@ type RetornoProps = {
 }
 
 export function AwaitingPayment() {
+  const navigate = useNavigate();
   const [retorno, setRetorno] = useState<null | RetornoProps>(null);
   const { type } = useParams();
 
@@ -66,7 +67,7 @@ export function AwaitingPayment() {
         </Grid>
       </Grid>
       <Grid mt={4} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-        <CustomButton onClick={() => { }} type="button" color="success" variant="contained">
+        <CustomButton onClick={() => navigate('/')} type="button" color="success" variant="contained">
           <Typography color="#fff">Página inicial</Typography>
         </CustomButton>
       </Grid>

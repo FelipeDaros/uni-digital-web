@@ -1,4 +1,5 @@
 import { IAssinatura } from "./IAssinatura";
+import { IPerfil } from "./IPerfil";
 import { IProduct } from "./IProduct";
 import { IUser } from "./IUser";
 
@@ -11,4 +12,5 @@ export interface IAuth {
   token_type: string;
   expires_in: number;
   produto: IProduct;
+  funcao: IPerfil[];
 }

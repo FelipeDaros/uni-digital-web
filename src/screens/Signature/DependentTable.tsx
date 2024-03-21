@@ -8,14 +8,23 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material"
-import RemoveIcon from "@mui/icons-material/Remove"
-import { FormAlterSignatureStore } from "./store/FormAlterSignatureStore"
+import DeleteIcon from '@mui/icons-material/Delete';
+import moment from "moment";
 
-export function DependentTable() {
-  const [secundarios] = FormAlterSignatureStore(
-    (state) => [state.secundarios],
-  )
+type SecundariosProps = {
+  nome: string;
+  documento: string;
+  data_nascimento: Date | string;
+  sexo: string;
+  email: string;
+}
 
+type Props = {
+  secundarios: SecundariosProps[];
+  handleRemove: (user: SecundariosProps) => void;
+}
+
+export function DependentTable({ secundarios, handleRemove }: Props) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -37,18 +46,18 @@ export function DependentTable() {
             >
               <TableCell>
                 <IconButton
-                  onClick={() => { }}
+                  onClick={() => handleRemove(row)}
                   size="small"
-                  sx={{ backgroundColor: "#28DA9D" }}
+                  color="error"
                 >
-                  <RemoveIcon />
+                  <DeleteIcon />
                 </IconButton>
               </TableCell>
               <TableCell component="th" scope="row">
                 {row.nome}
               </TableCell>
               <TableCell align="right">{row.documento}</TableCell>
-              <TableCell align="right">{row.dataNascimento}</TableCell>
+              <TableCell align="right">{moment(row.data_nascimento).format("DD/MM/YYYY")}</TableCell>
               <TableCell align="right">{row.sexo}</TableCell>
               <TableCell align="right">{row.email}</TableCell>
             </TableRow>

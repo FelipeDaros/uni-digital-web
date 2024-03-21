@@ -20,6 +20,7 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 
 import { Profile } from "../screens/Profile"
 import { Payment } from "../screens/Payments"
@@ -39,6 +40,7 @@ import { Permissions } from "../screens/Permissions"
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { RegisterPermission } from "../screens/Permissions/RegisterPermission"
 import { UsersPermissions } from "../screens/Permissions/UsersPermissions"
+import { CreditCard } from "../screens/CreditCard"
 
 
 export function RoutesAuth() {
@@ -69,55 +71,62 @@ export function RoutesAuth() {
       },
       {
         id: 3,
+        icon: CreditCardIcon,
+        path: "/credit-card",
+        label: "Cartão de crédito",
+        disabled: !(user?.user.tipo === "T")
+      },
+      {
+        id: 4,
         icon: TimelineIcon,
         path: "/payment",
         label: "Hist. Pagamentos",
         disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       },
       {
-        id: 4,
+        id: 5,
         icon: GroupsIcon,
         path: "/dependents",
         label: "Dependentes",
         disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       },
       {
-        id: 5,
+        id: 6,
         icon: DonutSmallIcon,
         path: "/dashboard",
         label: "DashBoard",
         disabled: !(user?.user.tipo === "T" || user?.user.tipo === "A")
       },
       {
-        id: 6,
+        id: 7,
         icon: ConfirmationNumberIcon,
         path: "/cupom",
         label: "Cupom",
         disabled: !(user?.user.tipo === "A")
       },
       {
-        id: 7,
+        id: 8,
         icon: ProductionQuantityLimitsIcon,
         path: "/products",
         label: "Produtos",
         disabled: !(user?.user.tipo === "A")
       },
       {
-        id: 8,
+        id: 9,
         icon: NewspaperIcon,
         path: "/policies",
         label: "Políticas",
         disabled: !(user?.user.tipo === "A")
       },
       {
-        id: 9,
+        id: 10,
         icon: SupervisorAccountIcon,
         path: "/administers",
         label: "Administradores",
         disabled: !(user?.user.tipo === "A")
       },
       {
-        id: 10,
+        id: 11,
         icon: VpnKeyIcon,
         path: "/permissions",
         label: "Permissões",
@@ -160,6 +169,8 @@ export function RoutesAuth() {
         <Route path="/register-permission" element={<RegisterPermission />} />
         <Route path="/register-permission/:id" element={<RegisterPermission />} />
         <Route path="/permissions-users" element={<UsersPermissions />} />
+
+        <Route path="/credit-card" element={<CreditCard />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
