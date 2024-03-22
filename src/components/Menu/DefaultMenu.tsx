@@ -138,7 +138,7 @@ export const DefaultMenu: React.FC = ({ children }) => {
                   {!drawerOption.disabled &&
                     <ListItemLink
                       to={drawerOption.path}
-                      key={drawerOption.id}
+                      key={drawerOption.id+drawerOption.path}
                       icon={drawerOption.icon}
                       label={drawerOption.label}
                       onClick={smDown ? toggleDrawerOpen : undefined}

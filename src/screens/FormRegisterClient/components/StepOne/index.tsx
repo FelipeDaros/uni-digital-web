@@ -156,7 +156,7 @@ export function StepOne() {
         </Typography>
       </ContainerText>
       {/* @ts-ignore */}
-      <ContainerDependentesComponent limit={product.qtd_secundario_padrao} />
+      <ContainerDependentesComponent limit={product?.qtd_secundario_padrao} />
       <ContainerText>
         <Typography fontSize={12} color="white">
           Você possui algum cupom de desconto?

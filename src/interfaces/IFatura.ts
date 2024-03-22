@@ -8,4 +8,8 @@ export interface IFatura{
   id_dono: number;
   created_at: Date;
   updated_at: Date;
+  link: string;
+  forma_pagamento: 'PIX' | 'BOLETO' | 'CARTAO';
+  valor: number;
+  nome: string;
 }

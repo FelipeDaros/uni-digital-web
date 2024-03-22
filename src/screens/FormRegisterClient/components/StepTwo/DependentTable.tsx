@@ -32,7 +32,7 @@ export function DependentTable() {
         <TableBody>
           {secundarios.map((row) => (
             <TableRow
-              key={`${row.documento}` + `${row.nome}`}
+              key={`${row.documento}` + `${row?.nome}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell>
@@ -45,7 +45,7 @@ export function DependentTable() {
                 </IconButton>
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.nome}
+                {row?.nome}
               </TableCell>
               <TableCell align="right">{row.documento}</TableCell>
               <TableCell align="right">{row.dataNascimento}</TableCell>

@@ -4,6 +4,9 @@ import { Grid, Typography } from "@mui/material"
 import { CustomButton } from "../../../components/Button"
 import { CopyToClipboardButton } from "../../../components/CopyToClipboardButton"
 import { theme } from "../../../styled"
+import { useEffect, useState } from "react"
+import { api } from "../../../config/api"
+import { useToast } from "../../../context/ToastContext"
 
 
 const ModalContent = styled("div")(
@@ -56,14 +59,63 @@ const Modal = styled(BaseModal)`
 `
 
 type Props = {
-  isState: boolean
-  title: string
-  changeState: () => void
+  id: number;
+  isState: boolean;
+  title: string;
+  changeState: () => void;
 }
 
-const cod_bar = "2344 8634 2532 8769 67657 83453 3456 4434 3456 453990"
+type PagamentoProps = {
+  valor: number;
+  data_assinatura: string;
+  nome_produto: string;
+  valor_proxima_fatura: number;
+}
 
-export function ModalBoletoDetails({ changeState, isState, title }: Props) {
+type BoletoProps = {
+  id: number;
+  nome_titular: string;
+  numero: string;
+  data_vencimento: string;
+  cvv: number;
+  ativo: number;
+  id_dono: number;
+  created_at: Date;
+  updated_at: Date;
+  link: string;
+}
+
+type PropsFetch = {
+  boleto: BoletoProps;
+  pagamento: PagamentoProps;
+}
+
+export function ModalBoletoDetails({ changeState, isState, title, id }: Props) {
+  const { showToast } = useToast();
+  const [payload, setPayload] = useState<PropsFetch | null>(null);
+
+  async function fetchData() {
+    try {
+      const { data } = await api.get(`/pagamentos/boleto/${id}`)
+      setPayload(data.data)
+    } catch (error: any) {
+      if (!!error.response) {
+        showToast({
+          message: error.response.data.message,
+          color: 'error'
+        })
+      }
+    } finally {
+
+    }
+  }
+
+  useEffect(() => {
+    if (isState) {
+      fetchData()
+    }
+  }, [isState])
+
   return (
     <Modal open={isState} onClose={changeState}>
       <ModalContent>
@@ -73,34 +125,33 @@ export function ModalBoletoDetails({ changeState, isState, title }: Props) {
         <Grid container p={2}>
           <Grid item xs={12} sm={6}>
             <Typography fontWeight="bold">Vencimento</Typography>
-            <p>10/12/2023</p>
+            <p>{payload?.boleto.data_vencimento}</p>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography fontWeight="bold">Valor</Typography>
-            <p>R$ 39,90</p>
+            <p>{Number(payload?.pagamento.valor)?.toLocaleString("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            })}</p>
           </Grid>
         </Grid>
         <Grid container p={2}>
           <Grid item xs={12} sm={6}>
             <Typography fontWeight="bold">Data assinatura</Typography>
-            <p>10/12/2023</p>
+            <p>{payload?.pagamento?.data_assinatura}</p>
           </Grid>
           <Grid item xs={12} sm={6}>
             <Typography fontWeight="bold">Valor próxima recorrencia</Typography>
-            <p>R$ 39,90</p>
-          </Grid>
-          <Grid container item xs={12} sm={12}>
-            <p>Sua próxima cobraça será dia 10 de janeiro de 2024</p>
+            <p>{Number(payload?.pagamento?.valor_proxima_fatura)?.toLocaleString("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            })}</p>
           </Grid>
         </Grid>
         <Grid container p={2}>
           <Grid item xs={12} sm={6}>
             <Typography fontWeight="bold">Assintarua</Typography>
-            <p>UniDigital Individual</p>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography fontWeight="bold">Forma pagamento</Typography>
-            <p>Boleto</p>
+            <p>{payload?.pagamento?.nome_produto}</p>
           </Grid>
         </Grid>
         <Grid p={2}>
@@ -109,17 +160,14 @@ export function ModalBoletoDetails({ changeState, isState, title }: Props) {
           </Grid>
           <Grid display="flex" alignItems="center">
             <Grid item xs={11} sm={11}>
-              <p>2344 8634 2532 8769 67657 83453 3456 4434 3456 453990</p>
+              <p>{payload?.boleto?.numero}</p>
             </Grid>
             <Grid item xs={1} sm={1}>
-              <CopyToClipboardButton cod_bar={cod_bar} />
+              <CopyToClipboardButton cod_bar={payload?.boleto?.numero} color="success" />
             </Grid>
           </Grid>
-        </Grid>
-        <Grid p={2}>
-          <Grid item xs={12} sm={12}>
-            <Typography fontWeight="bold">Status</Typography>
-            <p>Em abertura</p>
+          <Grid container item xs={12} sm={12}>
+            <p>Sua próxima cobraça será {payload?.boleto?.data_vencimento}</p>
           </Grid>
         </Grid>
         <Grid
@@ -138,25 +186,28 @@ export function ModalBoletoDetails({ changeState, isState, title }: Props) {
         >
           <CustomButton
             variant="contained"
-            onClick={() => {}}
+            onClick={() => { }}
             color="success"
             sx={{ color: "#fff" }}
+            disabled
           >
             PDF NFSe
           </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={() => {}}
+            onClick={() => { }}
             color="success"
             sx={{ color: "#fff" }}
+            disabled
           >
             Enviar por e-mail
           </CustomButton>
           <CustomButton
             variant="contained"
-            onClick={() => {}}
+            onClick={() => { }}
             color="success"
             sx={{ color: "#fff" }}
+            disabled
           >
             Alterar forma pagamento
           </CustomButton>

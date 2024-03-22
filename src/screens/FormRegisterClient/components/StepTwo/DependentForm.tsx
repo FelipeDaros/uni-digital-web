@@ -66,7 +66,7 @@ export function DependentForm() {
           fullWidth
           color="success"
           variant="standard"
-          value={formularioDependente.nome}
+          value={formularioDependente?.nome}
           onChange={(e) =>
             setFormularioDependente((state) => ({
               ...state,

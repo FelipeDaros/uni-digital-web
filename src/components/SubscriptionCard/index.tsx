@@ -33,7 +33,7 @@ export function SubscriptionCard({
           <Diversity1Icon sx={{ fontSize: 54 }} />
         )}
         <TruncatedText sx={{ textAlign: "center", fontWeight: "bold" }}>
-          {produto.nome}
+          {produto?.nome}
         </TruncatedText>
       </ContainerOne>
       <ContainerTwo>
@@ -41,7 +41,7 @@ export function SubscriptionCard({
           fontSize={12}
           sx={{ textAlign: "center", textOverflow: "ellipsis" }}
         >
-          {produto.descricao}
+          {produto?.descricao}
         </Typography>
       </ContainerTwo>
       <ContainerThree>
@@ -50,7 +50,7 @@ export function SubscriptionCard({
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
           {/* @ts-ignore */}
-          {String(produto.preco).toLocaleString("pt-br", {
+          {Number(produto?.preco).toLocaleString("pt-br", {
             style: "currency",
             currency: "BRL",
           })}

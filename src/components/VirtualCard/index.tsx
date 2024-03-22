@@ -61,7 +61,7 @@ export function VirtualCard({ codigo, nome, data_nascimento, nome_produto }: Pro
           </Typography>
         </Box>
         <Box>
-          <p>TESTE</p>
+          <p></p>
         </Box>
       </Stack>
     </ContainerCard>

@@ -34,7 +34,7 @@ export function CreditCard() {
             fullWidth
             color="success"
             variant="standard"
-            value={formularioCartao.nomeTitular}
+            value={formularioCartao?.nomeTitular}
             onChange={(e) =>
               setFormularioCartao((state) => ({
                 ...state,

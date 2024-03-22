@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CustomButton } from "../../components/Button";
 import { StyledContainerAwatingPayment } from "./styles";
 import { useEffect, useState } from "react";
+import { useToast } from "../../context/ToastContext";
 
 type RetornoProps = {
   code: string;
@@ -11,18 +12,23 @@ type RetornoProps = {
 }
 
 export function AwaitingPayment() {
+  const { showToast } = useToast();
   const navigate = useNavigate();
   const [retorno, setRetorno] = useState<null | RetornoProps>(null);
   const { type } = useParams();
 
   async function fetchData() {
-    const { original } = JSON.parse(window.localStorage.getItem("retorno_pagamento"))
-    setRetorno(original.data);
-    // const response = await fetch('https://sandbox.api.pagseguro.com/qrcode/QRCO_2C5AE1F7-3345-4C1C-BE32-6338DDF03EEF/base64', {
-    //   method: 'GET'
-    // })/
-
-    console.log(retorno)
+    try {
+      const { original } = JSON.parse(window.localStorage.getItem("retorno_pagamento"))
+      setRetorno(original.data);
+    } catch (error: any) {
+      if (!!error.response) {
+        showToast({
+          message: error.response.data.message,
+          color: 'error'
+        })
+      }
+    }
   }
 
   useEffect(() => {

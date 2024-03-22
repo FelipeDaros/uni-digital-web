@@ -26,6 +26,7 @@ export function Payment() {
   const [page, setPage] = useState(0);
 
   const [atual, setAtual] = useState<IFatura>(null);
+  const [selectBoletoId, setSelectBoletoId] = useState<number | null>();
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -49,7 +50,7 @@ export function Payment() {
       headerName: 'Visualizar',
       width: 130,
       renderCell: (params) => (
-        <IconButton onClick={handleStateModalBoletoDetails}>
+        <IconButton onClick={() => handleBoleto(params.row.id)}>
           {params.row.metodo === "BOLETO" ? <FindInPageIcon /> : <></>}
         </IconButton>
       ),
@@ -58,6 +59,11 @@ export function Payment() {
 
   const handleStateModalBoletoDetails = () =>
     setIsStateModalBoletoDetails(!isStateModalBoletoDetails)
+
+  function handleBoleto(id: number){
+    setSelectBoletoId(id);
+    handleStateModalBoletoDetails();
+  }
 
   async function fetchData() {
     try {
@@ -115,30 +121,37 @@ export function Payment() {
         <Grid direction="row" container p={2}>
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Vencimento</Typography>
-            {atual && <p>{atual.data_vencimento}</p>}
+            <p>{atual?.data_vencimento}</p>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Valor</Typography>
-            <p>R$ 39,90</p>
+            <p>{atual?.valor?.toLocaleString("pt-br", {
+              style: "currency",
+              currency: "BRL",
+            })}</p>
           </Grid>
         </Grid>
         <Grid direction="row" container p={2}>
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Assinatura</Typography>
-            <p>UniDigital Individual</p>
+            <p>{atual?.nome}</p>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Typography fontWeight="bold">Forma pagamento</Typography>
-            <p>Boleto</p>
+            <p>{atual?.forma_pagamento}</p>
           </Grid>
         </Grid>
         <Grid direction="row" container p={2}>
-          <Grid item xs={12} sm={4}>
-            <Typography fontWeight="bold">Em aberto</Typography>
-          </Grid>
-          <CustomButton endIcon={<CloudDownloadIcon />} type="submit" color="error" variant="contained" onClick={handleDownload}>
-            <Typography color="#fff">Download</Typography>
-          </CustomButton>
+          {atual?.forma_pagamento === 'BOLETO' &&
+            <CustomButton disabled endIcon={<CloudDownloadIcon />} type="submit" color="error" variant="contained" onClick={handleDownload}>
+              <Typography color="#fff">Visualizar</Typography>
+            </CustomButton>
+          }
+          {atual?.forma_pagamento === 'PIX' &&
+            <CustomButton disabled endIcon={<CloudDownloadIcon />} type="submit" color="error" variant="contained" onClick={handleDownload}>
+              <Typography color="#fff">Visualizar</Typography>
+            </CustomButton>
+          }
         </Grid>
       </Grid>
       <Grid p={2} container>
@@ -168,7 +181,8 @@ export function Payment() {
       <ModalBoletoDetails
         isState={isStateModalBoletoDetails}
         changeState={handleStateModalBoletoDetails}
-        title="Dados Fatura"
+        title="Dados do boleto"
+        id={selectBoletoId}
       />
     </Grid>
   )
