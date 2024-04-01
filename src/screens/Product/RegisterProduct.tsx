@@ -101,7 +101,7 @@ export function RegisterProduct() {
   }, [])
 
   return (
-    <Container maxWidth="md" sx={{ paddingTop: 4, paddingBottom: 4 }}>
+    <Container maxWidth="xl" sx={{ paddingTop: 4, paddingBottom: 4 }}>
       <Loading isLoading={loading} />
       <Form ref={formRef} placeholder="form" onSubmit={handleSave}>
         <Grid container spacing={2} component={Paper} pr={2} pb={2}>

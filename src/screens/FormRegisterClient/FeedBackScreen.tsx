@@ -23,7 +23,7 @@ export function FeedBackScreen() {
       <DivBackgroundColor>
         <ImgLogo src={imgLogo} />
       </DivBackgroundColor>
-      <Container maxWidth="md">
+      <Container maxWidth="xl">
         <Grid container direction="column">
           <Grid item xs={12} sm={6} md={4}>
             <Typography

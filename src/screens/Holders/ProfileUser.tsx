@@ -1,26 +1,41 @@
+import {
+  Container,
+  FormControlLabel,
+  Grid,
+  MenuItem,
+  Paper,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material"
+import { CustomButton } from "../../components/Button"
+import { LabelText } from "../FormRegisterClient/components/StepTwo/style"
+import { VTextField } from "../../components/Input/VTextField"
+import { VSelect } from "../../components/Select/VSelect"
+import { statesArray } from "../../utils/estados"
+import { VModalConfirm } from "../../components/ModalConfirm"
+import { useEffect, useRef, useState } from "react"
+import { theme } from "../../styled"
+
+import { Form } from "@unform/web"
 import { FormHandles } from "@unform/core"
-import { useRef, useState } from "react"
-import { CustomButton } from "../../components/Button";
-import { Container, MenuItem, Grid, Paper, Typography, RadioGroup, FormControlLabel, Radio } from "@mui/material";
-import { LabelText } from "../FormRegisterClient/components/StepTwo/style";
-import { VTextField } from "../../components/Input/VTextField";
-import { theme } from "../../styled";
-import { Loading } from "../../components/Loading";
-import { Form } from "@unform/web";
-import { useNavigate } from "react-router-dom";
-import { api } from "../../config/api";
-import { VSelect } from "../../components/Select/VSelect";
-import { statesArray } from "../../utils/estados";
-import { handleKeyPress } from "../../utils/handleKeyPress";
-import { useToast } from "../../context/ToastContext";
+import { useNavigate, useParams } from "react-router-dom"
+import { api } from "../../config/api"
+import { Loading } from "../../components/Loading"
+import { useToast } from "../../context/ToastContext"
 
-
-export function RegisterAdminister() {
+export function ProfileUser() {
+  const { id } = useParams();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const formRef = useRef<FormHandles>(null)
+  const [isStateSignature, setIsStateSignature] = useState(false)
+  const [isStateModalCancelSignature, setIsStateModalCancelSignature] = useState(false);
   const [loading, setLoading] = useState(false);
   const [radio, setRadio] = useState("");
+  const formRef = useRef<FormHandles>(null)
+
+  const handleStateSignature = () => setIsStateSignature(!isStateSignature)
+  const handleStateCancelSignature = () => setIsStateModalCancelSignature(!isStateModalCancelSignature)
 
 
   async function handleSave(dados: any) {
@@ -30,17 +45,27 @@ export function RegisterAdminister() {
         ...dados,
         sexo: radio
       }
-      await api.post('/auth/create-admin', payload);
-      showToast({ message: 'Política cadastrada com sucesso!', color: 'success' })
+      const { data } = await api.put(`/auth/update/${id}`, payload);
+      showToast({ color: 'success', message: data.message });
     } catch (error: any) {
       if (!!error.response) {
         showToast({
-          message: error.response.data.message, color: 'error'
+          color: 'error',
+          message: error.response.data.message
         })
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
+  }
+
+  async function handleAlterSignature() {
+    navigate(`/signature/${id}`)
+    handleStateSignature()
+  }
+
+  async function handleCancelSignature() {
+
   }
 
   function setRadioValue(value: any) {
@@ -48,31 +73,41 @@ export function RegisterAdminister() {
     formRef.current?.setFieldValue("sexo", value);
   }
 
-  async function handleAlterCep() {
+  async function fetchData() {
     try {
-      setLoading(true);
-      //@ts-ignore
-      const cep = formRef.current?.getData()?.cep
+      setLoading(true)
+      const { data } = await api.get(`/auth/show/${id}`);
 
+      formRef.current?.setFieldValue("nome", data.data.nome);
+      formRef.current?.setFieldValue("data_nascimento", data.data.data_nascimento);
+      formRef.current?.setFieldValue("documento", data.data.documento);
+      formRef.current?.setFieldValue("sexo", data.data.sexo);
+      formRef.current?.setFieldValue("fone", data.data.fone);
+      formRef.current?.setFieldValue("celular", data.data.celular);
+      formRef.current?.setFieldValue("email", data.data.email);
+      formRef.current?.setFieldValue("cep", data.data.cep);
+      formRef.current?.setFieldValue("endereco", data.data.endereco);
+      formRef.current?.setFieldValue("numero", data.data.numero);
+      formRef.current?.setFieldValue("bairro", data.data.bairro);
+      formRef.current?.setFieldValue("cidade", data.data.cidade);
+      formRef.current?.setFieldValue("uf", data.data.uf);
 
-      if (!cep) {
-        return;
+      setRadio(data.data.sexo);
+    } catch (error: any) {
+      if (!!error.response) {
+        showToast({
+          color: 'error',
+          message: error.response.data.message
+        })
       }
-
-      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`, {
-        method: "GET",
-      })
-      const data = await response.json()
-
-      //@ts-ignore
-      formRef.current.setFieldValue("uf", data.uf)
-      formRef.current.setFieldValue("cidade", data.localidade)
-    } catch (error) {
-      console.error(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchData();
+  }, [])
 
   return (
     <Container maxWidth="xl" sx={{ paddingTop: 4, paddingBottom: 4 }}>
@@ -121,7 +156,7 @@ export function RegisterAdminister() {
               color="success"
               fullWidth
               id="documento"
-              inputProps={{ maxLength: 11 }}
+              autoFocus
               type="text"
             />
           </Grid>
@@ -189,32 +224,30 @@ export function RegisterAdminister() {
               Contatos
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Grid>
-              <LabelText>Fone</LabelText>
-            </Grid>
+          <Grid item xs={12} sm={6}>
+            <LabelText>Fone</LabelText>
             <VTextField
-              id="fone"
-              name="fone"
               size="small"
-              autoComplete="given-fone"
+              autoComplete="given-name"
+              name="fone"
               required
               color="success"
-              inputProps={{ maxLength: 10 }}
+              fullWidth
+              id="fone"
+              autoFocus
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
-            <Grid>
-              <LabelText>Celular</LabelText>
-            </Grid>
+          <Grid item xs={12} sm={6}>
+            <LabelText>Celular</LabelText>
             <VTextField
-              id="celular"
-              name="celular"
               size="small"
-              autoComplete="given-celular"
+              name="celular"
               required
               color="success"
-              inputProps={{ maxLength: 11 }}
+              fullWidth
+              id="celular"
+              autoFocus
+              type="text"
             />
           </Grid>
           <Grid item xs={12}>
@@ -228,7 +261,6 @@ export function RegisterAdminister() {
               id="email"
               autoFocus
               type="email"
-              inputProps={{ maxLength: 40 }}
             />
           </Grid>
         </Grid>
@@ -249,9 +281,6 @@ export function RegisterAdminister() {
               fullWidth
               id="cep"
               autoFocus
-              onBlur={handleAlterCep}
-              onKeyPress={handleKeyPress}
-              inputProps={{ maxLength: 8 }}
             />
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -342,11 +371,37 @@ export function RegisterAdminister() {
           <CustomButton type="submit" color="success" variant="contained">
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>
-          <CustomButton onClick={() => navigate('/administers')} type="button" color="error" variant="outlined">
-            <Typography>Voltar</Typography>
+          <CustomButton
+            type="button"
+            color="success"
+            variant="contained"
+            onClick={handleStateSignature}
+          >
+            <Typography color="#fff">Alterar Assinatura</Typography>
+          </CustomButton>
+          <CustomButton onClick={() => navigate(`/change-payment-method/${id}`)} type="button" color="success" variant="contained">
+            <Typography color="#fff">Alterar forma pagamento</Typography>
+          </CustomButton>
+          <CustomButton onClick={() => handleStateCancelSignature()} type="button" color="error" variant="outlined">
+            <Typography>Cancelar assinatura</Typography>
           </CustomButton>
         </Grid>
       </Form>
+      <VModalConfirm
+        onOk={handleAlterSignature}
+        changeState={handleStateSignature}
+        isState={isStateSignature}
+        description="Você deseja alterear a assinatura"
+        title="Alterar assinatura"
+      />
+      <VModalConfirm
+        onOk={handleCancelSignature}
+        changeState={handleStateCancelSignature}
+        isState={isStateModalCancelSignature}
+        description="Para nos ajudar a melhorar, favor informar o motivo do cancelamento"
+        title="Cancelamento UniDigital"
+        titleOk="Confirmar Cancelamento"
+      />
     </Container>
   )
 }

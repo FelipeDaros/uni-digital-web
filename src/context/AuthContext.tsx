@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react"
 import { api } from "../config/api"
 import { IAuth } from "../interfaces/IAuth"
 import { AxiosError } from "axios"
+import { IPermissoes } from "../interfaces/IPermissoes"
+import { StorePermissions } from "../store/StorePermissions"
 
 type AuthContextDataProps = {
   user: IAuth | null
@@ -20,16 +22,23 @@ type AuthContextProviderProps = {
 const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<IAuth | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<IAuth | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [handlePermissions] = StorePermissions((state) => [state.handlePermissions]);
 
   useEffect(() => {
     async function loadStoragedData() {
       setLoading(true)
       const storagedUser = localStorage.getItem("@UNIDIGITAL:user")
+      const permissions = localStorage.getItem("@UNIDIGITAL:permissions")
 
       if (storagedUser) {
-        const userParsed = JSON.parse(storagedUser)
+        const userParsed = JSON.parse(storagedUser);
+
+        if(userParsed.user.tipo !== "A"){
+          const permissionsParsed = JSON.parse(permissions);
+          handlePermissions(permissionsParsed);
+        }
 
         api.defaults.headers["Authorization"] = `Bearer ${userParsed.access_token}`;
         setUser(userParsed)
@@ -62,6 +71,12 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
 
         localStorage.setItem("@UNIDIGITAL:user", JSON.stringify(user));
         setUser(data);
+
+        if(data.user.tipo !== "A"){
+          const permissoes = fetchPermissions(data.permissoes);
+          handlePermissions(permissoes);
+          localStorage.setItem("@UNIDIGITAL:permissions", JSON.stringify(permissoes));
+        }
       }
 
       return;
@@ -81,6 +96,22 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
         throw new Error("Erro durante o login. Detalhes: " + error.message);
       }
     }
+  }
+
+  function fetchPermissions(permissions: IPermissoes[]){
+    const permissoesAssinatura = permissions.filter(item => item.tela === "ASSINATURA");
+    const permissoesCartaoCredito = permissions.filter(item => item.tela === "CARTAO DE CREDITO");
+    const permissoesHistoricoPagamentos = permissions.filter(item => item.tela === "HISTORICO PAGAMENTOS");
+    const permissoesDependentes = permissions.filter(item => item.tela === "DEPENDENTES");
+
+    const permissao = {
+      assinatura: permissoesAssinatura,
+      cartaoCredito: permissoesCartaoCredito,
+      hisotricoPagamentos: permissoesHistoricoPagamentos,
+      dependentes: permissoesDependentes
+    }
+
+    return permissao;
   }
 
   if (loading) return <p>Loading..</p>

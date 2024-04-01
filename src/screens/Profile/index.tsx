@@ -28,7 +28,7 @@ import { useToast } from "../../context/ToastContext"
 export function Profile() {
   const { showToast } = useToast();
   const { user } = useAuth();
-  const navigation = useNavigate();
+  const navigate = useNavigate();
   const [isStateSignature, setIsStateSignature] = useState(false)
   const [isStateModalCancelSignature, setIsStateModalCancelSignature] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ export function Profile() {
   }
 
   async function handleAlterSignature() {
-    navigation('/signature')
+    navigate(`/signature/${user.user.id}`)
     handleStateSignature()
   }
 
@@ -111,7 +111,7 @@ export function Profile() {
   }, [])
 
   return (
-    <Container maxWidth="md" sx={{ paddingTop: 4, paddingBottom: 4 }}>
+    <Container maxWidth="xl" sx={{ paddingTop: 4, paddingBottom: 4 }}>
       <Loading isLoading={loading} />
       <Form ref={formRef} placeholder="form" onSubmit={handleSave}>
         <Grid container spacing={2} component={Paper} pr={2} pb={2}>
@@ -382,7 +382,7 @@ export function Profile() {
               >
                 <Typography color="#fff">Alterar Assinatura</Typography>
               </CustomButton>
-              <CustomButton onClick={() => navigation('/change-payment-method')} type="button" color="success" variant="contained">
+              <CustomButton onClick={() => navigate(`/change-payment-method/${user.user.id}`)} type="button" color="success" variant="contained">
                 <Typography color="#fff">Alterar forma pagamento</Typography>
               </CustomButton>
               <CustomButton onClick={() => handleStateCancelSignature()} type="button" color="error" variant="outlined">

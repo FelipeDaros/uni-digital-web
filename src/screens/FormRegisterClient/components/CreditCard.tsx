@@ -11,8 +11,8 @@ export function CreditCard() {
   const [formularioCartao, setFormularioCartao] = useState<ICartao>({
     nomeTitular: "",
     numero: "",
-    vencimento: "",
-    cvc: ""
+    dataVencimento: "",
+    cvv: ""
   });
 
   function handleCartao() {
@@ -80,11 +80,11 @@ export function CreditCard() {
             variant="standard"
             inputProps={{ maxLength: 2 }}
             type="date"
-            value={formularioCartao.vencimento}
+            value={formularioCartao.dataVencimento}
             onChange={(e) =>
               setFormularioCartao((state) => ({
                 ...state,
-                vencimento: e.target.value,
+                dataVencimento: e.target.value,
               }))
             }
             onBlur={handleCartao}
@@ -92,22 +92,22 @@ export function CreditCard() {
         </Grid>
         <Grid item xs={3} md={1}>
           <Grid>
-            <LabelText>CVC</LabelText>
+            <LabelText>CVV</LabelText>
           </Grid>
           <TextField
             required
             size="small"
-            id="cvc"
-            name="cvc"
+            id="cvv"
+            name="cvv"
             fullWidth
             color="success"
             variant="standard"
             inputProps={{ maxLength: 3 }}
-            value={formularioCartao.cvc}
+            value={formularioCartao.cvv}
             onChange={(e) =>
               setFormularioCartao((state) => ({
                 ...state,
-                cvc: e.target.value,
+                cvv: e.target.value,
               }))
             }
             onBlur={handleCartao}

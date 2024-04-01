@@ -4,6 +4,7 @@ import { useState } from "react"
 import { LabelText } from "../FormRegisterClient/components/StepTwo/style"
 import { handleKeyPress } from "../../utils/handleKeyPress"
 import { useToast } from "../../context/ToastContext"
+import { StorePermissions } from "../../store/StorePermissions"
 
 type SecundariosProps = {
   nome: string;
@@ -18,6 +19,8 @@ type Props = {
 }
 
 export function DependentForm({ handleAddDependente }: Props) {
+  const [permissions] = StorePermissions((state) => [state.permissions]);
+
   const { showToast } = useToast();
   const [formularioDependente, setFormularioDependente] = useState({
     nome: "",
@@ -156,6 +159,7 @@ export function DependentForm({ handleAddDependente }: Props) {
           onClick={handleAdd}
           size="small"
           sx={{ backgroundColor: "#28DA9D" }}
+          disabled={!permissions.assinatura.find(item => item.tipo === "EDITAR")}
         >
           <AddIcon color="primary" sx={{ fontSize: 16 }} />
         </IconButton>

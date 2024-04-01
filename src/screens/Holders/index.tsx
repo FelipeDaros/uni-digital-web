@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
-import { Grid, OutlinedInput, Paper, Typography } from "@mui/material";
+import { Grid, IconButton, OutlinedInput, Paper, Typography } from "@mui/material";
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 
-import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import CreateIcon from '@mui/icons-material/Create';
+
+import { useNavigate } from "react-router-dom";
+import { useToast } from "../../context/ToastContext";
+import { Circle } from "../../components/Circle";
 
 import { api } from "../../config/api";
 
-import { CustomButton } from "../../components/Button";
-import { useNavigate } from "react-router-dom";
-import { theme } from "../../styled";
-import { useToast } from "../../context/ToastContext";
-import { Circle } from "../../components/Circle";
-import { StorePermissions } from "../../store/StorePermissions";
-
-export function CreditCard() {
-  const [permissions] = StorePermissions((state) => [state.permissions]);
-
+export function Holders() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -24,26 +19,52 @@ export function CreditCard() {
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
 
-
   const columns: GridColDef[] = [
     { field: 'status', headerName: '', width: 30, renderCell: (params) => (<Circle colorCircle={params.row.ativo} />) },
     { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'nome_titular',
-      headerName: 'Nome titular',
+      field: 'nome',
+      headerName: 'Nome',
       width: 200,
     },
     {
-      field: 'numero',
-      headerName: 'Numero',
-      width: 400,
+      field: 'produto',
+      headerName: 'Assinatura',
+      width: 300,
+    },
+    {
+      field: 'total',
+      headerName: 'Valor',
+      width: 150,
+    },
+    {
+      field: 'data_inicio',
+      headerName: 'Data inícioo',
+      width: 150,
+    },
+    {
+      field: 'qtd_secundario',
+      headerName: 'Qtd secundários',
+      width: 150,
+    },
+    {
+      field: 'acoes',
+      headerName: 'Ações',
+      width: 130,
+      renderCell: (params) => (
+        <>
+          <IconButton onClick={() => handleSelected(params.row.id)}>
+            <CreateIcon />
+          </IconButton>
+        </>
+      ),
     }
   ];
 
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get('/pagamentos/cartoes', {
+      const { data } = await api.get('/admin/usuarios', {
         params: {
           pageSize: pageSize,
           page: page
@@ -70,6 +91,10 @@ export function CreditCard() {
     }
   }
 
+  function handleSelected(id: number) {
+    return navigate(`/holder/${id}`);
+  }
+
   useEffect(() => {
     fetchData()
   }, [page, pageSize])
@@ -77,9 +102,9 @@ export function CreditCard() {
   return (
     <Grid margin={2} pt={4} pb={4}>
       <Typography fontWeight="bold" textAlign="start">
-        Cadastro de cartões
+        Títulares
       </Typography>
-      <p>Cadastre suas cartões de uso da plataforma</p>
+      <p>Abaixo estão todos os titulares da plataforma</p>
       <OutlinedInput
         id="outlined-adornment-weight"
         endAdornment={<SearchIcon />}
@@ -91,25 +116,6 @@ export function CreditCard() {
           'aria-label': 'weight',
         }}
       />
-      <Grid mt={2} justifyContent="end" display="flex"
-        sx={{
-          [theme.breakpoints.down("md")]: {
-            alignItems: "center",
-            justifyContent: "center"
-          },
-        }}>
-        <CustomButton
-          onClick={() => navigate('/register-credit-card')}
-          startIcon={<AddIcon color="primary" />}
-          size="small"
-          color="success"
-          variant="contained"
-          sx={{ color: 'white' }}
-          disabled={!permissions.cartaoCredito.find(item => item.tipo === "CRIAR")}
-        >
-          Novo
-        </CustomButton>
-      </Grid>
       <Paper sx={{ width: '100%', marginTop: 2 }}>
         {gridData &&
           <DataGrid

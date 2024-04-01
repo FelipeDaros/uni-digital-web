@@ -1,6 +1,6 @@
 export interface ICartao{
   nomeTitular: string;
   numero: number | string;
-  vencimento: Date | string;
-  cvc: number | string;
+  dataVencimento: Date | string;
+  cvv: number | string;
 }

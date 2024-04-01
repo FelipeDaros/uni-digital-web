@@ -177,7 +177,7 @@ export function StepTwo() {
   }
 
   return (
-    <Container maxWidth="md" sx={{ paddingTop: 4, paddingBottom: 4 }}>
+    <Container maxWidth="xl" sx={{ paddingTop: 4, paddingBottom: 4 }}>
       <Grid p={2} container justifyContent="center">
         <Typography textAlign="center">
           O titular é a pessoa responsável pelo aceite do contrato e pelo pagamento das mensalidades da Telemedicina Unimed.

@@ -10,7 +10,6 @@ import {
 } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete';
 import moment from "moment";
-import { StorePermissions } from "../../store/StorePermissions";
 
 type SecundariosProps = {
   nome: string;
@@ -25,15 +24,12 @@ type Props = {
   handleRemove: (user: SecundariosProps) => void;
 }
 
-export function DependentTable({ secundarios, handleRemove }: Props) {
-  const [permissions] = StorePermissions((state) => [state.permissions]);
-
+export function DependentTableList({ secundarios, handleRemove }: Props) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>...</TableCell>
             <TableCell>Nome</TableCell>
             <TableCell align="right">CPF</TableCell>
             <TableCell align="right">Data Nasc.</TableCell>
@@ -47,16 +43,6 @@ export function DependentTable({ secundarios, handleRemove }: Props) {
               key={`${row.documento}` + `${row.nome}`}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
-              <TableCell>
-                <IconButton
-                  onClick={() => handleRemove(row)}
-                  size="small"
-                  color="error"
-                  disabled={!permissions.assinatura.find(item => item.tipo === "DELETAR")}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
               <TableCell component="th" scope="row">
                 {row.nome}
               </TableCell>
