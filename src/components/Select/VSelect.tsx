@@ -2,6 +2,7 @@ import { SelectChangeEvent, SelectProps, Select } from "@mui/material"
 import { useField } from "@unform/core"
 import { useEffect, useState } from "react"
 
+// @ts-ignore
 interface VSelectProps extends SelectProps {
   name: string
 }

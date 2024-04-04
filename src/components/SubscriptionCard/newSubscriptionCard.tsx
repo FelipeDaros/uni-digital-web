@@ -31,11 +31,11 @@ export function NewSubscriptionCard({
         flexDirection="column"
       >
         {icon === "UNIDIGITAL_INIDIVIDUAL" && (
-          <PersonIcon sx={{ fontSize: 54 }} />
+          <PersonIcon sx={{ fontSize: 48 }} />
         )}
-        {icon === "UNIDIGITAL_DUPLO" && <PeopleIcon sx={{ fontSize: 54 }} />}
+        {icon === "UNIDIGITAL_DUPLO" && <PeopleIcon sx={{ fontSize: 48 }} />}
         {icon === "UNIDIGITAL_FAMILIA" && (
-          <Diversity1Icon sx={{ fontSize: 54 }} />
+          <Diversity1Icon sx={{ fontSize: 48 }} />
         )}
         <TruncatedText sx={{ textAlign: "center", fontWeight: "bold" }}>
           {produto?.nome}
@@ -43,7 +43,7 @@ export function NewSubscriptionCard({
       </Grid>
       <Grid
         item
-        xs={8}
+        xs={7.8}
         display="flex"
         alignItems="start"
         justifyContent="center"

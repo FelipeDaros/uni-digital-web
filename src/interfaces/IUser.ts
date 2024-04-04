@@ -16,7 +16,7 @@ export interface IUser {
   numero: string;
   recuperar_até: any;
   sexo: string;
-  tipo: string;
+  tipo: "T" | "A" | "S";
   uf: string;
   created_at: Date;
   updated_at: Date;

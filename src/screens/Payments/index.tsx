@@ -31,7 +31,7 @@ export function Payment() {
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'metodo',
+      field: 'tipo',
       headerName: 'Método',
       width: 200,
     },
@@ -71,7 +71,8 @@ export function Payment() {
       const { data } = await api.get(`/pagamentos/historico-pagamento`, {
         params: {
           pageSize: pageSize,
-          page: page
+          page: page,
+          id_usuario: user.user.id
         }
       });
 

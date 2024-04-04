@@ -3,7 +3,6 @@ import { Grid, IconButton, OutlinedInput, Paper, Typography } from "@mui/materia
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
 
 import AddIcon from '@mui/icons-material/Add';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SearchIcon from '@mui/icons-material/Search';
 import CreateIcon from '@mui/icons-material/Create';
@@ -14,15 +13,23 @@ import { CustomButton } from "../../components/Button";
 import { useNavigate } from "react-router-dom";
 import { theme } from "../../styled";
 import { useToast } from "../../context/ToastContext";
+import { TimeLinePolicy } from "./TimeLinePolicy";
+import { Loading } from "../../components/Loading";
+import { useAuth } from "../../context/AuthContext";
 
 export function Policies() {
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [gridData, setGridData] = useState(null);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(0);
 
+  const [isVisible, setVisible] = useState(false);
+  const [tipo, setTipo] = useState<string | null>(null);
+
+  const handleVisible = () => setVisible(!isVisible);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -42,10 +49,10 @@ export function Policies() {
       width: 130,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => params.row.ativo === 1 ? handleAlterPolitica(params.row.id, params.row, 0) : handleAlterPolitica(params.row.id, params.row, 1)}>
-            {params.row.ativo === 1 ? <VisibilityOffIcon /> : <VisibilityIcon />}
+          <IconButton onClick={() => handleOpenTimeLinePolicy(params.row.tipo)}>
+            <VisibilityIcon />
           </IconButton>
-          <IconButton onClick={() => handleSelected(params.row.tipo)}>
+          <IconButton onClick={() => handleSelected(params.row.id)}>
             <CreateIcon />
           </IconButton>
         </>
@@ -72,23 +79,29 @@ export function Policies() {
       // @ts-ignore
       setGridData(payload)
     } catch (error: any) {
+      
       if (!!error.response) {
         showToast({
           message: error.response.data.message,
           color: 'error'
-        })
+        });
+
+        if(error.response.status){
+          signOut();
+        }
       }
     } finally {
       setLoading(false);
     }
   }
 
-  function handleSelected(tipo: string) {
-    return navigate(`/register-policy/${tipo}`);
+  function handleSelected(id: number) {
+    return navigate(`/register-policy/${id}`);
   }
 
-  async function handleAlterPolitica(id: number, row: any, ativo: number){
-    
+  async function handleOpenTimeLinePolicy(tipo: string){
+    setTipo(tipo);
+    handleVisible()
   }
 
   useEffect(() => {
@@ -97,6 +110,7 @@ export function Policies() {
 
   return (
     <Grid margin={2} pt={4} pb={4}>
+      <Loading isLoading={loading}/>
       <Typography fontWeight="bold" textAlign="start">
         Cadastro de políticas
       </Typography>
@@ -132,7 +146,7 @@ export function Policies() {
               pagination: { paginationModel: { pageSize: pageSize, page } },
             }}
             loading={loading}
-            pageSizeOptions={[5, 10, 20]}
+            pageSizeOptions={[10, 25, 50]}
             onPaginationModelChange={e => {
               setPage(e.page)
               setPageSize(e.pageSize)
@@ -142,6 +156,12 @@ export function Policies() {
           />
         }
       </Paper>
+      {tipo && 
+      <TimeLinePolicy 
+        isVisible={isVisible}
+        changeState={handleVisible}
+        tipo={tipo}
+      />}
     </Grid >
   )
 }

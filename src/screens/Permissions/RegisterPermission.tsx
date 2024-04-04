@@ -67,7 +67,6 @@ export function RegisterPermission() {
         const { data } = await api.get('/permissoes/list');
 
         if (data && typeof data === 'object') {
-          console.log(data.data)
           const permissoesArray = Object.entries(data.data);
 
           permissoesArray.forEach(([tela, permissoes]) => {

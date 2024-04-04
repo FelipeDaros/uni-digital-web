@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "../../context/ToastContext";
 import { api } from "../../config/api";
-import { useNavigate } from "react-router-dom";
-import { theme } from "../../styled";
 
 import { Grid, Paper, Typography } from "@mui/material";
 import { DataGrid, GridColDef, ptBR } from "@mui/x-data-grid";
@@ -46,13 +44,13 @@ export function Conciliation() {
     },
   ];
 
-  async function fetchData(dados: any) {
+  async function fetchData() {
     try {
       setLoading(true);
       const { data } = await api.get('/admin/relatorio-conciliacao', {
         params: {
-          dataInicio: dados.dataInicio,
-          dataFim: dados.dataFim,
+          dataInicio: formRef.current?.getData()?.dataInicio,
+          dataFim: formRef.current?.getData()?.dataFim,
           pageSize: pageSize,
           page: page
         }
@@ -62,8 +60,9 @@ export function Conciliation() {
         rows: data.data,
         columns,
         experimentalFeatures: true,
-
+        // rowCount: 5
       }
+
       // @ts-ignore
       setGridData(payload)
     } catch (error: any) {
@@ -80,19 +79,30 @@ export function Conciliation() {
 
   function handleExportData() {
     try {
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0]; // Formata a data no formato YYYY-MM-DD
+
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.json_to_sheet(gridData.rows);
 
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Vendas');
 
-      XLSX.writeFile(workbook, 'vendas.xlsx');
+      const fileName = `conciliacao_${formattedDate}.xlsx`;
+
+      XLSX.writeFile(workbook, fileName);
     } catch (error) {
       showToast({
         color: 'error',
         message: "Erro ao tentar realizar a exportação"
-      })
+      });
     }
   }
+
+  useEffect(() => {
+    if(formRef.current?.getData()?.dataInicio && formRef.current?.getData()?.dataFim){
+      fetchData();
+    }
+  }, [page, pageSize])
 
   return (
     <Grid margin={2} pt={4} pb={4}>
@@ -145,6 +155,7 @@ export function Conciliation() {
             endIcon={<SaveAltIcon color="success" />}
             sx={{ height: 35, borderWidth: 2 }}
             onClick={handleExportData}
+            disabled={!gridData}
           >
             <Typography color="#26DA9C">Exportar</Typography>
           </CustomButton>

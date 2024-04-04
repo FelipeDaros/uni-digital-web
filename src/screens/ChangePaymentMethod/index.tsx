@@ -8,17 +8,40 @@ import { CustomButton } from "../../components/Button"
 import { useNavigate, useParams } from "react-router-dom"
 import { api } from "../../config/api"
 import { VTextField } from "../../components/Input/VTextField"
+import { useToast } from "../../context/ToastContext"
+import { theme } from "../../styled"
+import { Loading } from "../../components/Loading"
 
 const TIPO_PAGAMENTO = ["PIX", "BOLETO", "CARTAO"]
 
 export function ChangePaymentMethod() {
+  const { showToast } = useToast();
+
   const { id } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState("");
   const formRef = useRef<FormHandles>(null)
 
-  function handleSave(dados: any) {
-    console.log(dados)
+  async function handleSave(dados: any) {
+    try {
+      setLoading(true);
+      const { data } = await api.post('/', dados);
+      showToast({
+        color: 'success',
+        message: data.data.message
+      })
+      navigate('/credit-card');
+    } catch (error: any) {
+      if (!!error.response) {
+        showToast({
+          message: error.response.data.message,
+          color: "error"
+        })
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleChange = (event: any) => {
@@ -31,7 +54,7 @@ export function ChangePaymentMethod() {
         id_usuario: id
       }
     });
-    
+
     setSelectedPayment(data.data.tipo)
     formRef.current?.setFieldValue("tipo_pagamento", data.data.tipo);
 
@@ -49,6 +72,7 @@ export function ChangePaymentMethod() {
 
   return (
     <Grid pt={4} pb={4}>
+      <Loading isLoading={loading}/>
       <Form
         placeholder="Alteração pagamento"
         ref={formRef}
@@ -67,6 +91,7 @@ export function ChangePaymentMethod() {
         </Grid>
         <Grid p={2} display="flex" direction="column">
           <LabelText>Atual</LabelText>
+          {/* @ts-ignore */}
           <VSelect
             type="text"
             required
@@ -156,7 +181,19 @@ export function ChangePaymentMethod() {
             </Grid>
           </Grid>
         )}
-        <Grid p={2} container gap={3}>
+        <Grid
+          direction="row"
+          display="flex"
+          container
+          gap={1}
+          p={2}
+          sx={{
+            [theme.breakpoints.down("md")]: {
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 3,
+            },
+          }}>
           <CustomButton type="submit" color="success" variant="contained">
             <Typography color="#fff">Salvar</Typography>
           </CustomButton>

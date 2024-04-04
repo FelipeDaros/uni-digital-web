@@ -109,7 +109,6 @@ export function RegisterCupom() {
   }
 
   async function handleSave(dados: any) {
-    console.log(rowSelected)
     if (!rowSelected) return;
 
     try {

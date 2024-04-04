@@ -68,7 +68,6 @@ export function RegisterAdminister() {
       formRef.current.setFieldValue("uf", data.uf)
       formRef.current.setFieldValue("cidade", data.localidade)
     } catch (error) {
-      console.error(error)
     } finally {
       setLoading(false);
     }
@@ -308,6 +307,7 @@ export function RegisterAdminister() {
           </Grid>
           <Grid item xs={12} sm={4}>
             <LabelText>UF</LabelText>
+            {/* @ts-ignore */}
             <VSelect
               type="text"
               required

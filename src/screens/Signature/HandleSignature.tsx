@@ -20,6 +20,7 @@ import { VModalConfirm } from "../../components/ModalConfirm";
 import { useNavigate, useParams } from "react-router-dom";
 import { StorePermissions } from "../../store/StorePermissions";
 import { theme } from "../../styled";
+import { useAuth } from "../../context/AuthContext";
 
 type PropsXLSX = {
   nome: string
@@ -47,6 +48,7 @@ type SecundariosProps = {
 export function HandleSignature() {
   const [permissions] = StorePermissions((state) => [state.permissions]);
 
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { id } = useParams();
   const { showToast } = useToast();
@@ -123,18 +125,20 @@ export function HandleSignature() {
         qtd_secundario: info.secundarios.length,
         valor: valorTotal,
         id_produto: productSelected.id,
-        secundarios: info.secundarios
+        secundarios: info.secundarios,
+        id_usuario: id
       }
 
-      const { data } = await api.post('/assinaturas/mudanca', payload, {
-        params: {
-          id_usuario: id
-        }
-      });
+      const { data } = await api.post('/assinaturas/mudanca', payload);
       window.localStorage.setItem("retorno_pagamento", JSON.stringify(data.data));
-      window.location.reload()
+      
+      if(user.user.tipo === "A"){
+        return navigate('/holders');
+      }else{
+        return navigate(`/signature/${user.user.id}`);  
+      }
+
     } catch (error: any) {
-      console.log(error)
       if (!!error.response) {
         showToast({
           color: 'error',
@@ -188,14 +192,20 @@ export function HandleSignature() {
     }
   }
 
-  function handleRemove(user: IUser) {
+  function handleRemove(secundario: IUser) {
+    const secundarios = info.secundarios.filter(item => item.documento !== secundario.documento);
+
     setInfo({
       ...info,
-      secundarios: info.secundarios.filter(item => item.documento !== user.documento)
+      secundarios: secundarios
     });
+
+    handleCalculate(info.produto, secundarios);
   }
 
   function handleAddDependente(depente: SecundariosProps) {
+    const secundariosArray = [];
+
     if (info.secundarios.length === productSelected.qtd_secundario_padrao && productSelected.add_secundarios === 0) {
       showToast({
         color: 'info',
@@ -204,10 +214,20 @@ export function HandleSignature() {
       return;
     }
 
+    if(info.secundarios.length){
+      info.secundarios.map(item => {
+        secundariosArray.push(item)
+      })
+    }
+
+    secundariosArray.push(depente);
+
     setInfo((prevInfo) => ({
       ...prevInfo,
-      secundarios: [...prevInfo.secundarios, depente]
+      secundarios: secundariosArray
     }));
+    
+    handleCalculate(info.produto, secundariosArray);
   }
 
   function handleSelect(produto: IProduct) {
@@ -236,8 +256,7 @@ export function HandleSignature() {
 
   function handleCalculate(produto: IProduct, secundarios: SecundariosProps[]) {
     let valorPorDependente = 0;
-    console.log(produto)
-    console.log(secundarios)
+    
     if (produto.tipo === "PF" && produto.add_secundarios === 1) {
       valorPorDependente = 10;
       // @ts-ignore

@@ -9,7 +9,7 @@ import { DefaultLayout } from "../layout/DefaultLayout"
 import { Home } from "../screens/Home"
 import { Signature } from "../screens/Signature"
 import { useDrawerContext } from "../context/DrawerContext"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 import HouseIcon from "@mui/icons-material/House"
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory"
@@ -163,6 +163,7 @@ export function RoutesAuth() {
     if (user) {
       if (user.user.ativo !== 1) return handleNavigate()
     }
+
   }, [location.pathname])
 
   return (
@@ -182,7 +183,7 @@ export function RoutesAuth() {
 
         <Route path="/policies" element={<Policies />} />
         <Route path="/register-policy" element={<RegisterPolicy />} />
-        <Route path="/register-policy/:type" element={<RegisterPolicy />} />
+        <Route path="/register-policy/:id" element={<RegisterPolicy />} />
 
         <Route path="/administers" element={<Administers />} />
         <Route path="/register-administer" element={<RegisterAdminister />} />
@@ -206,7 +207,6 @@ export function RoutesAuth() {
         <Route path="/holder/:id" element={<ProfileUser />} />
 
         <Route path="/conciliation" element={<Conciliation />} />
-        
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

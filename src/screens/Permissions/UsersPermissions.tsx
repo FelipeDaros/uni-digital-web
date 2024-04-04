@@ -48,7 +48,7 @@ export function UsersPermissions() {
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get('/auth/list-clientes', {
+      const { data } = await api.get('/auth/list', {
         params: {
           pageSize: pageSize,
           page: page

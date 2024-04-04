@@ -7,7 +7,7 @@ import { VTextField } from "../../components/Input/VTextField";
 import { theme } from "../../styled";
 import { Loading } from "../../components/Loading";
 import { Form } from "@unform/web";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api } from "../../config/api";
 import { useToast } from "../../context/ToastContext";
 import { handleKeyPress } from "../../utils/handleKeyPress";

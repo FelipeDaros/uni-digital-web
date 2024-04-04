@@ -35,10 +35,8 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
       if (storagedUser) {
         const userParsed = JSON.parse(storagedUser);
 
-        if(userParsed.user.tipo !== "A"){
-          const permissionsParsed = JSON.parse(permissions);
-          handlePermissions(permissionsParsed);
-        }
+        const permissionsParsed = JSON.parse(permissions);
+        handlePermissions(permissionsParsed);
 
         api.defaults.headers["Authorization"] = `Bearer ${userParsed.access_token}`;
         setUser(userParsed)
@@ -52,7 +50,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   async function signOut() {
     localStorage.clear()
     await api.post('/auth/logout');
-    setUser(null)
+    setUser(null);
   }
 
   async function signIn(usuario: string, password: string) {
@@ -72,11 +70,9 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
         localStorage.setItem("@UNIDIGITAL:user", JSON.stringify(user));
         setUser(data);
 
-        if(data.user.tipo !== "A"){
-          const permissoes = fetchPermissions(data.permissoes);
-          handlePermissions(permissoes);
-          localStorage.setItem("@UNIDIGITAL:permissions", JSON.stringify(permissoes));
-        }
+        const permissoes = fetchPermissions(data.permissoes);
+        handlePermissions(permissoes);
+        localStorage.setItem("@UNIDIGITAL:permissions", JSON.stringify(permissoes));
       }
 
       return;
@@ -98,7 +94,7 @@ const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
     }
   }
 
-  function fetchPermissions(permissions: IPermissoes[]){
+  function fetchPermissions(permissions: IPermissoes[]) {
     const permissoesAssinatura = permissions.filter(item => item.tela === "ASSINATURA");
     const permissoesCartaoCredito = permissions.filter(item => item.tela === "CARTAO DE CREDITO");
     const permissoesHistoricoPagamentos = permissions.filter(item => item.tela === "HISTORICO PAGAMENTOS");

@@ -15,7 +15,7 @@ import { useToast } from "../../context/ToastContext";
 
 export function RegisterPolicy() {
   const { showToast } = useToast();
-  const { type } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const formRef = useRef<FormHandles>(null)
   const [loading, setLoading] = useState(false);
@@ -24,15 +24,26 @@ export function RegisterPolicy() {
   async function handleSave(dados: any) {
     try {
       setLoading(true);
-      const payload = {
-        ...dados,
-        tipo
+
+      if (id) {
+        const payload = {
+          ...dados,
+          tipo
+        }
+        
+        await api.put(`/politicas/update/${id}`, payload);
+      } else {
+        const payload = {
+          ...dados,
+          tipo
+        }
+        await api.post('/politicas/store', payload);
+        showToast({
+          color: 'success',
+          message: 'Política cadastrada com sucesso!'
+        })
       }
-      await api.post('/politicas/store', payload);
-      showToast({
-        color: 'success',
-        message: 'Política cadastrada com sucesso!'
-      })
+
       navigate('/policies');
     } catch (error: any) {
       if (!!error.response) {
@@ -49,10 +60,12 @@ export function RegisterPolicy() {
   async function fetchData() {
     try {
       setLoading(true)
-      const { data } = await api.get(`/politicas/show/${type}`);
+      const { data } = await api.get(`/politicas/show/${id}`);
 
-      if(data.data){
-        formRef.current.setFieldValue('descricao', data.data.descricao)
+      if (data.data) {
+        formRef.current.setFieldValue('descricao', data.data.descricao);
+        formRef.current.setFieldValue('tipo', data.data.tipo);
+        setTipo(data.data.tipo);
       }
       showToast({
         message: 'Informações carregadas com sucesso!',
@@ -71,7 +84,7 @@ export function RegisterPolicy() {
   }
 
   useEffect(() => {
-    if (type) {
+    if (id) {
       fetchData()
     }
   }, [])
@@ -90,6 +103,7 @@ export function RegisterPolicy() {
             <Grid>
               <LabelText>Tipo</LabelText>
             </Grid>
+            {/* @ts-ignore */}
             <VSelect
               type="text"
               required

@@ -337,6 +337,7 @@ export function ProfileUser() {
           </Grid>
           <Grid item xs={12} sm={4}>
             <LabelText>UF</LabelText>
+            {/* @ts-ignore */}
             <VSelect
               type="text"
               required

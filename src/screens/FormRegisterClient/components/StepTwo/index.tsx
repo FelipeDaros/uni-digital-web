@@ -139,8 +139,11 @@ export function StepTwo() {
       //@ts-ignore
       formRef.current.setFieldValue("uf", data.uf)
       formRef.current.setFieldValue("cidade", data.localidade)
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      showToast({
+        color: 'error',
+        message: 'Ocorreu um erro ao tentar obter as informações referente ao CEP'
+      })
     } finally {
       handleLoading();
     }
@@ -527,6 +530,7 @@ export function StepTwo() {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={12}>
+            {/* @ts-ignore */}
             <VSelect
               type="text"
               required

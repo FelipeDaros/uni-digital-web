@@ -32,7 +32,6 @@ export function DependentForm() {
       return
     }
 
-    console.log(totalDependets, secundarios.length)
     if (totalDependets === secundarios.length) {
       handleChangeStateModal()
       setMessage("O limite de dependentes foi execidido!")

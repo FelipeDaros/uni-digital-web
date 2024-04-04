@@ -184,6 +184,7 @@ export function ModalPermissionUser({
             </Grid>
             <Grid item xs={12} sm={4} my={2}>
               <LabelText>Perfil</LabelText>
+              {/* @ts-ignore */}
               <VSelect
                 type="text"
                 id="perfil"
