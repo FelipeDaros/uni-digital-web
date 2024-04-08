@@ -6,8 +6,6 @@ export function Router() {
   const { user } = useAuth()
 
   return (
-    <>
-      <RouteRegisterNoAuth />
-    </>
+    <RouteRegisterNoAuth />
   )
 }
