@@ -1,0 +1,13 @@
+# Exported from Render on 2024-04-08T18:36:36Z
+services:
+- type: web
+  name: uni-digital-web
+  runtime: static
+  repo: https://github.com/FelipeDaros/uni-digital-web
+  branch: master
+  envVars:
+  - key: URL_PRODUCTION
+    sync: false
+  buildCommand: npm install; npm run build
+  staticPublishPath: dist
+version: "1"
