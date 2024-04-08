@@ -1,4 +1,5 @@
 import {
+  BrowserRouter,
   Navigate,
   Route,
   Routes,
@@ -167,48 +168,50 @@ export function RoutesAuth() {
   }, [location.pathname])
 
   return (
-    <Routes>
-      <Route path="/" element={<DefaultLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/change-payment-method/:id" element={<ChangePaymentMethod />} />
-        <Route path="/dependents" element={<Dependents />} />
-        <Route path="/dashboard" element={<DashBoard />} />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<DefaultLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
 
-        <Route path="/cupom" element={<Cupom />} />
-        <Route path="/register-cupom" element={<RegisterCupom />} />
-        <Route path="/register-cupom/:codigo" element={<RegisterCupom />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/change-payment-method/:id" element={<ChangePaymentMethod />} />
+          <Route path="/dependents" element={<Dependents />} />
+          <Route path="/dashboard" element={<DashBoard />} />
 
-        <Route path="/policies" element={<Policies />} />
-        <Route path="/register-policy" element={<RegisterPolicy />} />
-        <Route path="/register-policy/:id" element={<RegisterPolicy />} />
+          <Route path="/cupom" element={<Cupom />} />
+          <Route path="/register-cupom" element={<RegisterCupom />} />
+          <Route path="/register-cupom/:codigo" element={<RegisterCupom />} />
 
-        <Route path="/administers" element={<Administers />} />
-        <Route path="/register-administer" element={<RegisterAdminister />} />
+          <Route path="/policies" element={<Policies />} />
+          <Route path="/register-policy" element={<RegisterPolicy />} />
+          <Route path="/register-policy/:id" element={<RegisterPolicy />} />
 
-        <Route path="/products" element={<Products />} />
-        <Route path="/register-product" element={<RegisterProduct />} />
-        <Route path="/register-product/:id" element={<RegisterProduct />} />
+          <Route path="/administers" element={<Administers />} />
+          <Route path="/register-administer" element={<RegisterAdminister />} />
 
-        <Route path="/permissions" element={<Permissions />} />
-        <Route path="/register-permission" element={<RegisterPermission />} />
-        <Route path="/register-permission/:id" element={<RegisterPermission />} />
-        <Route path="/permissions-users" element={<UsersPermissions />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/register-product" element={<RegisterProduct />} />
+          <Route path="/register-product/:id" element={<RegisterProduct />} />
 
-        <Route path="/credit-card" element={<CreditCard />} />
-        <Route path="/register-credit-card" element={<RegisterCreditCard />} />
+          <Route path="/permissions" element={<Permissions />} />
+          <Route path="/register-permission" element={<RegisterPermission />} />
+          <Route path="/register-permission/:id" element={<RegisterPermission />} />
+          <Route path="/permissions-users" element={<UsersPermissions />} />
 
-        <Route path="/signature/:id" element={<Signature />} />
-        <Route path="/handle-signature/:id" element={<HandleSignature />} />
+          <Route path="/credit-card" element={<CreditCard />} />
+          <Route path="/register-credit-card" element={<RegisterCreditCard />} />
 
-        <Route path="/holders" element={<Holders />} />
-        <Route path="/holder/:id" element={<ProfileUser />} />
+          <Route path="/signature/:id" element={<Signature />} />
+          <Route path="/handle-signature/:id" element={<HandleSignature />} />
 
-        <Route path="/conciliation" element={<Conciliation />} />
-      </Route>
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+          <Route path="/holders" element={<Holders />} />
+          <Route path="/holder/:id" element={<ProfileUser />} />
+
+          <Route path="/conciliation" element={<Conciliation />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
