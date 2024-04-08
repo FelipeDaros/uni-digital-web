@@ -1,3 +1,4 @@
+import { BrowserRouter } from "react-router-dom"
 import { RouteRegisterNoAuth } from "./RoutesNoAuth"
 import { useAuth } from "../context/AuthContext"
 import { RoutesAuth } from "./RoutesAuth"
