@@ -21,8 +21,8 @@ export function DependentForm() {
 
   const handleChangeStateModal = () => setStateModal(!stateModal);
 
-  const [handleSecundarios, totalDependets, secundarios] = FormRegisterClientStore((state) => [
-    state.handleSecundarios, state.totalDependets, state.secundarios
+  const [handleSecundarios, totalDependets, secundarios, product] = FormRegisterClientStore((state) => [
+    state.handleSecundarios, state.totalDependets, state.secundarios, state.product
   ])
 
   function handleAdd() {
@@ -32,7 +32,7 @@ export function DependentForm() {
       return
     }
 
-    if (totalDependets === secundarios.length) {
+    if (totalDependets === secundarios.length && product.add_secundarios !== 1) {
       handleChangeStateModal()
       setMessage("O limite de dependentes foi execidido!")
       showToast({

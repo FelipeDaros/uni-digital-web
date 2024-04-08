@@ -60,7 +60,6 @@ export function HandleSignature() {
   const [productSelected, setProductSelected] = useState<IProduct>();
   const [isStateModal, setIsStateModal] = useState(false);
   const [valorTotal, setValorTotal] = useState(0);
-
   const changeStateModal = () => setIsStateModal(!isStateModal);
 
   function importXLS(data: any) {

@@ -58,18 +58,20 @@ export function Dependents() {
   async function fetchData() {
     try {
       setLoading(true);
-      const { data } = await api.get(`/auth/dependentes/${user?.user.id}`, {
+      const { data } = await api.get(`/auth/dependentes`, {
         params: {
           pageSize: pageSize,
-          page: page
+          page: page,
+          id_usuario: user.user.id
         }
       });
+
       const payload = {
         rows: data.data,
         columns,
         experimentalFeatures: true,
-
       }
+      
       // @ts-ignore
       setGridData(payload)
     } catch (error) {

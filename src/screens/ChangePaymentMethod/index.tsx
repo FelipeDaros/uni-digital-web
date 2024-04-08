@@ -12,7 +12,7 @@ import { useToast } from "../../context/ToastContext"
 import { theme } from "../../styled"
 import { Loading } from "../../components/Loading"
 
-const TIPO_PAGAMENTO = ["PIX", "BOLETO", "CARTAO"]
+const TIPO_PAGAMENTO = ["PIX", "BOLETO", "CARTAO"];
 
 export function ChangePaymentMethod() {
   const { showToast } = useToast();
@@ -26,7 +26,14 @@ export function ChangePaymentMethod() {
   async function handleSave(dados: any) {
     try {
       setLoading(true);
-      const { data } = await api.post('/', dados);
+
+      const payload = {
+        ...dados,
+        id_usuario: id,
+
+      }
+
+      const { data } = await api.post('/pagamentos/mudanca-metodo', payload);
       showToast({
         color: 'success',
         message: data.data.message
@@ -46,6 +53,7 @@ export function ChangePaymentMethod() {
 
   const handleChange = (event: any) => {
     setSelectedPayment(event.target.value as string);
+    formRef.current?.setFieldValue("tipo", event.target.value);
   };
 
   async function fetchData() {
@@ -56,7 +64,7 @@ export function ChangePaymentMethod() {
     });
 
     setSelectedPayment(data.data.tipo)
-    formRef.current?.setFieldValue("tipo_pagamento", data.data.tipo);
+    formRef.current?.setFieldValue("tipo", data.data.tipo);
 
     if (data.data.tipo === "CARTAO") {
       formRef.current?.setFieldValue("nomeTitular", data.data.nome_titular);
@@ -96,8 +104,8 @@ export function ChangePaymentMethod() {
             type="text"
             required
             size="small"
-            id="tipo_pagamento"
-            name="tipo_pagamento"
+            id="tipo"
+            name="tipo"
             color="success"
             variant="standard"
             onChange={handleChange}
