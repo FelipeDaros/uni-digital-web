@@ -8,7 +8,6 @@ import { NewPassword } from "../screens/Login/NewPassword"
 import { AwaitingPayment } from "../screens/FormRegisterClient/AwaitingPayment"
 
 export function RouteRegisterNoAuth() {
-
   return (
     <Routes>
       <Route path="/" element={<Login />} />
