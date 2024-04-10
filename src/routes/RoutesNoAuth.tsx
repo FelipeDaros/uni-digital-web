@@ -20,7 +20,7 @@ export function RouteRegisterNoAuth() {
       <Route path="/awaiting-payment/:type" element={<AwaitingPayment />} />
 
       {/* Rota para redirecionar para a página principal quando a rota não existir */}
-      {/* <Route path="*" element={<Navigate to="/" />} /> */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )
 }
