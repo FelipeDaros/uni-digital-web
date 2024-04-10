@@ -1,9 +1,10 @@
 import { CssBaseline, ThemeProvider } from "@mui/material"
 import { theme } from "./styled"
 import { AuthContextProvider } from "./context/AuthContext"
-import { Router } from "./routes/Router"
+
 import { DrawerProvider } from "./context/DrawerContext"
 import { ToastContextProvider } from "./context/ToastContext"
+import { AppRouter } from "./routes/Router"
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           {/* @ts-ignore */}
           <ToastContextProvider>
             <CssBaseline />
-            <Router />
+            <AppRouter />
           </ToastContextProvider>
         </DrawerProvider>
       </AuthContextProvider>
