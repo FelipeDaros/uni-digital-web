@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate, createBrowserRouter, RouterProvider } from "react-router-dom"
+import { Route, Routes, Navigate } from "react-router-dom"
 import { FormRegisterClient } from "../screens/FormRegisterClient"
 import { FeedBackScreen } from "../screens/FormRegisterClient/FeedBackScreen"
 import { Login } from "../screens/Login"
@@ -8,30 +8,20 @@ import { NewPassword } from "../screens/Login/NewPassword"
 import { AwaitingPayment } from "../screens/FormRegisterClient/AwaitingPayment"
 
 export function RouteRegisterNoAuth() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Login />
-    },
-    {
-      path: "/register/:id",
-      element: <FormRegisterClient />
-    },
-  ]);
+
   return (
-    // <Routes>
-    //   <Route path="/" element={<Login />} />
-    //   <Route path="/forgout" element={<ForgoutPassword />} />
-    //   <Route path="/send-forgout" element={<SendForgout />} />
-    //   <Route path="/register/:id" element={<FormRegisterClient />} />
-    //   <Route path="/concluded" element={<FeedBackScreen />} />
-    //   <Route path="/confirm-password/:id" element={<NewPassword />} />
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/forgout" element={<ForgoutPassword />} />
+      <Route path="/send-forgout" element={<SendForgout />} />
+      <Route path="/register/:id" element={<FormRegisterClient />} />
+      <Route path="/concluded" element={<FeedBackScreen />} />
+      <Route path="/confirm-password/:id" element={<NewPassword />} />
 
-    //   <Route path="/awaiting-payment/:type" element={<AwaitingPayment />} />
+      <Route path="/awaiting-payment/:type" element={<AwaitingPayment />} />
 
-    //   {/* Rota para redirecionar para a página principal quando a rota não existir */}
-    //   <Route path="*" element={<Navigate to="/" />} />
-    // </Routes>
-    <RouterProvider router={router} />
+      {/* Rota para redirecionar para a página principal quando a rota não existir */}
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   )
 }

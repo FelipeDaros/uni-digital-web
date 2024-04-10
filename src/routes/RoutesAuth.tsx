@@ -4,6 +4,7 @@ import {
   Routes,
   useLocation,
   useNavigate,
+  HashRouter
 } from "react-router-dom"
 import { DefaultLayout } from "../layout/DefaultLayout"
 import { Home } from "../screens/Home"
